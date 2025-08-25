@@ -68,25 +68,23 @@ body {
 
 /* Hero Section */
 .hero {
-  text-align: center;
-  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* pushes cow left, button right */
+  padding: 40px;
 }
-.cow-img {
-  max-width: 400px;
-  width: 100%;
+
+.cow-container {
+  flex: 1;
 }
+
+.cow-image {
+  max-width: 90%;
+  height: auto;
+}
+
 .order-btn {
-  display: inline-block;
-  margin-top: 30px;
-  background: #6EE757;
-  color: white;
-  font-weight: bold;
-  font-size: 20px;
-  padding: 15px 30px;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: background 0.3s;
+  flex: 1;
+  text-align: center;
 }
-.order-btn:hover {
-  background: #57c946;
-}
+

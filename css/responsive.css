@@ -21,3 +21,27 @@
     font-size: 18px;
   }
 }
+
+/* Dropdown inside mobile menu */
+@media (max-width: 768px) {
+  .dropdown-content {
+    position: static;  /* instead of absolute */
+    box-shadow: none;  /* remove floating shadow */
+    background: none;  /* keep same background */
+    padding-left: 15px; /* indent sub-items */
+  }
+  .dropdown-content li {
+    padding: 8px 0;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+  .order-btn {
+    margin-top: 20px;
+  }
+}
