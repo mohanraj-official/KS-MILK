@@ -103,6 +103,11 @@ body {
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   transition: transform 0.2s;
+
+  display: flex;
+  flex-direction: column;       /* stack elements vertically */
+  justify-content: space-between; /* push button to bottom */
+  height: 100%;                  /* equal height for all cards */
 }
 
 .product-card:hover {
@@ -111,9 +116,19 @@ body {
 
 .product-card img {
   width: 100%;
-  max-height: 180px;
-  object-fit: contain;
+  height: 200px;       /* fixed height for images */
+  object-fit: cover;   /* crop/scale neatly */
+  border-radius: 10px 10px 0 0;
+}
+
+.product-card h3 {
+  margin: 15px 0 5px;
+}
+
+.product-card p {
   margin-bottom: 15px;
+  font-size: 1rem;
+  color: #555;
 }
 
 .order-btn {
@@ -124,11 +139,13 @@ body {
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
+  align-self: center;   /* keeps button centered */
 }
 
 .order-btn:hover {
   background: #4cb758;
 }
+
 
 
 
