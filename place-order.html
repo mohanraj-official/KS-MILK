@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order - KS Milk</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/order.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo"><a href="index.html"><span class="green">KS</span> MILK</a></div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="founders.html">Founders</a></li>
+            <li><a href="orders.html">Orders</a></li>
+        </ul>
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+    </nav>
+    <div class="order-container">
+        <div class="order-box">
+            <h2>Place Your Milk Order</h2>
+            <form action="#" method="POST">
+
+                <!-- Name -->
+                <input type="text" placeholder="Full Name" required>
+
+                <!-- Address -->
+                <textarea placeholder="Delivery Address" rows="3" required></textarea>
+
+                <!-- Landmark Dropdown -->
+                <select required>
+                    <option value="" disabled selected>Select Landmark</option>
+                    <option>Bus Stand</option>
+                    <option>Railway Station</option>
+                    <option>Main Market</option>
+                    <option>Temple Road</option>
+                    <option>School Junction</option>
+                </select>
+
+                <!-- Milk Quantity (step 0.5 up to 50) -->
+                <input type="number" placeholder="Milk Quantity (Litres)" step="0.5" min="0.5" max="50" required>
+
+                <!-- Phone -->
+                <input type="tel" placeholder="Phone Number" pattern="[0-9]{10}" required>
+
+                <!-- Buttons -->
+                <div class="order-actions">
+                    <button type="reset" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="order-btn">Place Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
