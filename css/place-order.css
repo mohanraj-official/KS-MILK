@@ -95,7 +95,15 @@ input:focus, textarea:focus, select:focus {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
+    gap: 15px; /* equal spacing */
 }
+
+.cancel-btn,
+.order-btn {
+    flex: 1; /* same width */
+    margin: 0; /* remove old margin */
+}
+
 
 button {
     flex: 1;
@@ -108,25 +116,7 @@ button {
     transition: 0.3s;
 }
 
-.cancel-btn {
-    background: #f1f8e9;
-    color: #2e7d32;
-    margin-right: 10px;
-}
 
-.cancel-btn:hover {
-    background: #c8e6c9;
-}
-
-.order-btn {
-    background: #2e7d32;
-    color: white;
-    margin-left: 10px;
-}
-
-.order-btn:hover {
-    background: #1b5e20;
-}
 
 /* ===== Popup ===== */
 .popup {
