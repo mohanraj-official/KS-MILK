@@ -149,4 +149,30 @@ body {
 
 
 
+/* orders page */
 
+.orders {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.order-options {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.order-link {
+  background: #66d36e;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.order-link:hover {
+  background: #4cb758;
+}
