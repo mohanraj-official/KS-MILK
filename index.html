@@ -1,25 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>KS Milk - Auth Test</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KS MILK - Home</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
-
 <body>
-    <h2>Firebase Auth Test</h2>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo"><a href="index.html"><span class="green">KS</span> MILK</a></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="founders.html">Founders</a></li>
+      <li class="dropdown">
+        <a href="#">Orders ▾</a>
+        <ul class="dropdown-content">
+          <li><a href="order.html">Place Order</a></li>
+          <li><a href="confirm-order.html">Confirm Order</a></li>
+          <li><a href="order-history.html">Order History</a></li>
+        </ul>
+      </li>
+      <li><a href="login.html">Login</a> / <a href="register.html">Register</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+  </nav>
 
-    <!-- Simple input for email/password -->
-    <input type="text" id="email" placeholder="Enter email"><br><br>
-    <input type="password" id="password" placeholder="Enter password"><br><br>
+  <!-- Hero Section -->
+  <section class="hero">
+    <img src="assets/images/cow.png" alt="Cow Image" class="cow-img">
+    <a href="order.html" class="order-btn">ORDER NOW</a>
+  </section>
 
-    <button id="register">Register</button>
-    <button id="login">Login</button>
-    <button id="logout">Logout</button>
-
-    <script type="module" src="js/firebase.js"></script>
-    <script type="module" src="js/auth.js"></script>
-
+  <script src="assets/js/main.js"></script>
 </body>
-
 </html>
