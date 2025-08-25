@@ -41,3 +41,17 @@ document.getElementById("logout").addEventListener("click", () => {
     alert(error.message);
   });
 });
+
+
+//stay logged in after refresh
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { auth } from "./firebase.js";
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log("User is logged in:", user.email);
+    document.body.insertAdjacentHTML("beforeend", `<p>Welcome, ${user.email}</p>`);
+  } else {
+    console.log("No user is logged in.");
+  }
+});
