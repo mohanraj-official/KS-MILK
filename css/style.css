@@ -43,21 +43,7 @@ body {
   color: #00B06B;
 }
 
-/* Dropdown */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background: #fff;
-  min-width: 150px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  z-index: 10;
-}
-.dropdown-content li {
-  padding: 10px;
-}
-.dropdown:hover .dropdown-content {
-  display: block;
-}
+
 
 /* Hamburger (mobile) */
 .hamburger {
