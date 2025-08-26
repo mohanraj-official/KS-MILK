@@ -1,54 +1,61 @@
-/* ===== General Styles ===== */
+/* Global Styles */
 body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #fffdf5; /* cream background */
-    color: #2e4d2c; /* dark green text */
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fff;
+  color: #000;
 }
 
-/* ===== Navbar ===== */
+/* Navbar */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #2e7d32; /* green */
-    padding: 15px 40px;
-    color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.navbar .logo a {
-    font-size: 24px;
-    font-weight: bold;
-    color: white;
-    text-decoration: none;
+.logo a {
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: bold;
+  color: #000;
 }
-
-.navbar .logo .green {
-    color: #d8f3dc; /* light green highlight */
+.logo .green {
+  color: #00B06B;
 }
 
 .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 25px;
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+.nav-links li {
+  position: relative;
+}
+.nav-links a {
+  text-decoration: none;
+  color: #000;
+  font-weight: 500;
+}
+.nav-links a:hover {
+  color: #00B06B;
 }
 
-.nav-links li a {
-    text-decoration: none;
-    color: #f1f8e9; /* cream text */
-    font-weight: 500;
-    transition: color 0.3s;
-}
 
-.nav-links li a:hover {
-    color: #a5d6a7; /* lighter green */
-}
 
+/* Hamburger (mobile) */
 .hamburger {
-    display: none;
-    font-size: 26px;
-    cursor: pointer;
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
 }
+
+
+
+
+
 
 /* ===== Order Box ===== */
 .order-container {
