@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History - KS Milk</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/orders-history.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo"><a href="index.html"><span class="green">KS</span> MILK</a></div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="founders.html">Founders</a></li>
+            <li><a href="place-order.html">Place Order</a></li>
+            <li><a href="orders-history.html" class="active">Order History</a></li>
+        </ul>
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+    </nav>
+
+    <!-- Orders History Section -->
+    <section class="orders-section">
+        <h2>Your Order History</h2>
+        <p class="subtitle">Track all your past milk orders with <b>KS Milk</b></p>
+
+        <div class="orders-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Quantity</th>
+                        <th>Address</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#1001</td>
+                        <td>25 Aug 2025</td>
+                        <td>2 Litres</td>
+                        <td>Temple Road</td>
+                        <td><span class="status delivered">Delivered</span></td>
+                    </tr>
+                    <tr>
+                        <td>#1000</td>
+                        <td>20 Aug 2025</td>
+                        <td>1.5 Litres</td>
+                        <td>Main Market</td>
+                        <td><span class="status pending">Pending</span></td>
+                    </tr>
+                    <tr>
+                        <td>#0999</td>
+                        <td>15 Aug 2025</td>
+                        <td>5 Litres</td>
+                        <td>School Junction</td>
+                        <td><span class="status cancelled">Cancelled</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</body>
+
+</html>

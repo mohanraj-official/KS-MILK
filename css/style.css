@@ -418,3 +418,79 @@ button {
 .popup-content button:hover {
   background: #1b5e20;
 }
+
+
+
+
+/* order-history */
+
+
+.orders-section {
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.orders-section h2 {
+  color: #2e7d32;
+  margin-bottom: 10px;
+}
+
+.orders-section .subtitle {
+  color: #4a6d46;
+  margin-bottom: 30px;
+}
+
+/* Orders Table */
+.orders-table {
+  overflow-x: auto;
+  max-width: 900px;
+  margin: auto;
+}
+
+.orders-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fdfcf7;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.orders-table th, .orders-table td {
+  padding: 15px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.orders-table th {
+  background: #2e7d32;
+  color: white;
+  font-weight: bold;
+}
+
+.orders-table tr:hover {
+  background: #f1f8e9;
+}
+
+/* Status Styles */
+.status {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.status.delivered {
+  background: #c8e6c9;
+  color: #1b5e20;
+}
+
+.status.pending {
+  background: #fff9c4;
+  color: #f57f17;
+}
+
+.status.cancelled {
+  background: #ffcdd2;
+  color: #b71c1c;
+}
