@@ -123,6 +123,52 @@ button {
 
 
 
+/* ===== Dropdown Style ===== */
+select {
+    width: 100%;
+    padding: 14px 14px 14px 40px;
+    margin: 12px 0;
+    border-radius: 10px;
+    border: 1px solid #c8e6c9;
+    background: #fafafa;
+    font-size: 15px;
+    color: #2e4d2c;
+    outline: none;
+    transition: all 0.3s;
+    appearance: none; /* remove default arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    background-image: url("https://cdn-icons-png.flaticon.com/512/32/32195.png"); /* ⬇ custom arrow icon */
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+}
+
+select:focus {
+    border-color: #2e7d32;
+    background-color: #ffffff;
+    box-shadow: 0 0 6px rgba(46,125,50,0.25);
+}
+
+select option {
+    padding: 12px;
+    font-size: 15px;
+    background: #ffffff;
+    color: #2e4d2c;
+}
+
+/* Optional: style dropdown list in modern browsers */
+select option:hover {
+    background: #e8f5e9;
+}
+
+
+
+
+
+
+
 /* ===== Popup ===== */
 .popup {
     display: none; /* hidden by default */
