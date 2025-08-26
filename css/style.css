@@ -246,3 +246,54 @@ body {
   font-size: 14px;
   color: #333;
 }
+
+
+
+
+
+
+/* Journey Section */
+.journey-section {
+  padding: 50px 20px;
+  background: #f1f8e9; /* light green background */
+  text-align: center;
+}
+
+.journey-section h2 {
+  color: #2e7d32;
+  margin-bottom: 40px;
+}
+
+/* Timeline */
+.timeline {
+  max-width: 600px;
+  margin: auto;
+  position: relative;
+  padding-left: 20px;
+  border-left: 4px solid #2e7d32;
+}
+
+.timeline-item {
+  margin-bottom: 30px;
+  position: relative;
+  padding-left: 20px;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 5px;
+  width: 18px;
+  height: 18px;
+  background: #2e7d32;
+  border-radius: 50%;
+  border: 3px solid #fff;
+}
+
+.timeline-item .year {
+  font-weight: bold;
+  color: #2e7d32;
+  display: block;
+  margin-bottom: 5px;
+}
