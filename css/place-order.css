@@ -1,132 +1,95 @@
-/* Global Styles */
+/* ========== Global Styles ========== */
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #fff;
-  color: #000;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #fff;
+    color: #000;
 }
 
-/* Navbar */
+/* ========== Navbar ========== */
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 40px;
-  background: #fff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .logo a {
-  text-decoration: none;
-  font-size: 22px;
-  font-weight: bold;
-  color: #000;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: bold;
+    color: #000;
 }
+
 .logo .green {
-  color: #00B06B;
+    color: #00B06B;
 }
 
 .nav-links {
-  list-style: none;
-  display: flex;
-  gap: 20px;
+    list-style: none;
+    display: flex;
+    gap: 20px;
 }
+
 .nav-links li {
-  position: relative;
+    position: relative;
 }
+
 .nav-links a {
-  text-decoration: none;
-  color: #000;
-  font-weight: 500;
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
+    transition: color 0.3s;
 }
+
 .nav-links a:hover {
-  color: #00B06B;
+    color: #00B06B;
 }
 
-
-
-/* Hamburger (mobile) */
+/* Hamburger (mobile only) */
 .hamburger {
-  display: none;
-  font-size: 24px;
-  cursor: pointer;
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
 }
 
-
-
-
-/* ===== Order Box ===== */
+/* ========== Order Form Section ========== */
 .order-container {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 40px;
+    height: 100vh;
+    background: linear-gradient(135deg, #f9fff6, #ffffff);
 }
 
 .order-box {
-    background: #fdfcf7; /* soft cream */
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    max-width: 400px;
+    background: #fff;
+    padding: 35px 45px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    max-width: 420px;
     width: 100%;
     text-align: center;
+    animation: fadeIn 0.6s ease;
 }
 
 .order-box h2 {
     color: #2e7d32;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    font-size: 22px;
+    font-weight: 600;
 }
 
-/* ===== Form Inputs ===== */
-input, textarea, select {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: 1px solid #c8e6c9; /* light green border */
-    background: #fffef9;
-    font-size: 15px;
-    outline: none;
-    transition: border 0.3s;
-}
-
-input:focus, textarea:focus, select:focus {
-    border-color: #2e7d32;
-}
-
-/* ===== Buttons ===== */
-.order-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    gap: 15px; /* equal spacing */
-}
-
-.cancel-btn,
-.order-btn {
-    flex: 1; /* same width */
-    margin: 0; /* remove old margin */
-}
-
-
-button {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-
-
-/* ===== Dropdown Style ===== */
+/* Inputs & Select */
+input,
+textarea,
 select {
     width: 100%;
     padding: 14px 14px 14px 40px;
+    /* room for icons */
     margin: 12px 0;
     border-radius: 10px;
     border: 1px solid #c8e6c9;
@@ -135,47 +98,82 @@ select {
     color: #2e4d2c;
     outline: none;
     transition: all 0.3s;
-    appearance: none; /* remove default arrow */
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #2e7d32;
+    background: #fff;
+    box-shadow: 0 0 6px rgba(46, 125, 50, 0.25);
+}
+
+/* Custom dropdown */
+select {
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     cursor: pointer;
-    background-image: url("https://cdn-icons-png.flaticon.com/512/32/32195.png"); /* ⬇ custom arrow icon */
+    background-image: url("https://cdn-icons-png.flaticon.com/512/32/32195.png");
     background-repeat: no-repeat;
     background-position: right 15px center;
     background-size: 16px;
 }
 
-select:focus {
-    border-color: #2e7d32;
-    background-color: #ffffff;
-    box-shadow: 0 0 6px rgba(46,125,50,0.25);
-}
-
 select option {
     padding: 12px;
     font-size: 15px;
-    background: #ffffff;
+    background: #fff;
     color: #2e4d2c;
 }
 
-/* Optional: style dropdown list in modern browsers */
-select option:hover {
-    background: #e8f5e9;
+/* ========== Buttons ========== */
+.order-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+    gap: 15px;
 }
 
+button {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
 
+.cancel-btn {
+    background: #f2f2f2;
+    color: #333;
+}
 
+.cancel-btn:hover {
+    background: #e0e0e0;
+}
 
+.order-btn {
+    background: linear-gradient(to right, #43a047, #66bb6a);
+    color: #fff;
+}
 
+.order-btn:hover {
+    background: linear-gradient(to right, #2e7d32, #388e3c);
+}
 
-
-/* ===== Popup ===== */
+/* ========== Popup ========== */
 .popup {
-    display: none; /* hidden by default */
+    display: none;
+    /* hidden by default */
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
 }
@@ -185,7 +183,8 @@ select option:hover {
     padding: 25px 40px;
     border-radius: 12px;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.4s ease;
 }
 
 .popup-content h3 {
@@ -196,11 +195,9 @@ select option:hover {
 .popup-content button {
     margin-top: 15px;
     background: #2e7d32;
-    color: white;
-    border: none;
+    color: #fff;
     padding: 10px 20px;
     border-radius: 8px;
-    cursor: pointer;
     font-weight: bold;
 }
 
@@ -208,20 +205,42 @@ select option:hover {
     background: #1b5e20;
 }
 
-/* ===== Responsive ===== */
-@media(max-width: 768px) {
+/* ========== Animations ========== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
     .nav-links {
         display: none;
         flex-direction: column;
         background: #2e7d32;
         position: absolute;
-        top: 60px; right: 0;
+        top: 60px;
+        right: 0;
         width: 200px;
         padding: 15px;
     }
 
     .nav-links li {
         margin: 10px 0;
+    }
+
+    .nav-links a {
+        color: #fff;
+    }
+
+    .nav-links a:hover {
+        color: #c8e6c9;
     }
 
     .hamburger {
