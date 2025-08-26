@@ -1,19 +1,35 @@
 /* ===== General Styles ===== */
 body {
     margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #fffdf5; /* cream background */
-    color: #2e4d2c; /* dark green text */
+    background: linear-gradient(to right, #f9fdf9, #fdfdfd);
+    background-image: url('https://cdn-icons-png.flaticon.com/512/3047/3047928.png');
+    /* 🥛 milk icon subtle bg */
+    background-repeat: no-repeat;
+    background-size: 120px;
+    background-position: top right;
+    color: #2e4d2c;
+    overflow: hidden;
+    /* remove scroll */
 }
 
 /* ===== Navbar ===== */
 .navbar {
+    position: absolute;
+    top: 0;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #2e7d32; /* green */
-    padding: 15px 40px;
+    background-color: #2e7d32;
+    padding: 12px 40px;
     color: white;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
 .navbar .logo a {
@@ -21,10 +37,14 @@ body {
     font-weight: bold;
     color: white;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.navbar .logo .green {
-    color: #d8f3dc; /* light green highlight */
+.navbar .logo::before {
+    content: "🥛";
+    font-size: 24px;
 }
 
 .nav-links {
@@ -35,13 +55,13 @@ body {
 
 .nav-links li a {
     text-decoration: none;
-    color: #f1f8e9; /* cream text */
+    color: #f1f8e9;
     font-weight: 500;
     transition: color 0.3s;
 }
 
 .nav-links li a:hover {
-    color: #a5d6a7; /* lighter green */
+    color: #dcedc8;
 }
 
 .hamburger {
@@ -52,94 +72,133 @@ body {
 
 /* ===== Order Box ===== */
 .order-container {
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 40px;
 }
 
 .order-box {
-    background: #fdfcf7; /* soft cream */
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    max-width: 400px;
+    background: #ffffff;
+    padding: 35px 45px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    max-width: 420px;
     width: 100%;
     text-align: center;
+    animation: fadeIn 0.7s ease;
 }
 
 .order-box h2 {
     color: #2e7d32;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    font-size: 22px;
 }
 
 /* ===== Form Inputs ===== */
-input, textarea, select {
+input,
+textarea,
+select {
     width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: 1px solid #c8e6c9; /* light green border */
-    background: #fffef9;
+    padding: 14px 14px 14px 40px;
+    /* add left space for icon */
+    margin: 12px 0;
+    border-radius: 10px;
+    border: 1px solid #c8e6c9;
+    background: #fafafa;
     font-size: 15px;
     outline: none;
-    transition: border 0.3s;
+    transition: all 0.3s;
+    position: relative;
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
     border-color: #2e7d32;
+    background: #ffffff;
+    box-shadow: 0 0 6px rgba(46, 125, 50, 0.2);
+}
+
+/* Placeholder icons */
+input[type="text"]::placeholder {
+    content: "👤 Full Name";
+}
+
+textarea::placeholder {
+    content: "📍 Delivery Address";
+}
+
+input[type="number"]::placeholder {
+    content: "🥛 Milk Quantity (Litres)";
+}
+
+input[type="tel"]::placeholder {
+    content: "📱 Phone Number";
 }
 
 /* ===== Buttons ===== */
 .order-actions {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
-    gap: 15px; /* equal spacing */
+    margin-top: 25px;
+    gap: 15px;
 }
-
-.cancel-btn,
-.order-btn {
-    flex: 1; /* same width */
-    margin: 0; /* remove old margin */
-}
-
 
 button {
     flex: 1;
-    padding: 12px;
+    padding: 14px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
 }
 
+.cancel-btn {
+    background: #e0e0e0;
+    color: #333;
+}
 
+.cancel-btn:hover {
+    background: #cfcfcf;
+}
+
+.order-btn {
+    background: #2e7d32;
+    color: white;
+}
+
+.order-btn:hover {
+    background: #1b5e20;
+}
 
 /* ===== Popup ===== */
 .popup {
-    display: none; /* hidden by default */
+    display: none;
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
 }
 
 .popup-content {
-    background: #fdfcf7;
-    padding: 25px 40px;
-    border-radius: 12px;
+    background: #ffffff;
+    padding: 30px 45px;
+    border-radius: 14px;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    animation: scaleIn 0.4s ease;
 }
 
 .popup-content h3 {
     color: #2e7d32;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .popup-content button {
@@ -147,7 +206,7 @@ button {
     background: #2e7d32;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 25px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
@@ -157,6 +216,31 @@ button {
     background: #1b5e20;
 }
 
+/* ===== Animations ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
 /* ===== Responsive ===== */
 @media(max-width: 768px) {
     .nav-links {
@@ -164,7 +248,8 @@ button {
         flex-direction: column;
         background: #2e7d32;
         position: absolute;
-        top: 60px; right: 0;
+        top: 60px;
+        right: 0;
         width: 200px;
         padding: 15px;
     }
@@ -175,5 +260,9 @@ button {
 
     .hamburger {
         display: block;
+    }
+
+    .order-box {
+        padding: 25px;
     }
 }
