@@ -176,3 +176,73 @@ body {
 .order-link:hover {
   background: #4cb758;
 }
+
+
+
+
+
+
+
+/*Founders Section */
+.founders-section {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.founders-section h2 {
+  font-size: 28px;
+  color: #2e7d32;
+  margin-bottom: 10px;
+}
+
+.founders-section .subtitle {
+  color: #4a6d46;
+  margin-bottom: 40px;
+}
+
+/* Founders Grid */
+.founders-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.founder-card {
+  background: #fdfcf7;
+  border-radius: 15px;
+  padding: 20px;
+  width: 260px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+
+.founder-card:hover {
+  transform: translateY(-5px);
+}
+
+.founder-card img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #2e7d32;
+  margin-bottom: 15px;
+}
+
+.founder-card h3 {
+  color: #2e7d32;
+  margin-bottom: 5px;
+}
+
+.founder-card .role {
+  font-weight: bold;
+  color: #4a6d46;
+  margin-bottom: 10px;
+}
+
+.founder-card .bio {
+  font-size: 14px;
+  color: #333;
+}
