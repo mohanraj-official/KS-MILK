@@ -66,11 +66,6 @@ if (popup) {
 
 
 
-// footer section copyrights
-// safe: only update if element exists
-const yearEl = document.getElementById('year');
-if (yearEl) yearEl.textContent = new Date().getFullYear();
-
 
 
 
