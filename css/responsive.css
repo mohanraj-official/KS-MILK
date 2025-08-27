@@ -11,7 +11,7 @@
     position: fixed;
     top: 60px;
     right: 16px;
-    width: 220px;
+    width: 150px;
     /* small dropdown width */
     display: flex;
     flex-direction: column;
