@@ -43,9 +43,6 @@
     margin: 0;
   }
 
-  .nav-links li:last-child {
-    border-bottom: none;
-  }
 
   .nav-links a {
     display: block;
