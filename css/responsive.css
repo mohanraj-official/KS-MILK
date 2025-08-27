@@ -1,26 +1,67 @@
-/* Mobile Styles */
+/* Mobile menu: small white dropdown, consistent across pages */
 @media (max-width: 768px) {
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    background: white;
-    padding: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  }
-  .nav-links.show {
-    display: flex;
-  }
+  /* show hamburger icon */
   .hamburger {
     display: block;
   }
+
+  /* small floating dropdown near the top-right */
+  .nav-links {
+    position: fixed;
+    top: 60px;
+    right: 16px;
+    width: 220px;               /* small dropdown width */
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding: 6px 0;
+    background: #ffffff;        /* white like other pages */
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    transform: translateY(-8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .22s ease, opacity .22s ease;
+    z-index: 1100;              /* above form but not permanently covering it */
+  }
+
+  /* visible state toggled by .show */
+  .nav-links.show {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .nav-links li {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    margin: 0;
+  }
+
+  .nav-links li:last-child { border-bottom: none; }
+
+  .nav-links a {
+    display: block;
+    color: #000;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  /* Make sure the order box stays visually correct */
+  .order-container { padding: 20px; } /* reduce padding on small screens */
+  .order-box { max-width: 420px; margin: 20px auto; position: relative; z-index: 1; }
+
+  /* Keep order button nice on mobile */
   .order-btn {
     width: 80%;
+    display: block;
+    margin: 18px auto 8px;
     font-size: 18px;
   }
 }
+
 
 
 
