@@ -43,6 +43,9 @@
     margin: 0;
   }
 
+  .nav-links li:last-child {
+    border-bottom: none;
+  }
 
   .nav-links a {
     display: block;
@@ -53,18 +56,6 @@
   }
 
 
-  /* if login/register is the last li in the list */
-  .nav-links li:last-child {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    padding: 12px 16px;
-  }
-
-  .nav-links li:last-child a {
-    display: inline-block;
-    padding: 8px 6px;
-  }
 
 
 
