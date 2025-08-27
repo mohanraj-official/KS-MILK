@@ -179,7 +179,7 @@ button {
     position: fixed;
     top: 60px;
     right: 16px;
-    width: 220px;               /* small dropdown width */
+    width: 150px;               /* small dropdown width */
     display: flex;
     flex-direction: column;
     gap: 0;
