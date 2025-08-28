@@ -78,3 +78,10 @@ function closePopup() {
   document.getElementById("successPopup").style.display = "none";
   window.location.href = "index.html"; // redirect home
 }
+
+
+
+
+
+
+
