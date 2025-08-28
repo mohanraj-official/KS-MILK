@@ -7,7 +7,7 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebas
 
 // Your Firebase configuration (copy-paste from Firebase console)
 const firebaseConfig = {
-  apiKey: "AIzaSyBfRRsyC9hOtzpEv-JUJBWh01QgXgc10K",
+  apiKey: "AIzaSyBErrsRyC9hOtzpEw-JUJBWh01QgXgci0k",
   authDomain: "ks-milk.firebaseapp.com",
   projectId: "ks-milk",
   storageBucket: "ks-milk.appspot.com",
