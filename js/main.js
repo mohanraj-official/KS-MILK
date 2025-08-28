@@ -1,10 +1,10 @@
-// Toggle mobile menu (called from HTML onclick)
+// ---------------- Toggle mobile menu ----------------
 function toggleMenu() {
   const nav = document.querySelector(".nav-links");
   if (nav) nav.classList.toggle("show");
 }
 
-/* ---------------- Place-order popup + safe DOM checks ---------------- */
+// ---------------- Place-order popup ----------------
 const form = document.getElementById("orderForm");
 const popup = document.getElementById("popup");
 
@@ -12,19 +12,20 @@ if (form && popup) {
   form.addEventListener("submit", function (e) {
     e.preventDefault(); // stop actual submit
     popup.style.display = "flex"; // show popup
+
     // move focus into popup for accessibility
     const okBtn = popup.querySelector("button");
     if (okBtn) okBtn.focus();
   });
 }
 
-function closePopup() {
+function closeOrderPopup() {
   if (!popup) return;
   popup.style.display = "none";
   if (form) form.reset(); // reset after closing
 }
 
-/* ---------------- Mobile menu helpers ---------------- */
+// ---------------- Mobile menu helpers ----------------
 const nav = document.querySelector(".nav-links");
 const ham = document.querySelector(".hamburger");
 
@@ -53,35 +54,55 @@ document.addEventListener("click", (e) => {
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     if (nav && nav.classList.contains("show")) nav.classList.remove("show");
-    if (popup && popup.style.display === "flex") closePopup();
+    if (popup && popup.style.display === "flex") closeOrderPopup();
   }
 });
 
-/* Optional: close popup when its OK button is clicked (safe check) */
+// Optional: close popup when its OK button is clicked
 if (popup) {
   const okBtn = popup.querySelector("button");
-  if (okBtn) okBtn.addEventListener("click", closePopup);
+  if (okBtn) okBtn.addEventListener("click", closeOrderPopup);
 }
 
-
-
-
-
-
-
-
-// confirm order script
+// ---------------- Confirm order popup ----------------
 function showSuccess() {
-  document.getElementById("successPopup").style.display = "flex";
+  const successPopup = document.getElementById("successPopup");
+  if (successPopup) successPopup.style.display = "flex";
 }
-function closePopup() {
-  document.getElementById("successPopup").style.display = "none";
+
+function closeSuccessPopup() {
+  const successPopup = document.getElementById("successPopup");
+  if (successPopup) successPopup.style.display = "none";
   window.location.href = "index.html"; // redirect home
 }
 
+// ---------------- Firebase Navbar Auth ----------------
+import { auth } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+onAuthStateChanged(auth, (user) => {
+  const navLinks = document.querySelector(".nav-links");
+  const loginLink = document.getElementById("login-link");
+  const registerLink = document.getElementById("register-link");
 
+  if (user) {
+    // Hide Login & Register
+    if (loginLink) loginLink.style.display = "none";
+    if (registerLink) registerLink.style.display = "none";
 
+    // Add Dashboard link dynamically
+    let dashboardLink = document.getElementById("dashboard-link");
+    if (!dashboardLink && navLinks) { // prevent duplicate
+      const li = document.createElement("li");
+      li.innerHTML = `<a href="dashboard.html" id="dashboard-link">Dashboard</a>`;
+      navLinks.appendChild(li);
+    }
+  } else {
+    // Show Login & Register, remove Dashboard
+    if (loginLink) loginLink.style.display = "inline-block";
+    if (registerLink) registerLink.style.display = "inline-block";
 
-
-
+    const dashboardLink = document.getElementById("dashboard-link");
+    if (dashboardLink) dashboardLink.remove();
+  }
+});
