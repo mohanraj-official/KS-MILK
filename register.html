@@ -13,19 +13,20 @@
         <div class="auth-box">
             <h2>Create Account</h2>
             <form id="register-form" action="#" method="POST">
-                <input type="text" id="fullname" placeholder="Full Name" required>
+                <input type="text" id="fullName" placeholder="Full Name" required>
                 <input type="email" id="email" placeholder="Email" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+                <input type="password" id="password" placeholder="Password (min 6 chars)" minlength="6" required>
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
                 <button type="submit" class="auth-btn">Register</button>
             </form>
 
             <p class="auth-link">Already have an account? <a href="login.html">Login</a></p>
         </div>
     </div>
+
+    <!-- Firebase -->
     <script type="module" src="./js/firebase.js"></script>
     <script type="module" src="./js/auth.js"></script>
-
 </body>
 
 </html>

@@ -2,29 +2,51 @@ import { auth, db } from "./firebase.js";
 import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// Elements
+const nameEl = document.getElementById("user-name");
+const emailEl = document.getElementById("user-email");
+const logoutBtn = document.getElementById("logout-btn");
+
 // Show user info when logged in
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    // Fetch user data from Firestore
-    const docRef = doc(db, "users", user.uid);
-    const docSnap = await getDoc(docRef);
+    try {
+      // Fetch Firestore user data
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      document.getElementById("user-name").textContent = "Name: " + docSnap.data().fullname;
-      document.getElementById("user-email").textContent = "Email: " + docSnap.data().email;
-    } else {
-      document.getElementById("user-name").textContent = "Name not found";
-      document.getElementById("user-email").textContent = "Email: " + user.email;
+      let fullName = "";
+      if (docSnap.exists()) {
+        fullName = docSnap.data().fullName || "No name set";
+      } else {
+        fullName = "No name set";
+      }
+
+      // Render details
+      nameEl.textContent = `👤 Name: ${fullName}`;
+      emailEl.textContent = `📧 Email: ${user.email}`;
+      
+      // Show account creation time
+      const createdAt = new Date(user.metadata.creationTime).toLocaleDateString();
+      const createdPara = document.createElement("p");
+      createdPara.textContent = `🕒 Member since: ${createdAt}`;
+      emailEl.insertAdjacentElement("afterend", createdPara);
+
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      nameEl.textContent = "Error loading user data";
+      emailEl.textContent = "";
     }
   } else {
-    // Not logged in → send to login page
+    // Not logged in → redirect
     window.location.href = "login.html";
   }
 });
 
 // Logout
-const logoutBtn = document.getElementById("logout-btn");
-logoutBtn.addEventListener("click", async () => {
-  await signOut(auth);
-  window.location.href = "login.html";
-});
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.href = "login.html";
+  });
+}
