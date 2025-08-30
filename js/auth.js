@@ -2,7 +2,8 @@ import { auth, db } from "./firebase.js";
 import { 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
-  signOut 
+  signOut, 
+  updateProfile
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import { setDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -12,7 +13,7 @@ const registerForm = document.getElementById("register-form");
 if (registerForm) {
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const fullname = document.getElementById("fullname").value.trim();
+    const fullName = document.getElementById("fullname").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
     const confirmPassword = document.getElementById("confirm-password").value.trim();
@@ -25,10 +26,14 @@ if (registerForm) {
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-      // Store extra info
-      await setDoc(doc(db, "users", userCredential.user.uid), {
-        fullname,
+      // ✅ Update Firebase Auth profile (so displayName is available)
+      await updateProfile(user, { displayName: fullName });
+
+      // ✅ Store extra info in Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        fullName,   // keep consistent naming
         email,
         createdAt: new Date()
       });
@@ -57,7 +62,7 @@ if (loginForm) {
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      alert("Welcome back, " + userCredential.user.email);
+      alert("Welcome back, " + (userCredential.user.displayName || userCredential.user.email));
       window.location.href = "dashboard.html"; // go to dashboard
     } catch (error) {
       if (error.code === "auth/wrong-password") {
