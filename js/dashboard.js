@@ -11,31 +11,31 @@ const logoutBtn = document.getElementById("logout-btn");
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     try {
-      // Fetch Firestore user data
+      // ✅ Fetch Firestore user data from users collection
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
-      let fullName = "";
+      let fullName = "No name set";
       if (docSnap.exists()) {
         fullName = docSnap.data().fullName || "No name set";
-      } else {
-        fullName = "No name set";
       }
 
       // Render details
-      nameEl.textContent = `👤 Name: ${fullName}`;
-      emailEl.textContent = `📧 Email: ${user.email}`;
-      
-      // Show account creation time
-      const createdAt = new Date(user.metadata.creationTime).toLocaleDateString();
-      const createdPara = document.createElement("p");
-      createdPara.textContent = `🕒 Member since: ${createdAt}`;
-      emailEl.insertAdjacentElement("afterend", createdPara);
+      if (nameEl) nameEl.textContent = `👤 Name: ${fullName}`;
+      if (emailEl) emailEl.textContent = `📧 Email: ${user.email}`;
 
+      // Show account creation time (avoid duplicates)
+      let createdPara = document.getElementById("created-at");
+      if (!createdPara && emailEl) {
+        createdPara = document.createElement("p");
+        createdPara.id = "created-at";
+        createdPara.textContent = `🕒 Member since: ${new Date(user.metadata.creationTime).toLocaleDateString()}`;
+        emailEl.insertAdjacentElement("afterend", createdPara);
+      }
     } catch (error) {
       console.error("Error fetching user:", error);
-      nameEl.textContent = "Error loading user data";
-      emailEl.textContent = "";
+      if (nameEl) nameEl.textContent = "Error loading user data";
+      if (emailEl) emailEl.textContent = "";
     }
   } else {
     // Not logged in → redirect

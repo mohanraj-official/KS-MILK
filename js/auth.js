@@ -5,7 +5,6 @@ import {
   signOut, 
   updateProfile
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 import { setDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // ---- REGISTER ----
@@ -31,9 +30,9 @@ if (registerForm) {
       // ✅ Update Firebase Auth profile (so displayName is available)
       await updateProfile(user, { displayName: fullName });
 
-      // ✅ Store extra info in Firestore
+      // ✅ Store extra info in Firestore (users collection)
       await setDoc(doc(db, "users", user.uid), {
-        fullName,   // keep consistent naming
+        fullName,   
         email,
         createdAt: new Date()
       });
