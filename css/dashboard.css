@@ -1,0 +1,95 @@
+/* Reset */
+body, h1, h2, h3, p, ul, li {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+  background: #2d3436;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 30px;
+}
+.navbar .logo {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.navbar .nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+.navbar .nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+}
+.navbar .nav-links a:hover,
+.navbar .nav-links .active {
+  color: #00cec9;
+}
+
+/* Dashboard Layout */
+.dashboard-container {
+  display: flex;
+  padding: 20px;
+  min-height: calc(100vh - 60px);
+  background: #f5f6fa;
+  gap: 20px;
+}
+
+/* Profile Card */
+.profile-card {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.profile-card h2 {
+  margin-bottom: 15px;
+  color: #2d3436;
+}
+.profile-card p {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  color: #636e72;
+}
+
+/* Main Content */
+.dashboard-content {
+  flex: 3;
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.dashboard-content h2 {
+  margin-bottom: 15px;
+  color: #2d3436;
+}
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+.card {
+  background: #00cec9;
+  color: white;
+  border-radius: 12px;
+  padding: 20px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+.card:hover {
+  background: #0984e3;
+}
+.card h3 {
+  margin-bottom: 8px;
+}

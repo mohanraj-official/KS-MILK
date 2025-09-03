@@ -91,6 +91,9 @@ onAuthStateChanged(auth, (user) => {
     if (loginLink)   loginLink.style.display   = "none";
     if (registerLink) registerLink.style.display = "none";
 
+
+
+    
     // Add Dashboard link dynamically (no duplicates)
     let dashboardLink = document.getElementById("dashboard-link");
     if (!dashboardLink && navLinks) {

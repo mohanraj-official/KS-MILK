@@ -4,22 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - KS Milk</title>
-  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-  <div class="auth-container">
-    <div class="auth-box">
-      <h2>Welcome 👋</h2>
-      
-      <!-- User Info -->
+  <!-- Top Navbar -->
+  <nav class="navbar">
+    <div class="logo">🥛 KS MILK</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="orders.html">Orders</a></li>
+      <li><a href="dashboard.html" class="active">Dashboard</a></li>
+      <li><a href="#" id="logout-btn">Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Dashboard Container -->
+  <div class="dashboard-container">
+    <!-- Left: Profile -->
+    <aside class="profile-card">
+      <h2>👋 Welcome</h2>
       <p id="user-name"></p>
       <p id="user-email"></p>
-      <p id="user-role"></p> <!-- ✅ added for role -->
-      <!-- "created-at" will be injected by JS -->
+      <p id="user-role"></p>
+      <!-- created-at injected by JS -->
+    </aside>
 
-      <!-- Logout -->
-      <button id="logout-btn" class="auth-btn">Logout</button>
-    </div>
+    <!-- Right: Dashboard Content -->
+    <main class="dashboard-content">
+      <h2>📊 Dashboard</h2>
+      <p>Here you’ll find your account details and order management.</p>
+
+      <div class="dashboard-grid">
+        <a href="orders.html" class="card">
+          <h3>🛒 My Orders</h3>
+          <p>View and manage your milk orders.</p>
+        </a>
+        <a href="subscriptions.html" class="card">
+          <h3>📅 Subscription</h3>
+          <p>Manage your milk delivery subscription.</p>
+        </a>
+        <a href="payments.html" class="card">
+          <h3>💳 Payments</h3>
+          <p>Check your invoices and payment history.</p>
+        </a>
+      </div>
+    </main>
   </div>
 
   <!-- Firebase -->
