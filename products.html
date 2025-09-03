@@ -33,15 +33,15 @@
                 <img src="assets/images/glassmilk.jpg" alt="Milk">
                 <h3>Fresh Milk</h3>
                 <p>₹40 / Liter</p>
-                <button class="order-btn">Order Now</button>
+                <button class="order-btn" data-name="Fresh Milk" data-price="40">Order Now</button>
             </div>
 
             <!-- Product 2 -->
             <div class="product-card">
-                <img src="assets/images/cheese.jpg" alt="Butter">
+                <img src="assets/images/cheese.jpg" alt="Curd">
                 <h3>Curd</h3>
                 <p>₹50 / Kg</p>
-                <button class="order-btn">Order Now</button>
+                <button class="order-btn" data-name="Curd" data-price="50">Order Now</button>
             </div>
 
             <!-- Product 3 -->
@@ -49,31 +49,62 @@
                 <img src="assets/images/ghee.jpg" alt="Ghee">
                 <h3>Ghee</h3>
                 <p>₹500 / Liter</p>
-                <button class="order-btn">Order Now</button>
+                <button class="order-btn" data-name="Ghee" data-price="500">Order Now</button>
+            </div>
+
+            <!-- Extra products (reuse milk example) -->
+            <div class="product-card">
+                <img src="assets/images/glassmilk.jpg" alt="Milk">
+                <h3>Fresh Milk</h3>
+                <p>₹40 / Liter</p>
+                <button class="order-btn" data-name="Fresh Milk" data-price="40">Order Now</button>
             </div>
 
             <div class="product-card">
                 <img src="assets/images/glassmilk.jpg" alt="Milk">
                 <h3>Fresh Milk</h3>
                 <p>₹40 / Liter</p>
-                <button class="order-btn">Order Now</button>
+                <button class="order-btn" data-name="Fresh Milk" data-price="40">Order Now</button>
             </div>
 
             <div class="product-card">
                 <img src="assets/images/glassmilk.jpg" alt="Milk">
                 <h3>Fresh Milk</h3>
                 <p>₹40 / Liter</p>
-                <button class="order-btn">Order Now</button>
-            </div>
-
-            <div class="product-card">
-                <img src="assets/images/glassmilk.jpg" alt="Milk">
-                <h3>Fresh Milk</h3>
-                <p>₹40 / Liter</p>
-                <button class="order-btn">Order Now</button>
+                <button class="order-btn" data-name="Fresh Milk" data-price="40">Order Now</button>
             </div>
         </div>
     </section>
+
+
+    <!-- Order Form Popup -->
+    <div id="orderFormContainer" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closeOrderPopup()">&times;</span>
+            <h2>Place Order</h2>
+            <form id="orderForm">
+                <label for="product">Product</label>
+                <input type="text" id="product" name="product" readonly>
+
+                <label for="quantity">Quantity</label>
+                <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+
+                <button type="submit">Confirm Order</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Popup -->
+    <div id="successPopup" class="popup">
+        <div class="popup-content">
+            <h2>✅ Order Successful!</h2>
+            <p>Your order has been placed successfully.</p>
+            <button onclick="closeSuccessPopup()">OK</button>
+        </div>
+    </div>
+
+
+    <!-- Load JS -->
     <script type="module" src="js/main.js"></script>
 </body>
 

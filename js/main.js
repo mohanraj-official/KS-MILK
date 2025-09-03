@@ -7,7 +7,8 @@ window.toggleMenu = toggleMenu; // if used via onclick in HTML
 
 // ---------------- Place-order popup ----------------
 const form = document.getElementById("orderForm");
-const popup = document.getElementById("popup");
+const popup = document.getElementById("orderFormContainer");
+
 
 if (form && popup) {
   form.addEventListener("submit", function (e) {
@@ -129,4 +130,21 @@ onAuthStateChanged(auth, (user) => {
     const logoutLink = document.getElementById("logout-link");
     if (logoutLink) logoutLink.remove();
   }
+});
+
+
+
+// Attach Order Now buttons to open popup
+const orderButtons = document.querySelectorAll(".order-btn");
+orderButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const productCard = btn.closest(".product-card");
+    const productName = productCard.querySelector("h3").textContent;
+
+    // set product name in form
+    document.getElementById("product").value = productName;
+
+    // show popup
+    if (popup) popup.style.display = "flex";
+  });
 });
