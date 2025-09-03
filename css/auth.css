@@ -79,3 +79,77 @@ body {
 .auth-link a:hover {
     text-decoration: underline;
 }
+
+
+
+
+/* registration */
+
+/* Registration Page Specific */
+.auth-box h2 {
+    margin-bottom: 20px;
+    color: #fff;
+    font-size: 1.8rem;
+}
+
+.auth-box label {
+    display: block;
+    text-align: left;
+    color: #eee;
+    font-size: 0.9rem;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.auth-box input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.auth-box input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Register Button */
+.register-btn {
+    width: 100%;
+    padding: 12px;
+    background: #ffd700;
+    border: none;
+    border-radius: 8px;
+    color: #333;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.register-btn:hover {
+    background: #e6c200;
+    transform: scale(1.02);
+}
+
+/* Small text under form */
+.auth-note {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+.auth-note a {
+    color: #ffd700;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.auth-note a:hover {
+    text-decoration: underline;
+}
