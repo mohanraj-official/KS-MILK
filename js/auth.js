@@ -30,10 +30,11 @@ if (registerForm) {
       // ✅ Update Firebase Auth profile (so displayName is available)
       await updateProfile(user, { displayName: fullName });
 
-      // ✅ Store extra info in Firestore (users collection)
-      await setDoc(doc(db, "users", user.uid), {
+      // ✅ Store extra info in Firestore (customers collection)
+      await setDoc(doc(db, "customers", user.uid), {
         fullName,   
         email,
+        role: "customer",   // required by your Firestore rules
         createdAt: new Date()
       });
 

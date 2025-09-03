@@ -5,24 +5,30 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase
 // Elements
 const nameEl = document.getElementById("user-name");
 const emailEl = document.getElementById("user-email");
+const roleEl = document.getElementById("user-role"); // optional if you want to show role
 const logoutBtn = document.getElementById("logout-btn");
 
 // Show user info when logged in
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     try {
-      // ✅ Fetch Firestore user data from users collection
-      const docRef = doc(db, "users", user.uid);
+      // ✅ Fetch Firestore user data from customers collection
+      const docRef = doc(db, "customers", user.uid);
       const docSnap = await getDoc(docRef);
 
-      let fullName = "No name set";
+      let fullName = user.displayName || "No name set";
+      let role = "customer";
+
       if (docSnap.exists()) {
-        fullName = docSnap.data().fullName || "No name set";
+        const data = docSnap.data();
+        fullName = data.fullName || fullName;
+        role = data.role || role;
       }
 
       // Render details
       if (nameEl) nameEl.textContent = `👤 Name: ${fullName}`;
       if (emailEl) emailEl.textContent = `📧 Email: ${user.email}`;
+      if (roleEl) roleEl.textContent = `⭐ Role: ${role}`;
 
       // Show account creation time (avoid duplicates)
       let createdPara = document.getElementById("created-at");
@@ -33,7 +39,7 @@ onAuthStateChanged(auth, async (user) => {
         emailEl.insertAdjacentElement("afterend", createdPara);
       }
     } catch (error) {
-      console.error("Error fetching user:", error);
+      console.error("Error fetching customer:", error);
       if (nameEl) nameEl.textContent = "Error loading user data";
       if (emailEl) emailEl.textContent = "";
     }
@@ -43,10 +49,11 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// Logout
+// ---- LOGOUT ----
 if (logoutBtn) {
   logoutBtn.addEventListener("click", async () => {
     await signOut(auth);
+    alert("You have logged out successfully.");
     window.location.href = "login.html";
   });
 }
