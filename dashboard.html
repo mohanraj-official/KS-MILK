@@ -1,14 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - KS Milk</title>
   <link rel="stylesheet" href="css/dashboard.css">
 </head>
+
 <body>
-  <!-- Top Navbar -->
+
+
+  <!-- Navbar -->
   <nav class="navbar">
+    <div class="logo"><a href="index.html"><span class="green">KS</span> MILK</a></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="orders.html">Orders</a></li>
+      <li><a href="dashboard.html" class="active">Dashboard</a></li>
+      <li><a href="#" id="logout-btn">Logout</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+  </nav>
+
+
+
+
+  <!-- Top Navbar -->
+  <!-- <nav class="navbar">
     <div class="logo">🥛 KS MILK</div>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
@@ -16,7 +35,7 @@
       <li><a href="dashboard.html" class="active">Dashboard</a></li>
       <li><a href="#" id="logout-btn">Logout</a></li>
     </ul>
-  </nav>
+  </nav> -->
 
   <!-- Dashboard Container -->
   <div class="dashboard-container">
@@ -55,4 +74,5 @@
   <script type="module" src="./js/firebase.js"></script>
   <script type="module" src="./js/dashboard.js"></script>
 </body>
+
 </html>
