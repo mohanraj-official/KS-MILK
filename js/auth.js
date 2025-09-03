@@ -5,7 +5,7 @@ import {
   signOut, 
   updateProfile
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { setDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { setDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // ---- REGISTER ----
 const registerForm = document.getElementById("register-form");
@@ -27,7 +27,7 @@ if (registerForm) {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // ✅ Update Firebase Auth profile (so displayName is available)
+      // ✅ Update Firebase Auth profile
       await updateProfile(user, { displayName: fullName });
 
       // ✅ Store extra info in Firestore (customers collection)
@@ -35,7 +35,7 @@ if (registerForm) {
         fullName,   
         email,
         role: "customer",   // required by your Firestore rules
-        createdAt: new Date()
+        createdAt: serverTimestamp()  // ✅ fixed
       });
 
       alert("Registration successful! Please login.");
