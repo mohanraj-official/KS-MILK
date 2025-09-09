@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register - KS Milk</title>
   <link rel="stylesheet" href="css/auth.css">
 </head>
+
 <body>
   <div class="auth-container">
     <div class="auth-box">
@@ -16,8 +18,11 @@
         <input type="email" id="email" placeholder="Email" required>
         <input type="password" id="password" placeholder="Password" required>
         <input type="password" id="confirm-password" placeholder="Confirm Password" required>
-        
+
         <button type="submit" class="register-btn">Register</button>
+        <!-- Inside the form, near Submit button -->
+        <button type="button" onclick="window.location.href='index.html'">Cancel</button>
+
       </form>
 
       <p class="auth-note">
@@ -29,4 +34,5 @@
   <!-- JS -->
   <script type="module" src="./js/auth.js"></script>
 </body>
+
 </html>
