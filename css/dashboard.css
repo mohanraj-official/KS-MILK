@@ -1,39 +1,3 @@
-/* Reset */
-body, h1, h2, h3, p, ul, li {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-}
-
-/* Navbar */
-.navbar {
-  background: #2d3436;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 30px;
-}
-.navbar .logo {
-  font-weight: bold;
-  font-size: 1.2rem;
-}
-.navbar .nav-links {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-}
-.navbar .nav-links a {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  transition: 0.3s;
-}
-.navbar .nav-links a:hover,
-.navbar .nav-links .active {
-  color: #00cec9;
-}
-
 /* Dashboard Layout */
 .dashboard-container {
   display: flex;
