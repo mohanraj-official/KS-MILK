@@ -12,6 +12,27 @@ window.toggleMenu = toggleMenu; // if used via onclick in HTML
 
 
 
+// Attach Order Now buttons to open popup
+const orderButtons = document.querySelectorAll(".order-btn");
+orderButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const productCard = btn.closest(".product-card");
+    const productName = productCard.querySelector("h3").textContent;
+
+    // Set product name in form
+    document.getElementById("product").value = productName;
+
+    // Show popup
+    if (popup) popup.style.display = "flex";
+  });
+});
+
+
+
+
+
+
+
 // ---------------- Place-order form submit ----------------
 import { db, auth } from "./firebase.js";
 import { collection, addDoc, serverTimestamp } 
