@@ -5,19 +5,52 @@ function toggleMenu() {
 }
 window.toggleMenu = toggleMenu; // if used via onclick in HTML
 
-// ---------------- Place-order popup ----------------
-const form = document.getElementById("orderForm");
-const popup = document.getElementById("orderFormContainer");
 
+
+
+
+
+
+
+// ---------------- Place-order form submit ----------------
+import { db, auth } from "./firebase.js";
+import { collection, addDoc, serverTimestamp } 
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 if (form && popup) {
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();              // stop actual submit
-    popup.style.display = "flex";    // show popup
-    const okBtn = popup.querySelector("button");
-    if (okBtn) okBtn.focus();        // accessibility
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault(); // stop reload
+
+    const product = document.getElementById("product").value;
+    const quantity = document.getElementById("quantity").value;
+
+    try {
+      await addDoc(collection(db, "orders"), {
+        product,
+        quantity,
+        user: auth.currentUser ? auth.currentUser.uid : "guest",
+        createdAt: serverTimestamp()
+      });
+
+      alert("✅ Order placed successfully!");
+      closeOrderPopup();
+
+    } catch (err) {
+      console.error("❌ Error saving order:", err);
+      alert("Failed to place order: " + err.message);
+    }
   });
 }
+
+
+
+
+
+
+
+
+
+
 
 function closeOrderPopup() {
   if (!popup) return;
@@ -151,3 +184,21 @@ orderButtons.forEach((btn) => {
     if (popup) popup.style.display = "flex";
   });
 });
+
+
+
+
+// Firestore DB connection
+import { auth, db } from "./firebase.js";
+import { 
+  onAuthStateChanged, 
+  signOut 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { 
+  collection, 
+  addDoc, 
+  serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
