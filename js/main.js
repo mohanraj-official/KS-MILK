@@ -22,7 +22,7 @@ if (form && popup) {
     e.preventDefault();
 
     const product = document.getElementById("product").value;
-    const quantity = document.getElementById("quantity").value;
+    const quantity = Number(document.getElementById("quantity").value);
 
     try {
       await addDoc(collection(db, "orders"), {
