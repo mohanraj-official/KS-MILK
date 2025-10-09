@@ -31,26 +31,30 @@
             <h2>Place Your Milk Order</h2>
             <form id="orderForm">
 
-                <input type="text" placeholder="Full Name" required>
-                <textarea placeholder="Delivery Address" rows="3" required></textarea>
+                <input type="text" id="fullName" name="fullName" placeholder="Full Name" required>
 
-                <select required>
+                <textarea id="address" name="address" placeholder="Delivery Address" rows="3" required></textarea>
+
+                <select id="landmark" name="landmark" required>
                     <option value="" disabled selected>Select Landmark</option>
-                    <option>Bus Stand</option>
-                    <option>Railway Station</option>
-                    <option>Main Market</option>
-                    <option>Temple Road</option>
-                    <option>School Junction</option>
+                    <option value="Bus Stand">Bus Stand</option>
+                    <option value="Railway Station">Railway Station</option>
+                    <option value="Main Market">Main Market</option>
+                    <option value="Temple Road">Temple Road</option>
+                    <option value="School Junction">School Junction</option>
                 </select>
 
-                <input type="number" placeholder="Milk Quantity (Litres)" step="0.5" min="0.5" max="50" required>
-                <input type="tel" placeholder="Phone Number" pattern="[0-9]{10}" required>
+                <input type="number" id="quantity" name="quantity" placeholder="Milk Quantity (Litres)" step="0.5"
+                    min="0.5" max="50" required>
+
+                <input type="tel" id="phone" name="phone" placeholder="Phone Number" pattern="[0-9]{10}" required>
 
                 <div class="order-actions">
                     <button type="reset" class="cancel-btn">Cancel</button>
                     <button type="submit" class="order-btn">Place Order</button>
                 </div>
             </form>
+
         </div>
     </div>
 
