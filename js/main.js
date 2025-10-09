@@ -14,35 +14,7 @@ const ham = document.querySelector(".hamburger");
 // ---------------- Firebase Imports ----------------
 import { auth, db } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-// import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { doc, setDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
-// ---------------- Place-order form submit ----------------
-if (form && popup) {
-  form.addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const product = document.getElementById("product").value;
-    const quantity = Number(document.getElementById("quantity").value);
-
-    try {
-      await addDoc(collection(db, "orders"), {
-        product,
-        quantity,
-        user: auth.currentUser ? auth.currentUser.uid : "guest",
-        createdAt: serverTimestamp()
-      });
-
-      alert("✅ Order placed successfully!");
-      closeOrderPopup();
-
-    } catch (err) {
-      console.error("❌ Error saving order:", err);
-      alert("Failed to place order: " + err.message);
-    }
-  });
-}
 
 // ---------------- Popup handling ----------------
 function closeOrderPopup() {
@@ -135,7 +107,6 @@ onAuthStateChanged(auth, (user) => {
         }
       });
     }
-
   } else {
     if (loginLink) loginLink.style.display = "inline-block";
     if (registerLink) registerLink.style.display = "inline-block";
@@ -148,19 +119,8 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-// Wait for user to be logged in
-auth.onAuthStateChanged((user) => {
+// ---------------- Place Order Form (latest version only) ----------------
+onAuthStateChanged(auth, (user) => {
   if (user) {
     const orderForm = document.getElementById("orderForm");
     if (orderForm) {
@@ -170,14 +130,13 @@ auth.onAuthStateChanged((user) => {
         // Get form values
         const fullName = document.getElementById("fullName").value.trim();
         const address = document.getElementById("address").value.trim();
-        const landmark = document.getElementById("landmark").value;
+        const landmark = document.getElementById("landmark").value.trim();
         const quantity = parseFloat(document.getElementById("quantity").value);
         const phone = document.getElementById("phone").value.trim();
 
-
         // Basic validation
         if (!fullName || !address || !landmark || !quantity || !phone) {
-          alert("Please fill all fields!");
+          alert("⚠️ Please fill all fields!");
           return;
         }
 
@@ -195,13 +154,16 @@ auth.onAuthStateChanged((user) => {
             createdAt: serverTimestamp()
           });
 
-          // Show popup
-          document.getElementById("popup").style.display = "block";
+          // Show popup or success alert
+          const successPopup = document.getElementById("successPopup");
+          if (successPopup) successPopup.style.display = "flex";
+          else alert("✅ Order placed successfully!");
+
           orderForm.reset();
 
         } catch (error) {
           console.error("Error placing order:", error);
-          alert("Failed to place order. Please try again!");
+          alert("❌ Failed to place order. Please try again!");
         }
       });
     }
@@ -213,5 +175,6 @@ auth.onAuthStateChanged((user) => {
 
 // Close popup function
 window.closePopup = function () {
-  document.getElementById("popup").style.display = "none";
+  const successPopup = document.getElementById("successPopup");
+  if (successPopup) successPopup.style.display = "none";
 };
