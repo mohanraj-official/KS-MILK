@@ -24,17 +24,17 @@ function closeOrderPopup() {
 }
 window.closeOrderPopup = closeOrderPopup;
 
-// Attach Order Now buttons
-const orderButtons = document.querySelectorAll(".order-btn");
-orderButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const productCard = btn.closest(".product-card");
-    const productName = productCard.querySelector("h3").textContent;
+// // Attach Order Now buttons
+// const orderButtons = document.querySelectorAll(".order-btn");
+// orderButtons.forEach((btn) => {
+//   btn.addEventListener("click", () => {
+//     const productCard = btn.closest(".product-card");
+//     const productName = productCard.querySelector("h3").textContent;
 
-    document.getElementById("product").value = productName;
-    if (popup) popup.style.display = "flex";
-  });
-});
+//     document.getElementById("product").value = productName;
+//     if (popup) popup.style.display = "flex";
+//   });
+// });
 
 // ---------------- Mobile menu helpers ----------------
 if (nav) {
