@@ -159,56 +159,57 @@ onAuthStateChanged(auth, (user) => {
 
 // Wait for user to be logged in
 auth.onAuthStateChanged((user) => {
-    if (user) {
-        const orderForm = document.getElementById("orderForm");
-        if (orderForm) {
-            orderForm.addEventListener("submit", async (e) => {
-                e.preventDefault();
+  if (user) {
+    const orderForm = document.getElementById("orderForm");
+    if (orderForm) {
+      orderForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-                // Get form values
-                const fullName = orderForm.querySelector('input[placeholder="Full Name"]').value.trim();
-                const address = orderForm.querySelector('textarea[placeholder="Delivery Address"]').value.trim();
-                const landmark = orderForm.querySelector('select').value;
-                const quantity = parseFloat(orderForm.querySelector('input[placeholder="Milk Quantity (Litres)"]').value);
-                const phone = orderForm.querySelector('input[placeholder="Phone Number"]').value.trim();
+        // Get form values
+        const fullName = document.getElementById("fullName").value.trim();
+        const address = document.getElementById("address").value.trim();
+        const landmark = document.getElementById("landmark").value;
+        const quantity = parseFloat(document.getElementById("quantity").value);
+        const phone = document.getElementById("phone").value.trim();
 
-                // Basic validation
-                if (!fullName || !address || !landmark || !quantity || !phone) {
-                    alert("Please fill all fields!");
-                    return;
-                }
 
-                try {
-                    // Create a new order document with auto ID
-                    const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
-                    await setDoc(orderRef, {
-                        product: "Milk",
-                        quantity: quantity,
-                        user: user.uid,
-                        fullName: fullName,
-                        address: address,
-                        landmark: landmark,
-                        phone: phone,
-                        createdAt: serverTimestamp()
-                    });
-
-                    // Show popup
-                    document.getElementById("popup").style.display = "block";
-                    orderForm.reset();
-
-                } catch (error) {
-                    console.error("Error placing order:", error);
-                    alert("Failed to place order. Please try again!");
-                }
-            });
+        // Basic validation
+        if (!fullName || !address || !landmark || !quantity || !phone) {
+          alert("Please fill all fields!");
+          return;
         }
-    } else {
-        // If not logged in, redirect to login
-        window.location.href = "login.html";
+
+        try {
+          // Create a new order document with auto ID
+          const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
+          await setDoc(orderRef, {
+            product: "Milk",
+            quantity: quantity,
+            user: user.uid,
+            fullName: fullName,
+            address: address,
+            landmark: landmark,
+            phone: phone,
+            createdAt: serverTimestamp()
+          });
+
+          // Show popup
+          document.getElementById("popup").style.display = "block";
+          orderForm.reset();
+
+        } catch (error) {
+          console.error("Error placing order:", error);
+          alert("Failed to place order. Please try again!");
+        }
+      });
     }
+  } else {
+    // If not logged in, redirect to login
+    window.location.href = "login.html";
+  }
 });
 
 // Close popup function
-window.closePopup = function() {
-    document.getElementById("popup").style.display = "none";
+window.closePopup = function () {
+  document.getElementById("popup").style.display = "none";
 };
