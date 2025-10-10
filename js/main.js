@@ -128,11 +128,17 @@ onAuthStateChanged(auth, (user) => {
         e.preventDefault();
 
         // Get form values
-        const fullName = document.getElementById("fullName").value.trim();
-        const address = document.getElementById("address").value.trim();
-        const landmark = document.getElementById("landmark").value.trim();
-        const quantity = parseFloat(document.getElementById("quantity").value);
-        const phone = document.getElementById("phone").value.trim();
+        const orderData = {
+          productName: document.getElementById("productName").value,
+          productPrice: document.getElementById("productPrice").value,
+          fullName: document.getElementById("fullName").value,
+          address: document.getElementById("address").value,
+          landmark: document.getElementById("landmark").value,
+          quantity: document.getElementById("quantity").value,
+          phone: document.getElementById("phone").value,
+          timestamp: new Date().toISOString()
+        };
+
 
         // Basic validation
         if (!fullName || !address || !landmark || !quantity || !phone) {
@@ -186,16 +192,16 @@ window.closePopup = function () {
 
 //for products order navigate to place order page
 
-    // 🥛 Capture product details and navigate to place order page
-    document.querySelectorAll(".order-btn").forEach(button => {
-        button.addEventListener("click", () => {
-            const name = button.getAttribute("data-name");
-            const price = button.getAttribute("data-price");
+// 🥛 Capture product details and navigate to place order page
+document.querySelectorAll(".order-btn").forEach(button => {
+  button.addEventListener("click", () => {
+    const name = button.getAttribute("data-name");
+    const price = button.getAttribute("data-price");
 
-            // Store product details temporarily in browser storage
-            localStorage.setItem("selectedProduct", JSON.stringify({ name, price }));
+    // Store product details temporarily in browser storage
+    localStorage.setItem("selectedProduct", JSON.stringify({ name, price }));
 
-            // Redirect to place order page
-            window.location.href = "placeorder.html";
-        });
-    });
+    // Redirect to place order page
+    window.location.href = "place-order.html";
+  });
+});
