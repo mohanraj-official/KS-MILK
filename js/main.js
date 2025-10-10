@@ -178,3 +178,24 @@ window.closePopup = function () {
   const successPopup = document.getElementById("successPopup");
   if (successPopup) successPopup.style.display = "none";
 };
+
+
+
+
+
+
+//for products order navigate to place order page
+
+    // 🥛 Capture product details and navigate to place order page
+    document.querySelectorAll(".order-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            const name = button.getAttribute("data-name");
+            const price = button.getAttribute("data-price");
+
+            // Store product details temporarily in browser storage
+            localStorage.setItem("selectedProduct", JSON.stringify({ name, price }));
+
+            // Redirect to place order page
+            window.location.href = "placeorder.html";
+        });
+    });

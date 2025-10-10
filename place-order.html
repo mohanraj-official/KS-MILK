@@ -30,6 +30,8 @@
         <div class="order-box">
             <h2>Place Your Milk Order</h2>
             <form id="orderForm">
+                <input type="text" id="productName" name="productName" placeholder="Product Name" readonly>
+                <input type="text" id="productPrice" name="productPrice" placeholder="Price" readonly>
 
                 <input type="text" id="fullName" name="fullName" placeholder="Full Name" required>
 
@@ -73,6 +75,15 @@
     <script type="module" src="js/firebase.js"></script>
 
 </body>
+<script>
+    // 🥛 Retrieve product data from localStorage
+    const selectedProduct = JSON.parse(localStorage.getItem("selectedProduct"));
+
+    if (selectedProduct) {
+        document.getElementById("productName").value = selectedProduct.name;
+        document.getElementById("productPrice").value = "₹" + selectedProduct.price;
+    }
+</script>
 
 
 </html>
