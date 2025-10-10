@@ -190,8 +190,6 @@ window.closePopup = function () {
 
 
 
-//for products order navigate to place order page
-
 // 🥛 Capture product details and navigate to place order page
 document.querySelectorAll(".order-btn").forEach(button => {
   button.addEventListener("click", () => {
@@ -201,7 +199,9 @@ document.querySelectorAll(".order-btn").forEach(button => {
     // Store product details temporarily in browser storage
     localStorage.setItem("selectedProduct", JSON.stringify({ name, price }));
 
-    // Redirect to place order page
+    // ✅ Corrected file path
+    const placeOrderPage = "place-order.html"; // single point of truth
     window.location.href = "place-order.html";
+    
   });
 });
