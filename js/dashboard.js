@@ -45,7 +45,7 @@ onAuthStateChanged(auth, async (user) => {
     }
   } else {
     // Not logged in → redirect
-    window.location.href = "login.html";
+    window.location.href = "index.html";
   }
 });
 
@@ -54,6 +54,6 @@ if (logoutBtn) {
   logoutBtn.addEventListener("click", async () => {
     await signOut(auth);
     alert("You have logged out successfully.");
-    window.location.href = "login.html";
+    window.location.href = "index.html";
   });
 }

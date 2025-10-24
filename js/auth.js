@@ -63,7 +63,7 @@ if (loginForm) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       alert("Welcome back, " + (userCredential.user.displayName || userCredential.user.email));
-      window.location.href = "index.html"; //Go to home page
+      window.location.href = "index.html"; //redirect to home page
     } catch (error) {
       if (error.code === "auth/wrong-password") {
         alert("Incorrect password!");
