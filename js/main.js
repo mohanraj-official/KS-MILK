@@ -118,7 +118,6 @@ onAuthStateChanged(auth, (user) => {
         fullName: order.fullName,
         address: order.address,
         landmark: order.landmark,
-        quantity: order.quantity,
         phone: order.phone,
         createdAt: serverTimestamp()
       });
