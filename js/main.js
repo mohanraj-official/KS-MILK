@@ -51,10 +51,7 @@ document.querySelectorAll(".order-btn").forEach((button) => {
     const name = button.getAttribute("data-name");
     const price = button.getAttribute("data-price");
 
-    // Store in localStorage
     localStorage.setItem("selectedProduct", JSON.stringify({ name, price }));
-
-    // Go to place order page
     window.location.href = "place-order.html";
   });
 });
@@ -62,8 +59,25 @@ document.querySelectorAll(".order-btn").forEach((button) => {
 // ---------------- Place Order → Confirm Order ----------------
 const orderForm = document.getElementById("orderForm");
 if (orderForm) {
+
+  // Cancel button → go to home page
+  const cancelBtn = document.querySelector(".cancel-btn");
+  cancelBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      window.location.href = "index.html";
+  });
+
   orderForm.addEventListener("submit", (e) => {
     e.preventDefault();
+
+    const quantityInput = document.getElementById("quantity");
+    const quantity = parseFloat(quantityInput.value);
+    const maxQuantity = parseFloat(quantityInput.max || 50);
+
+    if (quantity > maxQuantity) {
+      alert(`⚠️ You cannot order more than ${maxQuantity} Litres of milk.`);
+      return;
+    }
 
     const orderData = {
       productName: document.getElementById("productName").value,
@@ -71,12 +85,10 @@ if (orderForm) {
       fullName: document.getElementById("fullName").value,
       address: document.getElementById("address").value,
       landmark: document.getElementById("landmark").value,
-      quantity: Number(document.getElementById("quantity").value), // convert to number
+      quantity: quantity,
       phone: document.getElementById("phone").value
     };
-    
 
-    // Save to localStorage and go to confirm page
     localStorage.setItem("pendingOrder", JSON.stringify(orderData));
     window.location.href = "confirm-order.html";
   });
@@ -90,7 +102,6 @@ onAuthStateChanged(auth, (user) => {
   const order = JSON.parse(localStorage.getItem("pendingOrder"));
 
   if (order) {
-    // Fill details in confirm page
     document.querySelector(".order-summary").innerHTML = `
       <p><b>Product:</b> ${order.productName}</p>
       <p><b>Price:</b> ${order.productPrice}</p>
@@ -110,23 +121,20 @@ onAuthStateChanged(auth, (user) => {
     }
 
     try {
-      // Firestore document id: userUID + timestamp
       const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
 
-      // ✅ Store order exactly matching Firestore rules
       await setDoc(orderRef, {
-        user: user.uid,                     // string
-        product: order.productName,         // string
-        price: order.productPrice,          // string
-        quantity: order.quantity,           // number
-        fullName: order.fullName,           // string
-        address: order.address,             // string
-        landmark: order.landmark,           // string
-        phone: order.phone,                 // string
-        createdAt: serverTimestamp()        // timestamp
+        user: user.uid,
+        product: order.productName,
+        price: order.productPrice,
+        quantity: order.quantity,
+        fullName: order.fullName,
+        address: order.address,
+        landmark: order.landmark,
+        phone: order.phone,
+        createdAt: serverTimestamp()
       });
 
-      // Clear local storage + show success popup
       localStorage.removeItem("pendingOrder");
       document.getElementById("successPopup").style.display = "flex";
 
@@ -142,5 +150,3 @@ window.closePopup = function () {
   document.getElementById("successPopup").style.display = "none";
   window.location.href = "order-history.html";
 };
-
-
