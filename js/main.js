@@ -56,21 +56,49 @@ document.querySelectorAll(".order-btn").forEach((button) => {
   });
 });
 
+
 // ---------------- Place Order → Confirm Order ----------------
 const orderForm = document.getElementById("orderForm");
 if (orderForm) {
 
-  // Cancel button → go to home page
+  const submitBtn = orderForm.querySelector(".order-btn"); // Place Order button
   const cancelBtn = document.querySelector(".cancel-btn");
+
+  // Cancel button → go home
   cancelBtn.addEventListener("click", function (e) {
       e.preventDefault();
       window.location.href = "index.html";
   });
 
+  // Function to check all fields
+  const checkFields = () => {
+      const productName = document.getElementById("productName").value.trim();
+      const productPrice = document.getElementById("productPrice").value.trim();
+      const fullName = document.getElementById("fullName").value.trim();
+      const address = document.getElementById("address").value.trim();
+      const landmark = document.getElementById("landmark").value.trim();
+      const quantity = document.getElementById("quantity").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+
+      if (productName && productPrice && fullName && address && landmark && quantity && phone) {
+          submitBtn.disabled = false; // enable
+      } else {
+          submitBtn.disabled = true; // disable
+      }
+  };
+
+  // Add input event listeners to all fields
+  orderForm.querySelectorAll("input, textarea, select").forEach(field => {
+      field.addEventListener("input", checkFields);
+  });
+
+  // Initial check
+  checkFields();
+
+  // Submit event
   orderForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    // Get all form values
     const productName = document.getElementById("productName").value.trim();
     const productPrice = document.getElementById("productPrice").value.trim();
     const fullName = document.getElementById("fullName").value.trim();
@@ -80,79 +108,14 @@ if (orderForm) {
     const quantity = parseFloat(quantityInput.value);
     const phone = document.getElementById("phone").value.trim();
 
-    // Check for empty fields
-    if (!productName || !productPrice || !fullName || !address || !landmark || !quantity || !phone) {
-        alert("⚠️ Please fill all fields before placing the order.");
-        return;
-    }
-
-    // Check quantity max
     const maxQuantity = parseFloat(quantityInput.max || 50);
     if (quantity > maxQuantity) {
       alert(`⚠️ You cannot order more than ${maxQuantity} Litres of milk.`);
       return;
     }
 
-    // Save order to localStorage and go to confirm page
     const orderData = { productName, productPrice, fullName, address, landmark, quantity, phone };
     localStorage.setItem("pendingOrder", JSON.stringify(orderData));
     window.location.href = "confirm-order.html";
   });
 }
-
-// ---------------- Confirm Order (Store in Firestore) ----------------
-onAuthStateChanged(auth, (user) => {
-  const confirmBtn = document.querySelector(".confirm-btn");
-  if (!confirmBtn) return;
-
-  const order = JSON.parse(localStorage.getItem("pendingOrder"));
-
-  if (order) {
-    document.querySelector(".order-summary").innerHTML = `
-      <p><b>Product:</b> ${order.productName}</p>
-      <p><b>Price:</b> ${order.productPrice}</p>
-      <p><b>Name:</b> ${order.fullName}</p>
-      <p><b>Address:</b> ${order.address}</p>
-      <p><b>Landmark:</b> ${order.landmark}</p>
-      <p><b>Quantity:</b> ${order.quantity} L</p>
-      <p><b>Phone:</b> ${order.phone}</p>
-    `;
-  }
-
-  confirmBtn.addEventListener("click", async () => {
-    if (!user) {
-      alert("Please login to confirm your order.");
-      window.location.href = "login.html";
-      return;
-    }
-
-    try {
-      const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
-
-      await setDoc(orderRef, {
-        user: user.uid,
-        product: order.productName,
-        price: order.productPrice,
-        quantity: order.quantity,
-        fullName: order.fullName,
-        address: order.address,
-        landmark: order.landmark,
-        phone: order.phone,
-        createdAt: serverTimestamp()
-      });
-
-      localStorage.removeItem("pendingOrder");
-      document.getElementById("successPopup").style.display = "flex";
-
-    } catch (err) {
-      console.error("Error saving order:", err);
-      alert("❌ Failed to save order. Please check your data and permissions.");
-    }
-  });
-});
-
-// ---------------- Success Popup Close ----------------
-window.closePopup = function () {
-  document.getElementById("successPopup").style.display = "none";
-  window.location.href = "order-history.html";
-};
