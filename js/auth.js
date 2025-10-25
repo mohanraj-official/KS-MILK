@@ -80,8 +80,14 @@ if (loginForm) {
 const logoutBtn = document.getElementById("logout-btn");
 if (logoutBtn) {
   logoutBtn.addEventListener("click", async () => {
-    await signOut(auth);
-    alert("You have logged out successfully.");
-    window.location.href = "index.html";
+    try {
+      await signOut(auth);
+      alert("You have logged out successfully.");
+      window.location.href = "index.html";
+    } catch (error) {
+      console.error("Logout error:", error);
+      alert("Error logging out. Please try again.");
+    }
   });
 }
+
