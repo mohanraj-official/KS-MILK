@@ -59,37 +59,11 @@ document.querySelectorAll(".order-btn").forEach((button) => {
   });
 });
 
-
-
-
-
-
 // ---------------- Place Order → Confirm Order ----------------
 const orderForm = document.getElementById("orderForm");
 if (orderForm) {
-
-  // Cancel button confirmation
-  const cancelBtn = document.querySelector(".cancel-btn");
-  cancelBtn.addEventListener("click", function (e) {
-      e.preventDefault(); // Prevent form reset
-      const confirmed = confirm("Are you sure you want to cancel?");
-      if (confirmed) {
-          window.location.href = "index.html"; // Go home
-      }
-  });
-
   orderForm.addEventListener("submit", (e) => {
     e.preventDefault();
-
-    // Get quantity
-    const quantityInput = document.getElementById("quantity");
-    const quantity = parseFloat(quantityInput.value);
-    const maxQuantity = parseFloat(quantityInput.max || 50);
-
-    if (quantity > maxQuantity) {
-      alert(`⚠️ You cannot order more than ${maxQuantity} Litres of milk.`);
-      return; // Stop submission
-    }
 
     const orderData = {
       productName: document.getElementById("productName").value,
@@ -97,28 +71,16 @@ if (orderForm) {
       fullName: document.getElementById("fullName").value,
       address: document.getElementById("address").value,
       landmark: document.getElementById("landmark").value,
-      quantity: quantity, // number
+      quantity: Number(document.getElementById("quantity").value), // convert to number
       phone: document.getElementById("phone").value
     };
+    
 
-    // Save pending order & go to confirm page
+    // Save to localStorage and go to confirm page
     localStorage.setItem("pendingOrder", JSON.stringify(orderData));
     window.location.href = "confirm-order.html";
   });
 }
-
-
-    
-
-
-
-
-
-
-
-
-
-
 
 // ---------------- Confirm Order (Store in Firestore) ----------------
 onAuthStateChanged(auth, (user) => {
