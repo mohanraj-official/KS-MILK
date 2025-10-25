@@ -75,6 +75,26 @@ if (orderForm) {
       phone: document.getElementById("phone").value
     };
 
+
+
+    // Select the cancel button
+    const cancelBtn = document.querySelector(".cancel-btn");
+
+    cancelBtn.addEventListener("click", function (e) {
+        e.preventDefault(); // Prevent form reset immediately
+        const confirmed = confirm("Are you sure you want to cancel?");
+        if (confirmed) {
+            // Redirect to home page
+            window.location.href = "index.html";
+        }
+    });
+
+
+
+
+
+
+
     // Save to localStorage and go to confirm page
     localStorage.setItem("pendingOrder", JSON.stringify(orderData));
     window.location.href = "confirm-order.html";
@@ -141,3 +161,5 @@ window.closePopup = function () {
   document.getElementById("successPopup").style.display = "none";
   window.location.href = "order-history.html";
 };
+
+
