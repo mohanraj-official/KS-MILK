@@ -114,6 +114,7 @@ onAuthStateChanged(auth, (user) => {
         user: user.uid,
         product: order.productName,
         price: order.productPrice,
+        quantity: Number(order.quantity),
         fullName: order.fullName,
         address: order.address,
         landmark: order.landmark,
@@ -121,6 +122,8 @@ onAuthStateChanged(auth, (user) => {
         phone: order.phone,
         createdAt: serverTimestamp()
       });
+
+
 
       // Clear storage + show success
       localStorage.removeItem("pendingOrder");
