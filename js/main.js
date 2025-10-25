@@ -70,25 +70,31 @@ if (orderForm) {
   orderForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
+    // Get all form values
+    const productName = document.getElementById("productName").value.trim();
+    const productPrice = document.getElementById("productPrice").value.trim();
+    const fullName = document.getElementById("fullName").value.trim();
+    const address = document.getElementById("address").value.trim();
+    const landmark = document.getElementById("landmark").value.trim();
     const quantityInput = document.getElementById("quantity");
     const quantity = parseFloat(quantityInput.value);
-    const maxQuantity = parseFloat(quantityInput.max || 50);
+    const phone = document.getElementById("phone").value.trim();
 
+    // Check for empty fields
+    if (!productName || !productPrice || !fullName || !address || !landmark || !quantity || !phone) {
+        alert("⚠️ Please fill all fields before placing the order.");
+        return;
+    }
+
+    // Check quantity max
+    const maxQuantity = parseFloat(quantityInput.max || 50);
     if (quantity > maxQuantity) {
       alert(`⚠️ You cannot order more than ${maxQuantity} Litres of milk.`);
       return;
     }
 
-    const orderData = {
-      productName: document.getElementById("productName").value,
-      productPrice: document.getElementById("productPrice").value,
-      fullName: document.getElementById("fullName").value,
-      address: document.getElementById("address").value,
-      landmark: document.getElementById("landmark").value,
-      quantity: quantity,
-      phone: document.getElementById("phone").value
-    };
-
+    // Save order to localStorage and go to confirm page
+    const orderData = { productName, productPrice, fullName, address, landmark, quantity, phone };
     localStorage.setItem("pendingOrder", JSON.stringify(orderData));
     window.location.href = "confirm-order.html";
   });
