@@ -101,70 +101,76 @@ document.querySelectorAll(".order-btn").forEach((button) => {
 const orderForm = document.getElementById("orderForm");
 const orderBtn = document.querySelector(".order-btn");
 
-if (orderForm) {
+// Fill product fields from localStorage
+const selectedProduct = JSON.parse(localStorage.getItem("selectedProduct"));
+if (selectedProduct) {
+  document.getElementById("productName").value = selectedProduct.name;
+  document.getElementById("productPrice").value = "₹" + selectedProduct.price;
+}
 
-  // 🥛 Retrieve selected product
-  const selectedProduct = JSON.parse(localStorage.getItem("selectedProduct"));
-  if (selectedProduct) {
-    document.getElementById("productName").value = selectedProduct.name;
-    document.getElementById("productPrice").value = "₹" + selectedProduct.price;
+// Check if all required fields are filled & valid
+function checkForm() {
+  const fullName = document.getElementById("fullName").value.trim();
+  const address = document.getElementById("address").value.trim();
+  const landmark = document.getElementById("landmark").value;
+  const quantity = parseFloat(document.getElementById("quantity").value);
+  const phone = document.getElementById("phone").value.trim();
+
+  // Quantity validation
+  const quantityValid = !isNaN(quantity) && quantity >= 0.5 && quantity <= 50;
+
+  // Phone validation: exactly 10 digits
+  const phoneValid = /^[0-9]{10}$/.test(phone);
+
+  // Enable button only if all fields filled and valid
+  orderBtn.disabled = !(fullName && address && landmark && quantityValid && phoneValid);
+}
+
+// Listen to input changes
+orderForm.addEventListener("input", checkForm);
+
+// Cancel button
+document.querySelector(".cancel-btn").addEventListener("click", (e) => {
+  e.preventDefault();
+  window.location.href = "index.html";
+});
+
+// Form submit
+orderForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const quantity = parseFloat(document.getElementById("quantity").value);
+  const phone = document.getElementById("phone").value.trim();
+
+  // Extra validation before submission
+  if (quantity < 0.5 || quantity > 50) {
+    alert("⚠️ Quantity must be between 0.5 and 50 litres.");
+    return;
   }
 
-  // Cancel button → go to home page
-  const cancelBtn = document.querySelector(".cancel-btn");
-  cancelBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      window.location.href = "index.html";
-  });
-
-  // Function to check if all required fields are filled
-  function checkForm() {
-    const fullName = document.getElementById("fullName").value.trim();
-    const address = document.getElementById("address").value.trim();
-    const landmark = document.getElementById("landmark").value;
-    const quantity = document.getElementById("quantity").value;
-    const phone = document.getElementById("phone").value.trim();
-
-    if (fullName && address && landmark && quantity && phone) {
-        orderBtn.disabled = false;
-    } else {
-        orderBtn.disabled = true;
-    }
+  if (!/^[0-9]{10}$/.test(phone)) {
+    alert("⚠️ Phone number must be 10 digits.");
+    return;
   }
 
-  // Listen to input changes
-  orderForm.addEventListener("input", checkForm);
+  // All good → save order
+  const orderData = {
+    productName: document.getElementById("productName").value,
+    productPrice: document.getElementById("productPrice").value,
+    fullName: document.getElementById("fullName").value,
+    address: document.getElementById("address").value,
+    landmark: document.getElementById("landmark").value,
+    quantity: quantity,
+    phone: phone
+  };
 
-  // Form submit
-  orderForm.addEventListener("submit", (e) => {
-    e.preventDefault();
+  localStorage.setItem("pendingOrder", JSON.stringify(orderData));
+  window.location.href = "confirm-order.html";
+});
 
-    const quantityInput = document.getElementById("quantity");
-    const quantity = parseFloat(quantityInput.value);
-    const maxQuantity = parseFloat(quantityInput.max || 50);
+// Initialize form check
+checkForm();
 
-    if (quantity > maxQuantity) {
-      alert(`⚠️ You cannot order more than ${maxQuantity} Litres of milk.`);
-      return;
-    }
-
-    const orderData = {
-      productName: document.getElementById("productName").value,
-      productPrice: document.getElementById("productPrice").value,
-      fullName: document.getElementById("fullName").value,
-      address: document.getElementById("address").value,
-      landmark: document.getElementById("landmark").value,
-      quantity: quantity,
-      phone: document.getElementById("phone").value
-    };
-
-    // Save order temporarily
-    localStorage.setItem("pendingOrder", JSON.stringify(orderData));
-    window.location.href = "confirm-order.html";
-  });
-
-  // Initialize form check
-  checkForm();
 }
 
 

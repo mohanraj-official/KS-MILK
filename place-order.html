@@ -57,31 +57,12 @@
 
         </div>
     </div>
-
-    <!-- ✅ Popup -->
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <h3>✅ Order Placed Successfully!</h3>
-            <p>Thank you for ordering with <b>KS MILK</b>.</p>
-            <button onclick="closePopup()">OK</button>
-        </div>
-    </div>
-
-
     <!-- Example at bottom of page, before </body> -->
     <script type="module" src="js/main.js"></script>
     <script type="module" src="js/firebase.js"></script>
 
 </body>
-<script>
-    // 🥛 Retrieve product data from localStorage
-    const selectedProduct = JSON.parse(localStorage.getItem("selectedProduct"));
 
-    if (selectedProduct) {
-        document.getElementById("productName").value = selectedProduct.name;
-        document.getElementById("productPrice").value = "₹" + selectedProduct.price;
-    }
-</script>
 
 
 </html>
