@@ -35,7 +35,7 @@ orderForm.addEventListener("submit", async (e) => {
 
     // Show success popup
     popup.style.display = "flex";
-    orderForm.reset();
+
   } catch (error) {
     console.error("Error placing order:", error);
     alert("Error placing order. Please try again.");

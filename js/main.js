@@ -171,7 +171,6 @@ orderForm.addEventListener("submit", (e) => {
 // Initialize form check
 checkForm();
 
-}
 
 
 
