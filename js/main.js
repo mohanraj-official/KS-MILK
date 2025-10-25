@@ -71,7 +71,7 @@ if (orderForm) {
       fullName: document.getElementById("fullName").value,
       address: document.getElementById("address").value,
       landmark: document.getElementById("landmark").value,
-      quantity: document.getElementById("quantity").value,
+      quantity: Number(document.getElementById("quantity").value), // convert to number
       phone: document.getElementById("phone").value
     };
 
@@ -109,27 +109,29 @@ onAuthStateChanged(auth, (user) => {
     }
 
     try {
+      // Firestore document id: userUID + timestamp
       const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
+
+      // ✅ Store order exactly matching Firestore rules
       await setDoc(orderRef, {
-        user: user.uid,
-        product: order.productName,
-        price: order.productPrice,
-        quantity: Number(order.quantity),
-        fullName: order.fullName,
-        address: order.address,
-        landmark: order.landmark,
-        phone: order.phone,
-        createdAt: serverTimestamp()
+        user: user.uid,                     // string
+        product: order.productName,         // string
+        price: order.productPrice,          // string
+        quantity: order.quantity,           // number
+        fullName: order.fullName,           // string
+        address: order.address,             // string
+        landmark: order.landmark,           // string
+        phone: order.phone,                 // string
+        createdAt: serverTimestamp()        // timestamp
       });
 
-
-
-      // Clear storage + show success
+      // Clear local storage + show success popup
       localStorage.removeItem("pendingOrder");
       document.getElementById("successPopup").style.display = "flex";
+
     } catch (err) {
       console.error("Error saving order:", err);
-      alert("❌ Failed to save order. Try again.");
+      alert("❌ Failed to save order. Please check your data and permissions.");
     }
   });
 });
