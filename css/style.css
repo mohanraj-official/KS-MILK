@@ -460,9 +460,10 @@ button {
 }
 
 .orders-table th, .orders-table td {
-  padding: 15px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 10px;
+  border: 1px solid #ddd;
   text-align: center;
+  font-size: 14px;
 }
 
 .orders-table th {
@@ -474,6 +475,14 @@ button {
 .orders-table tr:hover {
   background: #f1f8e9;
 }
+/*------------widt adjustment--------------*/
+
+.orders-table th:nth-child(6),
+.orders-table td:nth-child(6) {
+  font-weight: bold;
+  color: #27ae60;
+}
+
 
 /* Status Styles */
 .status {

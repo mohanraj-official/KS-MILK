@@ -1,207 +1,139 @@
-// ---------------- Toggle mobile menu ----------------
-function toggleMenu() {
-  const nav = document.querySelector(".nav-links");
-  if (nav) nav.classList.toggle("show");
-}
-window.toggleMenu = toggleMenu; // if used via onclick in HTML
-
-// ---------------- DOM elements ----------------
-const form = document.getElementById("orderForm");
-const popup = document.getElementById("orderFormContainer");
-const nav = document.querySelector(".nav-links");
-const ham = document.querySelector(".hamburger");
-
-// ---------------- Firebase Imports ----------------
+// main.js
 import { auth, db } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { doc, setDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// ---------------- Popup handling ----------------
-function closeOrderPopup() {
-  if (!popup) return;
-  popup.style.display = "none";
-  if (form) form.reset();
-}
-window.closeOrderPopup = closeOrderPopup;
+// ---------------- Toggle Menu ----------------
+window.toggleMenu = function () {
+  const nav = document.querySelector(".nav-links");
+  if (nav) nav.classList.toggle("show");
+};
 
-// // Attach Order Now buttons
-// const orderButtons = document.querySelectorAll(".order-btn");
-// orderButtons.forEach((btn) => {
-//   btn.addEventListener("click", () => {
-//     const productCard = btn.closest(".product-card");
-//     const productName = productCard.querySelector("h3").textContent;
-
-//     document.getElementById("product").value = productName;
-//     if (popup) popup.style.display = "flex";
-//   });
-// });
-
-// ---------------- Mobile menu helpers ----------------
-if (nav) {
-  nav.addEventListener("click", (e) => {
-    if (e.target && e.target.tagName === "A") {
-      nav.classList.remove("show");
-    }
-  });
-}
-
-document.addEventListener("click", (e) => {
-  if (!nav || !ham) return;
-  if (!nav.classList.contains("show")) return;
-  if (!nav.contains(e.target) && !ham.contains(e.target)) {
-    nav.classList.remove("show");
-  }
-});
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    if (nav && nav.classList.contains("show")) nav.classList.remove("show");
-    if (popup && popup.style.display === "flex") closeOrderPopup();
-  }
-});
-
-// ---------------- Confirm order popup ----------------
-function showSuccess() {
-  const successPopup = document.getElementById("successPopup");
-  if (successPopup) successPopup.style.display = "flex";
-}
-window.showSuccess = showSuccess;
-
-function closeSuccessPopup() {
-  const successPopup = document.getElementById("successPopup");
-  if (successPopup) successPopup.style.display = "none";
-  window.location.href = "index.html";
-}
-window.closeSuccessPopup = closeSuccessPopup;
-
-// ---------------- Firebase Navbar Auth ----------------
+// ---------------- Navbar Auth Links ----------------
 onAuthStateChanged(auth, (user) => {
   const loginLink = document.getElementById("login-link");
   const registerLink = document.getElementById("register-link");
+  const nav = document.querySelector(".nav-links");
 
   if (user) {
     if (loginLink) loginLink.style.display = "none";
     if (registerLink) registerLink.style.display = "none";
 
-    let dashboardLink = document.getElementById("dashboard-link");
-    if (!dashboardLink && nav) {
+    if (!document.getElementById("dashboard-link") && nav) {
       const li = document.createElement("li");
       li.innerHTML = `<a href="dashboard.html" id="dashboard-link">Dashboard</a>`;
       nav.appendChild(li);
     }
 
-    let logoutLink = document.getElementById("logout-link");
-    if (!logoutLink && nav) {
+    if (!document.getElementById("logout-link") && nav) {
       const li = document.createElement("li");
       li.innerHTML = `<a href="#" id="logout-link">Logout</a>`;
       nav.appendChild(li);
 
       li.querySelector("a").addEventListener("click", async (e) => {
         e.preventDefault();
-        try {
-          await signOut(auth);
-          alert("You have logged out successfully.");
-          window.location.href = "login.html";
-        } catch (err) {
-          alert("Logout failed: " + err.message);
-        }
+        await signOut(auth);
+        alert("Logged out successfully.");
+        window.location.href = "login.html";
       });
     }
   } else {
     if (loginLink) loginLink.style.display = "inline-block";
     if (registerLink) registerLink.style.display = "inline-block";
-
-    const dashboardLink = document.getElementById("dashboard-link");
-    if (dashboardLink) dashboardLink.remove();
-
-    const logoutLink = document.getElementById("logout-link");
-    if (logoutLink) logoutLink.remove();
+    document.getElementById("dashboard-link")?.remove();
+    document.getElementById("logout-link")?.remove();
   }
 });
 
-// ---------------- Place Order Form (latest version only) ----------------
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    const orderForm = document.getElementById("orderForm");
-    if (orderForm) {
-      orderForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        // Get form values
-        const orderData = {
-          productName: document.getElementById("productName").value,
-          productPrice: document.getElementById("productPrice").value,
-          fullName: document.getElementById("fullName").value,
-          address: document.getElementById("address").value,
-          landmark: document.getElementById("landmark").value,
-          quantity: document.getElementById("quantity").value,
-          phone: document.getElementById("phone").value,
-          timestamp: new Date().toISOString()
-        };
-
-
-        // Basic validation
-        if (!fullName || !address || !landmark || !quantity || !phone) {
-          alert("⚠️ Please fill all fields!");
-          return;
-        }
-
-        try {
-          // Create a new order document with auto ID
-          const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
-          await setDoc(orderRef, {
-            product: "Milk",
-            quantity: quantity,
-            user: user.uid,
-            fullName: fullName,
-            address: address,
-            landmark: landmark,
-            phone: phone,
-            createdAt: serverTimestamp()
-          });
-
-          // Show popup or success alert
-          const successPopup = document.getElementById("successPopup");
-          if (successPopup) successPopup.style.display = "flex";
-          else alert("✅ Order placed successfully!");
-
-          orderForm.reset();
-
-        } catch (error) {
-          console.error("Error placing order:", error);
-          alert("❌ Failed to place order. Please try again!");
-        }
-      });
-    }
-  } else {
-    // If not logged in, redirect to login
-    window.location.href = "login.html";
-  }
-});
-
-// Close popup function
-window.closePopup = function () {
-  const successPopup = document.getElementById("successPopup");
-  if (successPopup) successPopup.style.display = "none";
-};
-
-
-
-
-
-
-// 🥛 Capture product details and navigate to place order page
-document.querySelectorAll(".order-btn").forEach(button => {
+// ---------------- Product → Place Order ----------------
+document.querySelectorAll(".order-btn").forEach((button) => {
   button.addEventListener("click", () => {
     const name = button.getAttribute("data-name");
     const price = button.getAttribute("data-price");
 
-    // Store product details temporarily in browser storage
+    // Store in localStorage
     localStorage.setItem("selectedProduct", JSON.stringify({ name, price }));
 
-    // ✅ Corrected file path
-    const placeOrderPage = "place-order.html"; // single point of truth
+    // Go to place order page
     window.location.href = "place-order.html";
-    
   });
 });
+
+// ---------------- Place Order → Confirm Order ----------------
+const orderForm = document.getElementById("orderForm");
+if (orderForm) {
+  orderForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const orderData = {
+      productName: document.getElementById("productName").value,
+      productPrice: document.getElementById("productPrice").value,
+      fullName: document.getElementById("fullName").value,
+      address: document.getElementById("address").value,
+      landmark: document.getElementById("landmark").value,
+      quantity: document.getElementById("quantity").value,
+      phone: document.getElementById("phone").value
+    };
+
+    // Save to localStorage and go to confirm page
+    localStorage.setItem("pendingOrder", JSON.stringify(orderData));
+    window.location.href = "confirm-order.html";
+  });
+}
+
+// ---------------- Confirm Order (Store in Firestore) ----------------
+onAuthStateChanged(auth, (user) => {
+  const confirmBtn = document.querySelector(".confirm-btn");
+  if (!confirmBtn) return;
+
+  const order = JSON.parse(localStorage.getItem("pendingOrder"));
+
+  if (order) {
+    // Fill details in confirm page
+    document.querySelector(".order-summary").innerHTML = `
+      <p><b>Product:</b> ${order.productName}</p>
+      <p><b>Price:</b> ${order.productPrice}</p>
+      <p><b>Name:</b> ${order.fullName}</p>
+      <p><b>Address:</b> ${order.address}</p>
+      <p><b>Landmark:</b> ${order.landmark}</p>
+      <p><b>Quantity:</b> ${order.quantity} L</p>
+      <p><b>Phone:</b> ${order.phone}</p>
+    `;
+  }
+
+  confirmBtn.addEventListener("click", async () => {
+    if (!user) {
+      alert("Please login to confirm your order.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    try {
+      const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
+      await setDoc(orderRef, {
+        user: user.uid,
+        product: order.productName,
+        price: order.productPrice,
+        fullName: order.fullName,
+        address: order.address,
+        landmark: order.landmark,
+        quantity: order.quantity,
+        phone: order.phone,
+        createdAt: serverTimestamp()
+      });
+
+      // Clear storage + show success
+      localStorage.removeItem("pendingOrder");
+      document.getElementById("successPopup").style.display = "flex";
+    } catch (err) {
+      console.error("Error saving order:", err);
+      alert("❌ Failed to save order. Try again.");
+    }
+  });
+});
+
+// ---------------- Success Popup Close ----------------
+window.closePopup = function () {
+  document.getElementById("successPopup").style.display = "none";
+  window.location.href = "order-history.html";
+};
