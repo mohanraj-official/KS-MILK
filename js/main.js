@@ -56,9 +56,59 @@ document.querySelectorAll(".order-btn").forEach((button) => {
   });
 });
 
+// // ---------------- Place Order → Confirm Order ----------------
+// const orderForm = document.getElementById("orderForm");
+// if (orderForm) {
+
+//   // Cancel button → go to home page
+//   const cancelBtn = document.querySelector(".cancel-btn");
+//   cancelBtn.addEventListener("click", function (e) {
+//       e.preventDefault();
+//       window.location.href = "index.html";
+//   });
+
+//   orderForm.addEventListener("submit", (e) => {
+//     e.preventDefault();
+
+//     const quantityInput = document.getElementById("quantity");
+//     const quantity = parseFloat(quantityInput.value);
+//     const maxQuantity = parseFloat(quantityInput.max || 50);
+
+//     if (quantity > maxQuantity) {
+//       alert(`⚠️ You cannot order more than ${maxQuantity} Litres of milk.`);
+//       return;
+//     }
+
+//     const orderData = {
+//       productName: document.getElementById("productName").value,
+//       productPrice: document.getElementById("productPrice").value,
+//       fullName: document.getElementById("fullName").value,
+//       address: document.getElementById("address").value,
+//       landmark: document.getElementById("landmark").value,
+//       quantity: quantity,
+//       phone: document.getElementById("phone").value
+//     };
+
+//     localStorage.setItem("pendingOrder", JSON.stringify(orderData));
+//     window.location.href = "confirm-order.html";
+//   });
+// }
+
+
+
+
 // ---------------- Place Order → Confirm Order ----------------
 const orderForm = document.getElementById("orderForm");
+const orderBtn = document.querySelector(".order-btn");
+
 if (orderForm) {
+
+  // 🥛 Retrieve selected product
+  const selectedProduct = JSON.parse(localStorage.getItem("selectedProduct"));
+  if (selectedProduct) {
+    document.getElementById("productName").value = selectedProduct.name;
+    document.getElementById("productPrice").value = "₹" + selectedProduct.price;
+  }
 
   // Cancel button → go to home page
   const cancelBtn = document.querySelector(".cancel-btn");
@@ -67,6 +117,25 @@ if (orderForm) {
       window.location.href = "index.html";
   });
 
+  // Function to check if all required fields are filled
+  function checkForm() {
+    const fullName = document.getElementById("fullName").value.trim();
+    const address = document.getElementById("address").value.trim();
+    const landmark = document.getElementById("landmark").value;
+    const quantity = document.getElementById("quantity").value;
+    const phone = document.getElementById("phone").value.trim();
+
+    if (fullName && address && landmark && quantity && phone) {
+        orderBtn.disabled = false;
+    } else {
+        orderBtn.disabled = true;
+    }
+  }
+
+  // Listen to input changes
+  orderForm.addEventListener("input", checkForm);
+
+  // Form submit
   orderForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -89,10 +158,29 @@ if (orderForm) {
       phone: document.getElementById("phone").value
     };
 
+    // Save order temporarily
     localStorage.setItem("pendingOrder", JSON.stringify(orderData));
     window.location.href = "confirm-order.html";
   });
+
+  // Initialize form check
+  checkForm();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ---------------- Confirm Order (Store in Firestore) ----------------
 onAuthStateChanged(auth, (user) => {
