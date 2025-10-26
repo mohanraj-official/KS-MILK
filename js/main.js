@@ -335,19 +335,19 @@ window.closePopup = function () {
 
 
 
-// email sending after confirmed the order
+// // email sending after confirmed the order
 
-emailjs.send("service_fn6158y", "template_emzm871", {
-  fullName: order.fullName,
-  productName: order.productName,
-  quantity: order.quantity,
-  productPrice: order.productPrice,
-  address: order.address,
-  landmark: order.landmark,
-  phone: order.phone
-})
-.then(function(response) {
-  console.log('Email sent successfully!', response.status, response.text);
-}, function(error) {
-  console.error('Failed to send email:', error);
-});
+// emailjs.send("service_fn6158y", "template_emzm871", {
+//   fullName: order.fullName,
+//   productName: order.productName,
+//   quantity: order.quantity,
+//   productPrice: order.productPrice,
+//   address: order.address,
+//   landmark: order.landmark,
+//   phone: order.phone
+// })
+// .then(function(response) {
+//   console.log('Email sent successfully!', response.status, response.text);
+// }, function(error) {
+//   console.error('Failed to send email:', error);
+// });
