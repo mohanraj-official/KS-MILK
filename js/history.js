@@ -7,7 +7,7 @@ import {
   where,
   orderBy,
   getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 // Get reference to table body
 const ordersBody = document.getElementById("orders-body");
