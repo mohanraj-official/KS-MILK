@@ -56,224 +56,170 @@ body {
 
 
 
+/* ===========================================
+   Order Form Section (KS Milk Professional)
+=========================================== */
 
-/* ===== Order Box ===== */
 .order-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  background: linear-gradient(180deg, #f9fff9 0%, #ffffff 100%);
+  animation: fadeInUp 0.6s ease forwards;
 }
 
 .order-box {
-    background: #fdfcf7; /* soft cream */
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(46, 125, 50, 0.1);
+  padding: 40px 30px;
+  max-width: 500px;
+  width: 100%;
+  transition: all 0.4s ease;
+}
+
+.order-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(46, 125, 50, 0.15);
 }
 
 .order-box h2 {
-    color: #2e7d32;
-    margin-bottom: 20px;
+  color: #2e7d32;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.08);
 }
 
-/* ===== Form Inputs ===== */
-input, textarea, select {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: 1px solid #c8e6c9; /* light green border */
-    background: #fffef9;
-    font-size: 15px;
-    outline: none;
-    transition: border 0.3s;
+/* ========== Form Elements ========== */
+#orderForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-input:focus, textarea:focus, select:focus {
-    border-color: #2e7d32;
+#orderForm input,
+#orderForm textarea,
+#orderForm select {
+  font-size: 1rem;
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1px solid #c8e6c9;
+  outline: none;
+  transition: all 0.3s ease;
+  background-color: #fdfdfd;
 }
 
-/* ===== Buttons ===== */
+#orderForm input:focus,
+#orderForm textarea:focus,
+#orderForm select:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+}
+
+/* Placeholder */
+#orderForm input::placeholder,
+#orderForm textarea::placeholder {
+  color: #999;
+  opacity: 0.9;
+}
+
+/* Disabled (readonly) fields */
+#orderForm input[readonly] {
+  background-color: #f1f8e9;
+  font-weight: 600;
+  color: #2e7d32;
+  border-color: #a5d6a7;
+}
+
+/* ========== Buttons ========== */
 .order-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    gap: 15px; /* equal spacing */
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 15px;
 }
 
 .cancel-btn,
-.order-btn {
-    flex: 1; /* same width */
-    margin: 0; /* remove old margin */
+.submit-btn {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
 }
 
-
-button {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+.cancel-btn {
+  background: #efefef;
+  color: #333;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
 }
 
-
-
-/* ===== Popup ===== */
-.popup {
-    display: none; /* hidden by default */
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    justify-content: center;
-    align-items: center;
+.cancel-btn:hover {
+  background: #e0e0e0;
+  transform: scale(1.03);
 }
 
-.popup-content {
-    background: #fdfcf7;
-    padding: 25px 40px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+.submit-btn {
+  background: #4caf50;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.25);
 }
 
-.popup-content h3 {
-    color: #2e7d32;
-    margin-bottom: 10px;
+.submit-btn:hover {
+  background: #388e3c;
+  transform: scale(1.05);
 }
 
-.popup-content button {
-    margin-top: 15px;
-    background: #2e7d32;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.popup-content button:hover {
-    background: #1b5e20;
-}
-
-
-
-
-/* Mobile menu: small white dropdown, consistent across pages */
-@media (max-width: 768px) {
-  /* show hamburger icon */
-  .hamburger {
-    display: block;
-  }
-
-  /* small floating dropdown near the top-right */
-  .nav-links {
-    position: fixed;
-    top: 60px;
-    right: 16px;
-    width: 150px;               /* small dropdown width */
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    margin: 0;
-    padding: 6px 0;
-    background: #ffffff;        /* white like other pages */
-    border-radius: 8px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-    transform: translateY(-8px);
+/* Subtle fade-in animation */
+@keyframes fadeInUp {
+  from {
     opacity: 0;
-    pointer-events: none;
-    transition: transform .22s ease, opacity .22s ease;
-    z-index: 1100;              /* above form but not permanently covering it */
+    transform: translateY(25px);
   }
-
-  /* visible state toggled by .show */
-  .nav-links.show {
-    transform: translateY(0);
+  to {
     opacity: 1;
-    pointer-events: auto;
-  }
-
-  .nav-links li {
-    padding: 12px 16px;
-    border-bottom: 1px solid rgba(0,0,0,0.04);
-    margin: 0;
-  }
-
-  .nav-links li:last-child { border-bottom: none; }
-
-  .nav-links a {
-    display: block;
-    color: #000;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 500;
-  }
-
-  /* Make sure the order box stays visually correct */
-  .order-container { padding: 20px; } /* reduce padding on small screens */
-  .order-box { max-width: 420px; margin: 20px auto; position: relative; z-index: 1; }
-
-  /* Keep order button nice on mobile */
-  .order-btn {
-    width: 80%;
-    display: block;
-    margin: 18px auto 8px;
-    font-size: 18px;
+    transform: translateY(0);
   }
 }
 
+/* =============================
+   Responsive Design
+============================= */
+@media (max-width: 768px) {
+  .order-container {
+    padding: 40px 15px;
+  }
 
+  .order-box {
+    padding: 30px 20px;
+  }
 
+  .order-actions {
+    flex-direction: column;
+  }
 
-
-
-/* ===== Match dropdown to other fields (scoped to order-box) ===== */
-.order-box select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-
-  box-sizing: border-box;
-  width: 100%;
-  height: 48px;               /* match input height */
-  padding: 12px 44px 12px 12px; /* room for arrow on the right */
-  margin: 10px 0;
-  border-radius: 8px;
-  border: 1px solid #c8e6c9; /* light green border (existing palette) */
-  background-color: #fffef9;  /* diary cream background */
-  font-size: 15px;
-  outline: none;
-  transition: border 0.2s, box-shadow 0.2s;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path fill='%232e7d32' d='M7 9L0 0h14z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
+  .cancel-btn,
+  .submit-btn {
+    width: 100%;
+  }
 }
 
-/* Focus highlight using diary / green palette */
-.order-box select:focus {
-  border-color: #2e7d32;
-  box-shadow: 0 0 0 6px rgba(46,125,50,0.07); /* subtle green glow */
-}
+@media (max-width: 480px) {
+  .order-box h2 {
+    font-size: 1.5rem;
+  }
 
-/* Make options match the cream background on some browsers */
-.order-box select option {
-  background: #fffef9;
-  color: #000;
-}
-
-/* For small screens make sure arrow spacing still looks good */
-@media (max-width: 420px) {
-  .order-box select {
-    padding-right: 40px;
+  #orderForm input,
+  #orderForm textarea,
+  #orderForm select {
+    font-size: 0.95rem;
+    padding: 10px 12px;
   }
 }
 
