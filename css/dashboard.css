@@ -1,5 +1,5 @@
 /* ==============================
-   KS MILK - Dashboard Styles Only
+   KS MILK - Dashboard Styles (Final Optimized)
    ============================== */
 
 /* Dashboard Container Layout */
@@ -13,29 +13,88 @@
 }
 
 /* =============================
-   Profile Card
+   Profile Card (Modern Futuristic)
    ============================= */
 .profile-card {
-  background: linear-gradient(160deg, #e8f5e9, #ffffff);
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  text-align: center;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.8), rgba(232, 250, 236, 0.8));
+  backdrop-filter: blur(6px);
+  border-radius: 24px;
+  padding: 30px;
+  text-align: left;
+  box-shadow: 0 8px 25px rgba(46, 125, 50, 0.1);
+  border: 1px solid rgba(67, 160, 71, 0.15);
+  transition: all 0.4s ease;
   position: sticky;
   top: 100px;
   animation: fadeInUp 0.6s ease forwards;
 }
 
-.profile-card h2 {
-  color: #2e7d32;
-  font-size: 1.6rem;
-  margin-bottom: 10px;
+.profile-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(46, 125, 50, 0.18);
+  border-color: rgba(67, 160, 71, 0.3);
 }
 
+/* Heading */
+.profile-card h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #2e7d32;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #2e7d32, #66bb6a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glowText 2.5s infinite alternate;
+}
+
+/* Info Items */
 .profile-card p {
-  font-size: 0.95rem;
-  margin: 6px 0;
-  color: #555;
+  font-size: 1rem;
+  color: #2e2e2e;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1.5;
+  transition: transform 0.3s ease;
+}
+
+.profile-card p:hover {
+  transform: translateX(5px);
+  color: #1b5e20;
+}
+
+/* Glow animation */
+@keyframes glowText {
+  from { text-shadow: 0 0 5px rgba(102,187,106,0.4); }
+  to { text-shadow: 0 0 15px rgba(67,160,71,0.7); }
+}
+
+/* Entry animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Profile Card */
+@media (max-width: 768px) {
+  .profile-card {
+    text-align: center;
+    padding: 25px;
+    position: relative;
+    top: 0;
+  }
+
+  .profile-card h2 {
+    justify-content: center;
+  }
+
+  .profile-card p {
+    justify-content: center;
+  }
 }
 
 /* =============================
@@ -118,23 +177,13 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(25px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 /* =============================
-   Responsive
+   Responsive Layout
    ============================= */
 @media (max-width: 992px) {
   .dashboard-container {
     grid-template-columns: 1fr;
     padding: 30px 20px;
-  }
-
-  .profile-card {
-    position: relative;
-    top: 0;
   }
 }
 
