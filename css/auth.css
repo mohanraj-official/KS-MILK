@@ -30,7 +30,7 @@
 
 /* Input fields */
 .auth-box input {
-  width: 100%;
+  width: 90%;
   padding: 12px 15px;
   margin: 10px 0;
   border: 1px solid #dce7de;
@@ -74,7 +74,7 @@
 
 /* Register Button (Yellow) */
 .register-btn {
-  background: linear-gradient(135deg, #136b20, #7e5f17);
+  background: linear-gradient(135deg, #008113, #28c847);
   box-shadow: 0 5px 10px rgba(255, 214, 51, 0.3);
 }
 
@@ -110,7 +110,7 @@
   top: 15px;
   right: 25px;
   font-size: 26px;
-  color: #777;
+  color: #000000;
   cursor: pointer;
   transition: color 0.3s;
 }
