@@ -55,32 +55,3 @@
     font-weight: 500;
   }
 
-
-
-
-
-
-
-
-
-  /* Make sure the order box stays visually correct */
-  .order-container {
-    padding: 20px;
-  }
-
-  /* reduce padding on small screens */
-  .order-box {
-    max-width: 420px;
-    margin: 20px auto;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Keep order button nice on mobile */
-  .order-btn {
-    width: 80%;
-    display: block;
-    margin: 18px auto 8px;
-    font-size: 18px;
-  }
-}
