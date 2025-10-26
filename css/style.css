@@ -498,7 +498,7 @@ button {
 .orders-table th:nth-child(6),
 .orders-table td:nth-child(6) {
   font-weight: bold;
-  color: #2e7d32;
+  color: #000000;
 }
 
 /* Status Styling */
@@ -507,10 +507,7 @@ button {
   text-transform: capitalize;
 }
 
-.orders-table td:last-child::before {
-  content: "● ";
-  color: #43a047;
-}
+
 
 /* ==============================
    Animations
