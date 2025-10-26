@@ -133,11 +133,26 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
 // ---------- Confirm Order ----------
 onAuthStateChanged(auth, (user) => {
   const confirmBtn = document.querySelector(".confirm-btn");
-  if (!confirmBtn) return;
+  const cancelBtn = document.querySelector(".cancel-btn");
 
+  if (!confirmBtn) return; // Safety check
+
+  // Fetch pending order details
   const order = JSON.parse(localStorage.getItem("pendingOrder"));
   if (order) {
     document.querySelector(".order-summary").innerHTML = `
@@ -155,6 +170,7 @@ onAuthStateChanged(auth, (user) => {
     return;
   }
 
+  // ---------- Confirm Button ----------
   confirmBtn.addEventListener("click", async () => {
     if (!user) {
       alert("Please login to confirm your order.");
@@ -173,10 +189,10 @@ onAuthStateChanged(auth, (user) => {
         address: order.address,
         landmark: order.landmark,
         phone: order.phone,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
       });
 
-
+      // Clear local storage and show popup
       localStorage.removeItem("pendingOrder");
       localStorage.removeItem("selectedProduct");
       document.getElementById("successPopup").style.display = "flex";
@@ -185,10 +201,28 @@ onAuthStateChanged(auth, (user) => {
       alert("❌ Failed to save order. Please try again.");
     }
   });
+
+  // ---------- Cancel Button ----------
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", () => {
+      const confirmCancel = confirm("Are you sure you want to cancel this order?");
+      if (confirmCancel) {
+        // Clear any stored order data (optional)
+        localStorage.removeItem("pendingOrder");
+        localStorage.removeItem("selectedProduct");
+        window.location.href = "index.html";
+      }
+    });
+  }
 });
 
 // ---------- Success Popup ----------
 window.closePopup = function () {
-  document.getElementById("successPopup").style.display = "none";
-  window.location.href = "order-history.html"; // or "orders.html"
+  const popup = document.getElementById("successPopup");
+  popup.style.animation = "fadeOut 0.4s ease forwards";
+  setTimeout(() => {
+    popup.style.display = "none";
+    window.location.href = "order-history.html"; // Redirect after close
+  }, 400);
 };
+
