@@ -179,89 +179,102 @@
 
 
 
+/* ===========================================
+   KS MILK — Register Form (Same as Login)
+=========================================== */
 
-/* registration */
-
-/* Registration Page Specific */
-.auth-box h2 {
-    margin-bottom: 20px;
-    color: #fff;
-    font-size: 1.8rem;
+/* Form Layout */
+#register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.auth-box label {
-    display: block;
-    text-align: left;
-    color: #eee;
-    font-size: 0.9rem;
-    margin-top: 12px;
-    margin-bottom: 6px;
-    font-weight: 500;
+/* Inputs */
+#register-form input {
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1px solid #c8e6c9;
+  background: #fdfdfd;
+  font-size: 1rem;
+  color: #333;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
-.auth-box input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: none;
-    border-radius: 8px;
-    outline: none;
-    font-size: 1rem;
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
-}
-
-.auth-box input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
+#register-form input:focus {
+  border-color: #43a047;
+  box-shadow: 0 0 0 4px rgba(67, 160, 71, 0.15);
+  transform: scale(1.01);
 }
 
 /* Register Button */
 .register-btn {
-    width: 100%;
-    padding: 12px;
-    background: #ffd700;
-    border: none;
-    border-radius: 8px;
-    color: #333;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
+  background: linear-gradient(90deg, #4caf50, #66bb6a);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
 }
 
 .register-btn:hover {
-    background: #e6c200;
-    transform: scale(1.02);
+  background: linear-gradient(90deg, #388e3c, #4caf50);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(76, 175, 80, 0.3);
 }
 
-/* Small text under form */
-.auth-note {
-    margin-top: 15px;
-    font-size: 0.9rem;
-    color: #fff;
-}
-
-.auth-note a {
-    color: #ffd700;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.auth-note a:hover {
-    text-decoration: underline;
-}
-
-
+/* Close Button (same as login) */
 .close-btn {
   position: absolute;
-  top: 15px;
-  right: 20px;
+  top: 12px;
+  right: 18px;
   font-size: 24px;
-  color: #fff;
+  color: #2e7d32;
   cursor: pointer;
-  font-weight: bold;
+  transition: all 0.3s ease;
+  line-height: 1;
 }
 
 .close-btn:hover {
-  color: #ff4444;
+  color: #1b5e20;
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* Auth Note (bottom text) */
+.auth-note {
+  margin-top: 20px;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.auth-note a {
+  color: #2e7d32;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.auth-note a:hover {
+  color: #1b5e20;
+  text-decoration: underline;
+}
+
+/* ============================
+   Responsive
+============================ */
+@media (max-width: 768px) {
+  #register-form input {
+    font-size: 0.95rem;
+  }
+
+  .register-btn {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
 }
