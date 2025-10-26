@@ -1,11 +1,11 @@
 // main.js — unified fixed version
 import { auth, db } from "./firebase.js";
-import { 
-  onAuthStateChanged, 
-  signOut 
+import {
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import { 
-  doc, setDoc, serverTimestamp 
+import {
+  doc, setDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 // ---------- Toggle Menu ----------
@@ -166,9 +166,16 @@ onAuthStateChanged(auth, (user) => {
       const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
       await setDoc(orderRef, {
         user: user.uid,
-        ...order,
+        product: order.productName,
+        price: order.productPrice,
+        quantity: order.quantity,
+        fullName: order.fullName,
+        address: order.address,
+        landmark: order.landmark,
+        phone: order.phone,
         createdAt: serverTimestamp()
       });
+
 
       localStorage.removeItem("pendingOrder");
       localStorage.removeItem("selectedProduct");
