@@ -145,30 +145,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+// ---------- Confirm Order ----------
+onAuthStateChanged(auth, (user) => {
+  const confirmBtn = document.querySelector(".confirm-btn");
+  const cancelBtn = document.querySelector(".cancel-btn");
 
+  if (!confirmBtn) return; // Safety check
 
+  // Fetch pending order details
+  const order = JSON.parse(localStorage.getItem("pendingOrder"));
+  if (order) {
+    document.querySelector(".order-summary").innerHTML = `
+      <p><b>Product:</b> ${order.productName}</p>
+      <p><b>Price:</b> ₹${order.productPrice}</p>
+      <p><b>Name:</b> ${order.fullName}</p>
+      <p><b>Address:</b> ${order.address}</p>
+      <p><b>Landmark:</b> ${order.landmark}</p>
+      <p><b>Quantity:</b> ${order.quantity} L</p>
+      <p><b>Phone:</b> ${order.phone}</p>
+    `;
+  } else {
+    alert("No order details found. Please place an order first.");
+    window.location.href = "products.html";
+    return;
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ---------- Confirm Button ----------
+  // ---------- Confirm Button ----------
   confirmBtn.addEventListener("click", async () => {
     if (!user) {
       alert("Please login to confirm your order.");
@@ -200,104 +202,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-
-
-
-
-
-
-
-
-
-// // ---------- Confirm Order ----------
-// onAuthStateChanged(auth, (user) => {
-//   const confirmBtn = document.querySelector(".confirm-btn");
-//   const cancelBtn = document.querySelector(".cancel-btn");
-
-//   if (!confirmBtn) return; // Safety check
-
-//   // Fetch pending order details
-//   const order = JSON.parse(localStorage.getItem("pendingOrder"));
-//   if (order) {
-//     document.querySelector(".order-summary").innerHTML = `
-//       <p><b>Product:</b> ${order.productName}</p>
-//       <p><b>Price:</b> ₹${order.productPrice}</p>
-//       <p><b>Name:</b> ${order.fullName}</p>
-//       <p><b>Address:</b> ${order.address}</p>
-//       <p><b>Landmark:</b> ${order.landmark}</p>
-//       <p><b>Quantity:</b> ${order.quantity} L</p>
-//       <p><b>Phone:</b> ${order.phone}</p>
-//     `;
-//   } else {
-//     alert("No order details found. Please place an order first.");
-//     window.location.href = "products.html";
-//     return;
-//   }
-
-
-
-
-
-
-
-
-  
-
-
-// // ---------- Confirm Button ----------
-// confirmBtn.addEventListener("click", async () => {
-//   if (!user) {
-//     alert("Please login to confirm your order.");
-//     window.location.href = "login.html";
-//     return;
-//   }
-
-//   try {
-//     const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
-//     await setDoc(orderRef, {
-//       user: user.uid,
-//       product: order.productName,
-//       price: order.productPrice,
-//       quantity: order.quantity,
-//       fullName: order.fullName,
-//       address: order.address,
-//       landmark: order.landmark,
-//       phone: order.phone,
-//       createdAt: serverTimestamp(),
-//     });
-
-//     // Clear local storage
-//     localStorage.removeItem("pendingOrder");
-//     localStorage.removeItem("selectedProduct");
-
-//     // ---------- WhatsApp message ----------
-//     const message = `🎉 Your KS Milk order has been confirmed!\n\n🛒 Order Details:\nProduct: ${order.productName}\nQuantity: ${order.quantity} L\nPrice: ₹${order.productPrice}\n\n📍 Delivery Address:\n${order.fullName}\n${order.address}, ${order.landmark}\n\n📞 Contact: ${order.phone}\n\nThank you for choosing KS Milk! Your order will be delivered soon. 🥛`;
-//     const phoneNumber = "+91" + order.phone; // include country code
-//     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, "_blank");
-
-//     // Show success popup
-//     document.getElementById("successPopup").style.display = "flex";
-
-//   } catch (err) {
-//     console.error("Error saving order:", err);
-//     alert("❌ Failed to save order. Please try again.");
-//   }
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // ---------- Cancel Button ----------
   if (cancelBtn) {
     cancelBtn.addEventListener("click", () => {
@@ -322,32 +226,3 @@ window.closePopup = function () {
   }, 400);
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // email sending after confirmed the order
-
-// emailjs.send("service_fn6158y", "template_emzm871", {
-//   fullName: order.fullName,
-//   productName: order.productName,
-//   quantity: order.quantity,
-//   productPrice: order.productPrice,
-//   address: order.address,
-//   landmark: order.landmark,
-//   phone: order.phone
-// })
-// .then(function(response) {
-//   console.log('Email sent successfully!', response.status, response.text);
-// }, function(error) {
-//   console.error('Failed to send email:', error);
-// });
