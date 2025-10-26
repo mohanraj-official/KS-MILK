@@ -74,12 +74,12 @@
 
 /* Register Button (Yellow) */
 .register-btn {
-  background: linear-gradient(135deg, #ffd633, #ffb400);
+  background: linear-gradient(135deg, #136b20, #7e5f17);
   box-shadow: 0 5px 10px rgba(255, 214, 51, 0.3);
 }
 
 .register-btn:hover {
-  background: linear-gradient(135deg, #ffc107, #e6a300);
+  background: linear-gradient(135deg, #30aa6b, #528a31);
   transform: translateY(-2px);
 }
 
@@ -122,7 +122,7 @@
 /* Responsive */
 @media (max-width: 480px) {
   .auth-box {
-    width: 90%;
+    width: 75%;
     padding: 40px 20px;
   }
 
