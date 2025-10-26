@@ -83,71 +83,220 @@ body {
 
 
 
-/* Products Section */
+
+
+
+
+
+
+
+
+
+/* ==============================
+   KS MILK - Products Section (Final)
+   ============================== */
+
 .products {
-  padding: 40px 20px;
+  padding: 70px 30px;
   text-align: center;
+  background: linear-gradient(180deg, #ffffff 0%, #f5fff6 100%);
+  animation: fadeIn 0.8s ease forwards;
 }
 
 .products h2 {
-  font-size: 2rem;
-  margin-bottom: 30px;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #2e7d32;
+  margin-bottom: 40px;
+  background: linear-gradient(90deg, #2e7d32, #66bb6a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+  animation: glowText 3s infinite alternate;
 }
 
+/* ==============================
+   Product Grid
+   ============================== */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  gap: 25px;
+  justify-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeInUp 0.7s ease forwards;
 }
 
+/* ==============================
+   Product Cards
+   ============================== */
 .product-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
-
+  position: relative;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(46, 125, 50, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
   display: flex;
-  flex-direction: column;       /* stack elements vertically */
-  justify-content: space-between; /* push button to bottom */
-  height: 100%;                  /* equal height for all cards */
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  cursor: pointer;
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 10px 28px rgba(46, 125, 50, 0.15);
 }
 
+/* Product Image */
 .product-card img {
   width: 100%;
-  height: 200px;       /* fixed height for images */
-  object-fit: cover;   /* crop/scale neatly */
-  border-radius: 10px 10px 0 0;
+  height: 210px;
+  object-fit: cover;
+  border-radius: 18px 18px 0 0;
+  transition: transform 0.5s ease;
 }
 
+.product-card:hover img {
+  transform: scale(1.07);
+}
+
+/* Product Info */
 .product-card h3 {
-  margin: 15px 0 5px;
+  margin: 18px 0 6px;
+  color: #2e7d32;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .product-card p {
-  margin-bottom: 15px;
+  color: #4a6d46;
   font-size: 1rem;
-  color: #555;
+  margin-bottom: 18px;
+  opacity: 0.9;
 }
 
+/* ==============================
+   Order Button
+   ============================== */
 .order-btn {
-  background: #66d36e;
+  background: linear-gradient(90deg, #66bb6a, #43a047);
   border: none;
   color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
-  font-weight: bold;
-  align-self: center;   /* keeps button centered */
+  transition: all 0.3s ease;
+  margin-bottom: 18px;
+  align-self: center;
+  box-shadow: 0 4px 10px rgba(67, 160, 71, 0.3);
 }
 
 .order-btn:hover {
-  background: #4cb758;
+  background: linear-gradient(90deg, #43a047, #2e7d32);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(46, 125, 50, 0.3);
 }
+
+/* ==============================
+   Animations
+   ============================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowText {
+  from { text-shadow: 0 0 5px rgba(102,187,106,0.3); }
+  to { text-shadow: 0 0 15px rgba(67,160,71,0.6); }
+}
+
+/* ==============================
+   Responsive Design
+   ============================== */
+
+/* Tablets */
+@media (max-width: 992px) {
+  .products {
+    padding: 60px 20px;
+  }
+
+  .products h2 {
+    font-size: 1.8rem;
+  }
+
+  .product-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .product-card p {
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobiles */
+@media (max-width: 600px) {
+  .products {
+    padding: 50px 15px;
+  }
+
+  .products h2 {
+    font-size: 1.6rem;
+  }
+
+  .product-grid {
+    gap: 18px;
+  }
+
+  .product-card {
+    border-radius: 15px;
+  }
+
+  .product-card img {
+    height: 180px;
+  }
+
+  .order-btn {
+    font-size: 0.9rem;
+    padding: 10px 22px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
