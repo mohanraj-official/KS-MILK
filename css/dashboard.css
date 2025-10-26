@@ -1,0 +1,153 @@
+/* ==============================
+   KS MILK - Dashboard Styles Only
+   ============================== */
+
+/* Dashboard Container Layout */
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 30px;
+  padding: 40px 60px;
+  background-color: #f7fdf8;
+  min-height: calc(100vh - 80px); /* leaves room for navbar */
+}
+
+/* =============================
+   Profile Card
+   ============================= */
+.profile-card {
+  background: linear-gradient(160deg, #e8f5e9, #ffffff);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  position: sticky;
+  top: 100px;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.profile-card h2 {
+  color: #2e7d32;
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+
+.profile-card p {
+  font-size: 0.95rem;
+  margin: 6px 0;
+  color: #555;
+}
+
+/* =============================
+   Dashboard Content
+   ============================= */
+.dashboard-content {
+  background: #fff;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.7s ease forwards;
+}
+
+.dashboard-content h2 {
+  color: #2e7d32;
+  margin-bottom: 10px;
+}
+
+.dashboard-content p {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+/* =============================
+   Dashboard Cards
+   ============================= */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: linear-gradient(180deg, #f1fff1, #ffffff);
+  border-radius: 18px;
+  padding: 20px;
+  text-decoration: none;
+  color: #333;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card h3 {
+  color: #2e7d32;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* Hover Animation */
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(67,160,71,0.15);
+  background: linear-gradient(180deg, #e8f5e9, #ffffff);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: rgba(67,160,71,0.08);
+  transition: all 0.4s ease;
+}
+.card:hover::before {
+  left: 0;
+}
+
+/* =============================
+   Animations
+   ============================= */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================
+   Responsive
+   ============================= */
+@media (max-width: 992px) {
+  .dashboard-container {
+    grid-template-columns: 1fr;
+    padding: 30px 20px;
+  }
+
+  .profile-card {
+    position: relative;
+    top: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-content {
+    padding: 20px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    text-align: center;
+  }
+}
