@@ -1,280 +1,132 @@
-/* ===========================================
-   KS MILK — Auth (Login) Page Styles
-=========================================== */
-
-/* Page Container */
+/* Common container (use same as login) */
 .auth-container {
-  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(145deg, #f1fff1, #ffffff, #e8f5e9);
-  animation: fadeInBg 2s ease-in-out;
-  padding: 20px;
+  height: 100vh;
+  background: radial-gradient(circle at top left, #e8fdeb, #f8fff9);
+  font-family: 'Poppins', sans-serif;
 }
 
-/* Auth Box (Glassy Futuristic Card) */
+/* Box styling */
 .auth-box {
-  position: relative;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(76, 175, 80, 0.2);
-  border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(46, 125, 50, 0.15);
-  padding: 40px 35px;
-  width: 100%;
-  max-width: 400px;
+  background: #ffffff;
+  padding: 50px 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   text-align: center;
-  transition: all 0.4s ease;
-  animation: fadeInUp 0.8s ease forwards;
-}
-
-.auth-box:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 40px rgba(46, 125, 50, 0.2);
-}
-
-/* Heading */
-.auth-box h2 {
-  color: #2e7d32;
-  font-size: 1.9rem;
-  font-weight: 700;
-  margin-bottom: 25px;
-  background: linear-gradient(90deg, #2e7d32, #66bb6a);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  animation: glowText 2.5s infinite alternate;
-}
-
-/* ============================
-   Form Styles
-============================ */
-#login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-#login-form input {
-  padding: 12px 15px;
-  border-radius: 12px;
-  border: 1px solid #c8e6c9;
-  background: #fdfdfd;
-  font-size: 1rem;
-  color: #333;
-  outline: none;
+  width: 100%;
+  max-width: 380px;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
-#login-form input:focus {
-  border-color: #43a047;
-  box-shadow: 0 0 0 4px rgba(67, 160, 71, 0.15);
-  transform: scale(1.01);
+/* Title */
+.auth-box h2 {
+  color: #2f9b41;
+  font-weight: 600;
+  margin-bottom: 25px;
+  text-shadow: 0 0 8px rgba(47, 155, 65, 0.3);
+}
+
+/* Input fields */
+.auth-box input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 1px solid #dce7de;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #f0f7ff;
+  outline: none;
+  transition: 0.3s ease;
+}
+
+.auth-box input:focus {
+  border-color: #66d36e;
+  box-shadow: 0 0 6px rgba(102, 211, 110, 0.5);
 }
 
 /* Buttons */
-.auth-btn {
-  background: linear-gradient(90deg, #4caf50, #66bb6a);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
+.auth-btn,
+.register-btn {
+  width: 100%;
   padding: 12px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 10px;
   font-size: 1rem;
   font-weight: 600;
+  color: white;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
+}
+
+/* Login Button (Green) */
+.auth-btn {
+  background: linear-gradient(135deg, #4ecf60, #2fa748);
+  box-shadow: 0 5px 10px rgba(78, 207, 96, 0.3);
 }
 
 .auth-btn:hover {
-  background: linear-gradient(90deg, #388e3c, #4caf50);
+  background: linear-gradient(135deg, #3bb351, #228e3f);
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(76, 175, 80, 0.3);
 }
 
-/* Close Button (Top Right Corner) */
-.close-btn {
-  position: absolute;
-  top: 12px;
-  right: 18px;
-  font-size: 24px;
-  color: #2e7d32;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  line-height: 1;
-}
-
-.close-btn:hover {
-  color: #1b5e20;
-  transform: rotate(90deg) scale(1.1);
-}
-
-/* Auth Link (Bottom Text) */
-.auth-link {
-  margin-top: 20px;
-  font-size: 0.95rem;
-  color: #555;
-}
-
-.auth-link a {
-  color: #2e7d32;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.auth-link a:hover {
-  color: #1b5e20;
-  text-decoration: underline;
-}
-
-/* ============================
-   Animations
-============================ */
-@keyframes fadeInBg {
-  from { opacity: 0; background-position: center top; }
-  to { opacity: 1; background-position: center; }
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(25px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes glowText {
-  from { text-shadow: 0 0 6px rgba(102, 187, 106, 0.4); }
-  to { text-shadow: 0 0 18px rgba(67, 160, 71, 0.7); }
-}
-
-/* ============================
-   Responsive
-============================ */
-@media (max-width: 768px) {
-  .auth-box {
-    padding: 30px 25px;
-    max-width: 90%;
-  }
-
-  .auth-box h2 {
-    font-size: 1.6rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .auth-box {
-    padding: 25px 20px;
-  }
-
-  .auth-btn {
-    font-size: 0.95rem;
-    padding: 10px;
-  }
-
-  #login-form input {
-    font-size: 0.9rem;
-  }
-}
-
-
-
-/* ===========================================
-   KS MILK — Register Form (Same as Login)
-=========================================== */
-
-/* Form Layout */
-#register-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* Inputs */
-#register-form input {
-  padding: 12px 15px;
-  border-radius: 12px;
-  border: 1px solid #c8e6c9;
-  background: #fdfdfd;
-  font-size: 1rem;
-  color: #333;
-  outline: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-}
-
-#register-form input:focus {
-  border-color: #43a047;
-  box-shadow: 0 0 0 4px rgba(67, 160, 71, 0.15);
-  transform: scale(1.01);
-}
-
-/* Register Button */
+/* Register Button (Yellow) */
 .register-btn {
-  background: linear-gradient(90deg, #4caf50, #66bb6a);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  padding: 12px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
+  background: linear-gradient(135deg, #ffd633, #ffb400);
+  box-shadow: 0 5px 10px rgba(255, 214, 51, 0.3);
 }
 
 .register-btn:hover {
-  background: linear-gradient(90deg, #388e3c, #4caf50);
+  background: linear-gradient(135deg, #ffc107, #e6a300);
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(76, 175, 80, 0.3);
 }
 
-/* Close Button (same as login) */
-.close-btn {
-  position: absolute;
-  top: 12px;
-  right: 18px;
-  font-size: 24px;
-  color: #2e7d32;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  line-height: 1;
-}
-
-.close-btn:hover {
-  color: #1b5e20;
-  transform: rotate(90deg) scale(1.1);
-}
-
-/* Auth Note (bottom text) */
+/* Link section */
+.auth-link,
 .auth-note {
   margin-top: 20px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #555;
 }
 
+.auth-link a,
 .auth-note a {
-  color: #2e7d32;
+  color: #2f9b41;
   font-weight: 600;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: 0.2s;
 }
 
+.auth-link a:hover,
 .auth-note a:hover {
-  color: #1b5e20;
-  text-decoration: underline;
+  color: #228e3f;
 }
 
-/* ============================
-   Responsive
-============================ */
-@media (max-width: 768px) {
-  #register-form input {
-    font-size: 0.95rem;
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 26px;
+  color: #777;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: #2f9b41;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .auth-box {
+    width: 90%;
+    padding: 40px 20px;
   }
 
-  .register-btn {
-    font-size: 0.95rem;
-    padding: 10px;
+  .auth-box h2 {
+    font-size: 1.5rem;
   }
 }
