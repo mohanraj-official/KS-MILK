@@ -170,37 +170,69 @@ onAuthStateChanged(auth, (user) => {
     return;
   }
 
-  // ---------- Confirm Button ----------
-  confirmBtn.addEventListener("click", async () => {
-    if (!user) {
-      alert("Please login to confirm your order.");
-      window.location.href = "login.html";
-      return;
-    }
 
-    try {
-      const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
-      await setDoc(orderRef, {
-        user: user.uid,
-        product: order.productName,
-        price: order.productPrice,
-        quantity: order.quantity,
-        fullName: order.fullName,
-        address: order.address,
-        landmark: order.landmark,
-        phone: order.phone,
-        createdAt: serverTimestamp(),
-      });
 
-      // Clear local storage and show popup
-      localStorage.removeItem("pendingOrder");
-      localStorage.removeItem("selectedProduct");
-      document.getElementById("successPopup").style.display = "flex";
-    } catch (err) {
-      console.error("Error saving order:", err);
-      alert("❌ Failed to save order. Please try again.");
-    }
-  });
+
+
+
+
+
+  
+
+
+// ---------- Confirm Button ----------
+confirmBtn.addEventListener("click", async () => {
+  if (!user) {
+    alert("Please login to confirm your order.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  try {
+    const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
+    await setDoc(orderRef, {
+      user: user.uid,
+      product: order.productName,
+      price: order.productPrice,
+      quantity: order.quantity,
+      fullName: order.fullName,
+      address: order.address,
+      landmark: order.landmark,
+      phone: order.phone,
+      createdAt: serverTimestamp(),
+    });
+
+    // Clear local storage
+    localStorage.removeItem("pendingOrder");
+    localStorage.removeItem("selectedProduct");
+
+    // ---------- WhatsApp message ----------
+    const message = `🎉 Your KS Milk order has been confirmed!\n\n🛒 Order Details:\nProduct: ${order.productName}\nQuantity: ${order.quantity} L\nPrice: ₹${order.productPrice}\n\n📍 Delivery Address:\n${order.fullName}\n${order.address}, ${order.landmark}\n\n📞 Contact: ${order.phone}\n\nThank you for choosing KS Milk! Your order will be delivered soon. 🥛`;
+    const phoneNumber = "+91" + order.phone; // include country code
+    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, "_blank");
+
+    // Show success popup
+    document.getElementById("successPopup").style.display = "flex";
+
+  } catch (err) {
+    console.error("Error saving order:", err);
+    alert("❌ Failed to save order. Please try again.");
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // ---------- Cancel Button ----------
   if (cancelBtn) {
