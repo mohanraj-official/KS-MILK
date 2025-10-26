@@ -1,11 +1,12 @@
+// auth.js — fixed version
 import { auth, db } from "./firebase.js";
 import { 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
   signOut, 
-  updateProfile
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { setDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  updateProfile 
+} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { setDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 // ---- REGISTER ----
 const registerForm = document.getElementById("register-form");
@@ -34,8 +35,8 @@ if (registerForm) {
       await setDoc(doc(db, "customers", user.uid), {
         fullName,   
         email,
-        role: "customer",   // required by your Firestore rules
-        createdAt: serverTimestamp()  // ✅ fixed
+        role: "customer",
+        createdAt: serverTimestamp()
       });
 
       alert("Registration successful! Please login.");
@@ -63,7 +64,7 @@ if (loginForm) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       alert("Welcome back, " + (userCredential.user.displayName || userCredential.user.email));
-      window.location.href = "index.html"; //redirect to home page
+      window.location.href = "index.html"; // redirect to home page
     } catch (error) {
       if (error.code === "auth/wrong-password") {
         alert("Incorrect password!");
@@ -90,4 +91,3 @@ if (logoutBtn) {
     }
   });
 }
-
