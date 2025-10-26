@@ -90,101 +90,201 @@ body {
 
 
 
+
+
+
+
+
 /* ================================
-   Products Section (Professional + Responsive)
+   Products Section (Enhanced + Responsive + Interactive)
 ================================ */
 .products {
-  padding: 60px 20px;
+  padding: 70px 20px;
   text-align: center;
   background: linear-gradient(180deg, #f9fff9 0%, #ffffff 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle floating background animation */
+.products::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(76, 175, 80, 0.05), transparent 60%);
+  animation: floatBg 8s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+@keyframes floatBg {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(5%, 5%) scale(1.1); }
 }
 
 .products h2 {
-  font-size: 2rem;
+  font-size: 2.3rem;
   font-weight: 700;
   color: #2e7d32;
-  margin-bottom: 30px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  margin-bottom: 40px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 2;
+  animation: fadeSlideDown 0.8s ease both;
 }
 
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Product Grid Layout */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 25px;
+  gap: 30px;
   justify-content: center;
   align-items: stretch;
   max-width: 1200px;
   margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
 
-/* Card styling */
+/* Card Styling */
 .product-card {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(46, 125, 50, 0.08);
+  box-shadow: 0 10px 25px rgba(46, 125, 50, 0.08);
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   text-align: center;
-  padding-bottom: 20px;
+  padding-bottom: 25px;
   height: 100%;
-  animation: fadeInUp 0.6s ease forwards;
+  position: relative;
+  transform: translateY(0);
+  animation: fadeInUp 0.8s ease forwards;
+  backdrop-filter: blur(8px);
+}
+
+/* Add gradient border glow on hover */
+.product-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 2px;
+  background: linear-gradient(120deg, rgba(76, 175, 80, 0.4), rgba(46, 125, 50, 0.1));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  transition: opacity 0.4s ease;
+  opacity: 0;
+}
+
+.product-card:hover::before {
+  opacity: 1;
 }
 
 .product-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 10px 25px rgba(46, 125, 50, 0.15);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(46, 125, 50, 0.15);
 }
 
 /* Image */
 .product-card img {
   width: 100%;
-  height: 200px;
+  height: 210px;
   object-fit: cover;
   border-bottom: 1px solid #e0e0e0;
+  transition: transform 0.5s ease, filter 0.5s ease;
 }
 
-/* Product name & price */
+.product-card:hover img {
+  transform: scale(1.08);
+  filter: brightness(1.05);
+}
+
+/* Product Details */
 .product-card h3 {
-  font-size: 1.2rem;
-  margin: 15px 0 5px;
+  font-size: 1.25rem;
+  margin: 18px 0 8px;
   color: #1b5e20;
+  transition: color 0.3s ease;
+}
+
+.product-card:hover h3 {
+  color: #388e3c;
 }
 
 .product-card p {
   font-size: 1rem;
   color: #555;
   margin-bottom: 20px;
+  line-height: 1.5;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
 }
 
-/* Order button */
+.product-card:hover p {
+  opacity: 1;
+}
+
+/* Order Button */
 .order-btn {
-  background: #4caf50;
+  background: linear-gradient(90deg, #4caf50, #43a047);
   border: none;
   color: white;
   padding: 12px 25px;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
   font-size: 1rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.25);
-  width: 150px;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
+  width: 160px;
   align-self: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.order-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+
+.order-btn:hover::after {
+  left: 130%;
 }
 
 .order-btn:hover {
-  background: #388e3c;
-  transform: scale(1.05);
+  background: linear-gradient(90deg, #43a047, #2e7d32);
+  transform: scale(1.08);
+  box-shadow: 0 6px 18px rgba(46, 125, 50, 0.3);
 }
 
 /* Fade-in animation */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(25px);
   }
   to {
     opacity: 1;
@@ -197,23 +297,23 @@ body {
 ============================= */
 @media (max-width: 768px) {
   .products {
-    padding: 40px 15px;
+    padding: 50px 15px;
   }
 
   .product-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 25px;
   }
 
   .product-card {
-    max-width: 400px;
+    max-width: 420px;
     margin: 0 auto;
     width: 100%;
   }
 
   .order-btn {
     width: 100%;
-    max-width: 200px;
+    max-width: 220px;
   }
 }
 
@@ -230,7 +330,6 @@ body {
     font-size: 0.95rem;
   }
 }
-
 
 
 
