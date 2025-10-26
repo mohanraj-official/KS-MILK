@@ -140,37 +140,139 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+
+
+
+
+
 // ---------- Confirm Button ----------
-  confirmBtn.addEventListener("click", async () => {
-    if (!user) {
-      alert("Please login to confirm your order.");
-      window.location.href = "login.html";
-      return;
-    }
+confirmBtn.addEventListener("click", async () => {
+  if (!user) {
+    alert("Please login to confirm your order.");
+    window.location.href = "login.html";
+    return;
+  }
 
-    try {
-      const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
-      await setDoc(orderRef, {
-        user: user.uid,
-        product: order.productName,
-        price: order.productPrice,
-        quantity: order.quantity,
-        fullName: order.fullName,
-        address: order.address,
-        landmark: order.landmark,
-        phone: order.phone,
-        createdAt: serverTimestamp(),
-      });
+  try {
+    // ---------- Save order in Firestore ----------
+    const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
+    await setDoc(orderRef, {
+      user: user.uid,
+      product: order.productName,
+      price: order.productPrice,
+      quantity: order.quantity,
+      fullName: order.fullName,
+      address: order.address,
+      landmark: order.landmark,
+      phone: order.phone,
+      createdAt: serverTimestamp(),
+    });
 
-      // Clear local storage and show popup
-      localStorage.removeItem("pendingOrder");
-      localStorage.removeItem("selectedProduct");
-      document.getElementById("successPopup").style.display = "flex";
-    } catch (err) {
-      console.error("Error saving order:", err);
-      alert("❌ Failed to save order. Please try again.");
-    }
-  });
+    // ---------- Clear local storage ----------
+    localStorage.removeItem("pendingOrder");
+    localStorage.removeItem("selectedProduct");
+
+    // ---------- Send Email via EmailJS ----------
+    emailjs.send("service_fn6158y", "template_emzm871", {
+      fullName: order.fullName,
+      productName: order.productName,
+      quantity: order.quantity,
+      productPrice: order.productPrice,
+      address: order.address,
+      landmark: order.landmark,
+      phone: order.phone
+    })
+    .then(function(response) {
+       console.log('Email sent successfully!', response.status, response.text);
+    }, function(error) {
+       console.error('Failed to send email:', error);
+    });
+
+    // ---------- Show success popup ----------
+    document.getElementById("successPopup").style.display = "flex";
+
+  } catch (err) {
+    console.error("Error saving order:", err);
+    alert("❌ Failed to confirm order. Please try again.");
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // ---------- Confirm Button ----------
+//   confirmBtn.addEventListener("click", async () => {
+//     if (!user) {
+//       alert("Please login to confirm your order.");
+//       window.location.href = "login.html";
+//       return;
+//     }
+
+//     try {
+//       const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
+//       await setDoc(orderRef, {
+//         user: user.uid,
+//         product: order.productName,
+//         price: order.productPrice,
+//         quantity: order.quantity,
+//         fullName: order.fullName,
+//         address: order.address,
+//         landmark: order.landmark,
+//         phone: order.phone,
+//         createdAt: serverTimestamp(),
+//       });
+
+//       // Clear local storage and show popup
+//       localStorage.removeItem("pendingOrder");
+//       localStorage.removeItem("selectedProduct");
+//       document.getElementById("successPopup").style.display = "flex";
+//     } catch (err) {
+//       console.error("Error saving order:", err);
+//       alert("❌ Failed to save order. Please try again.");
+//     }
+//   });
 
 
 
