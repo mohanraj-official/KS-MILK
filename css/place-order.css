@@ -70,6 +70,7 @@ body {
 }
 
 .order-box {
+  position: relative;
   background: #ffffff;
   border-radius: 24px;
   box-shadow: 0 8px 24px rgba(46, 125, 50, 0.1);
@@ -161,14 +162,20 @@ body {
 }
 
 .cancel-btn:hover {
+  position: fixed;
   background: #e0e0e0;
   transform: scale(1.03);
+  position: relative;
+  top : 15%;
+  right: 15%;
+
 }
 
 .submit-btn {
   background: #4caf50;
   color: #fff;
   box-shadow: 0 4px 10px rgba(76, 175, 80, 0.25);
+  
 }
 
 .submit-btn:hover {
