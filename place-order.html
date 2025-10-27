@@ -27,6 +27,7 @@
     <div class="order-container">
         <div class="order-box">
             <h2>Place Your Milk Order</h2>
+            <button type="reset" class="cancel-btn">Cancel</button>
             <form id="orderForm">
                 <input type="text" id="productName" name="productName" placeholder="Product Name" readonly>
                 <input type="text" id="productPrice" name="productPrice" placeholder="Price" readonly>
@@ -50,7 +51,6 @@
                 <input type="tel" id="phone" name="phone" placeholder="Phone Number" pattern="[0-9]{10}" required>
 
                 <div class="order-actions">
-                    <button type="reset" class="cancel-btn">Cancel</button>
                     <button type="submit" class="submit-btn">Place Order</button>
                 </div>
             </form>
