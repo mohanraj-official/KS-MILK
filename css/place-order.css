@@ -143,7 +143,7 @@ body {
   margin-top: 15px;
 }
 
-.cancel-btn,
+.can-btn,
 .submit-btn {
   flex: 1;
   padding: 12px 0;
@@ -155,13 +155,13 @@ body {
   border: none;
 }
 
-.cancel-btn {
+.can-btn {
   background: #efefef;
   color: #333;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
 }
 
-.cancel-btn:hover {
+.can-btn:hover {
   position: fixed;
   background: #e0e0e0;
   transform: scale(1.03);
@@ -211,7 +211,7 @@ body {
     flex-direction: column;
   }
 
-  .cancel-btn,
+  .can-btn,
   .submit-btn {
     width: 100%;
   }
