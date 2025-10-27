@@ -27,7 +27,6 @@
     <div class="order-container">
         <div class="order-box">
             <h2>Place Your Milk Order</h2>
-            <button type="reset" class="can-btn">&times;</button>
             <form id="orderForm">
                 <input type="text" id="productName" name="productName" placeholder="Product Name" readonly>
                 <input type="text" id="productPrice" name="productPrice" placeholder="Price" readonly>
@@ -52,6 +51,7 @@
 
                 <div class="order-actions">
                     <button type="submit" class="submit-btn">Place Order</button>
+                    <span class="close-btn" onclick="window.location.href='index.html'">&times;</span>
                 </div>
             </form>
 
