@@ -1,4 +1,4 @@
-// auth.js — fixed version
+// auth.js — refined and safe version
 import { auth, db } from "./firebase.js";
 import { 
   createUserWithEmailAndPassword, 
@@ -8,39 +8,42 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 import { setDoc, getDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
-// ---- REGISTER ----
+// -------------------- REGISTER --------------------
 const registerForm = document.getElementById("register-form");
 if (registerForm) {
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const fullName = document.getElementById("fullname").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
     const confirmPassword = document.getElementById("confirm-password").value.trim();
 
-    // Validation
+    // Validate passwords
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
 
     try {
+      // 1️⃣ Create Firebase Auth user
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // ✅ Update Firebase Auth profile
+      // 2️⃣ Update profile
       await updateProfile(user, { displayName: fullName });
 
-      // ✅ Store extra info in Firestore (customers collection)
+      // 3️⃣ Save user info in Firestore
       await setDoc(doc(db, "customers", user.uid), {
-        fullName,   
+        fullName,
         email,
-        role: "customer",
+        role: "customer", // default role
         createdAt: serverTimestamp()
       });
 
       alert("Registration successful! Please login.");
-      window.location.href = "login.html"; // redirect to login
+      window.location.href = "login.html";
+
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         alert("Email already registered. Please login.");
@@ -53,23 +56,7 @@ if (registerForm) {
   });
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ---- LOGIN ----
-
+// -------------------- LOGIN --------------------
 const loginForm = document.getElementById("login-form");
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
@@ -85,10 +72,7 @@ if (loginForm) {
 
       // 2️⃣ Fetch user role from Firestore
       const userDoc = await getDoc(doc(db, "customers", user.uid));
-      let role = "customer"; // default
-      if (userDoc.exists()) {
-        role = userDoc.data().role || "customer";
-      }
+      const role = userDoc.exists() ? userDoc.data().role || "customer" : "customer";
 
       alert("Welcome back, " + (user.displayName || user.email));
 
@@ -96,7 +80,7 @@ if (loginForm) {
       if (role === "admin") {
         window.location.href = "admin-dashboard.html";
       } else {
-        window.location.href = "index.html"; // customer dashboard/home page
+        window.location.href = "index.html";
       }
 
     } catch (error) {
@@ -112,23 +96,7 @@ if (loginForm) {
   });
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ---- LOGOUT ----
+// -------------------- LOGOUT --------------------
 const logoutBtn = document.getElementById("logout-btn");
 if (logoutBtn) {
   logoutBtn.addEventListener("click", async () => {
