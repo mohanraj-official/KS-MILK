@@ -67,33 +67,40 @@ if (registerForm) {
 
 
 
-import { getDoc, doc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 // ---- LOGIN ----
+
 const loginForm = document.getElementById("login-form");
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const email = document.getElementById("login-email").value.trim();
     const password = document.getElementById("login-password").value.trim();
 
     try {
+      // 1️⃣ Sign in with Firebase Auth
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Fetch user role from Firestore
+      // 2️⃣ Fetch user role from Firestore
       const userDoc = await getDoc(doc(db, "customers", user.uid));
-      const role = userDoc.exists() ? userDoc.data().role : "customer";
+      let role = "customer"; // default
+      if (userDoc.exists()) {
+        role = userDoc.data().role || "customer";
+      }
 
       alert("Welcome back, " + (user.displayName || user.email));
 
-      // Redirect based on role
+      // 3️⃣ Redirect based on role
       if (role === "admin") {
         window.location.href = "admin-dashboard.html";
       } else {
-        window.location.href = "index.html";
+        window.location.href = "index.html"; // customer dashboard/home page
       }
+
     } catch (error) {
+      // Handle errors
       if (error.code === "auth/wrong-password") {
         alert("Incorrect password!");
       } else if (error.code === "auth/user-not-found") {
@@ -104,10 +111,6 @@ if (loginForm) {
     }
   });
 }
-
-
-
-
 
 
 
@@ -139,4 +142,3 @@ if (logoutBtn) {
     }
   });
 }
-
