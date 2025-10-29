@@ -53,6 +53,22 @@ if (registerForm) {
   });
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import { getDoc, doc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+
 // ---- LOGIN ----
 const loginForm = document.getElementById("login-form");
 if (loginForm) {
@@ -63,8 +79,20 @@ if (loginForm) {
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      alert("Welcome back, " + (userCredential.user.displayName || userCredential.user.email));
-      window.location.href = "index.html"; // redirect to home page
+      const user = userCredential.user;
+
+      // Fetch user role from Firestore
+      const userDoc = await getDoc(doc(db, "customers", user.uid));
+      const role = userDoc.exists() ? userDoc.data().role : "customer";
+
+      alert("Welcome back, " + (user.displayName || user.email));
+
+      // Redirect based on role
+      if (role === "admin") {
+        window.location.href = "admin-dashboard.html";
+      } else {
+        window.location.href = "index.html";
+      }
     } catch (error) {
       if (error.code === "auth/wrong-password") {
         alert("Incorrect password!");
@@ -76,6 +104,26 @@ if (loginForm) {
     }
   });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ---- LOGOUT ----
 const logoutBtn = document.getElementById("logout-btn");
@@ -89,5 +137,125 @@ if (logoutBtn) {
       console.error("Logout error:", error);
       alert("Error logging out. Please try again.");
     }
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// Admin autherization script
+
+import { auth, db } from "./firebase.js";
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+
+const logoutLink = document.getElementById("logout-link");
+
+// Handle logout
+logoutLink.addEventListener("click", async () => {
+  await signOut(auth);
+  alert("You have logged out.");
+  window.location.href = "login.html";
+});
+
+// Check admin access
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    alert("Please login as admin.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  // Check role
+  const userDoc = await getDoc(doc(db, "customers", user.uid));
+  if (!userDoc.exists() || userDoc.data().role !== "admin") {
+    alert("Access denied. Admins only.");
+    window.location.href = "index.html";
+    return;
+  }
+
+  document.getElementById("admin-name").textContent = userDoc.data().fullName;
+  document.getElementById("admin-email").textContent = userDoc.data().email;
+
+  loadCustomers();
+  loadOrders();
+});
+
+// Load customers list
+async function loadCustomers() {
+  const table = document.getElementById("customerTable");
+  table.innerHTML = "";
+  const snapshot = await getDocs(collection(db, "customers"));
+
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const row = `
+      <tr>
+        <td>${data.fullName}</td>
+        <td>${data.email}</td>
+        <td>${data.role}</td>
+        <td><button class="delete-btn" data-id="${docSnap.id}">🗑️ Delete</button></td>
+      </tr>`;
+    table.insertAdjacentHTML("beforeend", row);
+  });
+
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.id;
+      if (confirm("Delete this customer?")) {
+        await deleteDoc(doc(db, "customers", id));
+        alert("Customer deleted.");
+        loadCustomers();
+      }
+    });
+  });
+}
+
+// Load orders list
+async function loadOrders() {
+  const table = document.getElementById("orderTable");
+  table.innerHTML = "";
+  const snapshot = await getDocs(collection(db, "orders"));
+
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const row = `
+      <tr>
+        <td>${data.fullName}</td>
+        <td>${data.product}</td>
+        <td>${data.quantity} L</td>
+        <td>${data.address}</td>
+        <td>${data.createdAt?.toDate?.().toLocaleString?.() || "N/A"}</td>
+        <td><button class="delete-order-btn" data-id="${docSnap.id}">🗑️ Delete</button></td>
+      </tr>`;
+    table.insertAdjacentHTML("beforeend", row);
+  });
+
+  document.querySelectorAll(".delete-order-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.id;
+      if (confirm("Delete this order?")) {
+        await deleteDoc(doc(db, "orders", id));
+        alert("Order deleted.");
+        loadOrders();
+      }
+    });
   });
 }
