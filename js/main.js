@@ -1,12 +1,7 @@
-// main.js — unified fixed version
+// main.js — final refined version
 import { auth, db } from "./firebase.js";
-import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import {
-  doc, setDoc, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { doc, setDoc, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 // ---------- Toggle Menu ----------
 window.toggleMenu = function () {
@@ -15,23 +10,33 @@ window.toggleMenu = function () {
 };
 
 // ---------- Navbar Auth Links ----------
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   const loginLink = document.getElementById("login-link");
   const registerLink = document.getElementById("register-link");
   const nav = document.querySelector(".nav-links");
 
-  if (user) {
-    if (loginLink) loginLink.style.display = "none";
-    if (registerLink) registerLink.style.display = "none";
+  if (!user) {
+    // Not logged in → show login/register, remove dashboard/logout
+    if (loginLink) loginLink.style.display = "inline-block";
+    if (registerLink) registerLink.style.display = "inline-block";
+    document.getElementById("dashboard-link")?.remove();
+    document.getElementById("logout-link")?.remove();
+    return;
+  }
 
-    // Add dashboard link if not already present
-    if (!document.getElementById("dashboard-link") && nav) {
-      const li = document.createElement("li");
-      li.innerHTML = `<a href="dashboard.html" id="dashboard-link">Dashboard</a>`;
-      nav.appendChild(li);
-    }
+  // Logged in → hide login/register
+  if (loginLink) loginLink.style.display = "none";
+  if (registerLink) registerLink.style.display = "none";
 
-    // Add logout link if not already present
+  // Fetch user role from Firestore
+  const userDoc = await getDoc(doc(db, "customers", user.uid));
+  const role = userDoc.exists() ? userDoc.data().role || "customer" : "customer";
+
+  // Remove any existing dashboard link
+  document.getElementById("dashboard-link")?.remove();
+
+  if (role === "admin") {
+    // ---------- ADMIN NAVBAR ----------
     if (!document.getElementById("logout-link") && nav) {
       const li = document.createElement("li");
       li.innerHTML = `<a href="#" id="logout-link">Logout</a>`;
@@ -44,11 +49,31 @@ onAuthStateChanged(auth, (user) => {
         window.location.href = "login.html";
       });
     }
+
+    // Redirect to admin-dashboard if not already there
+    if (!window.location.href.includes("admin-dashboard.html")) {
+      window.location.href = "admin-dashboard.html";
+    }
   } else {
-    if (loginLink) loginLink.style.display = "inline-block";
-    if (registerLink) registerLink.style.display = "inline-block";
-    document.getElementById("dashboard-link")?.remove();
-    document.getElementById("logout-link")?.remove();
+    // ---------- CUSTOMER NAVBAR ----------
+    if (!document.getElementById("dashboard-link") && nav) {
+      const li = document.createElement("li");
+      li.innerHTML = `<a href="dashboard.html" id="dashboard-link">Dashboard</a>`;
+      nav.appendChild(li);
+    }
+
+    if (!document.getElementById("logout-link") && nav) {
+      const li = document.createElement("li");
+      li.innerHTML = `<a href="#" id="logout-link">Logout</a>`;
+      nav.appendChild(li);
+
+      li.querySelector("a").addEventListener("click", async (e) => {
+        e.preventDefault();
+        await signOut(auth);
+        alert("Logged out successfully.");
+        window.location.href = "login.html";
+      });
+    }
   }
 });
 
@@ -67,19 +92,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const orderForm = document.getElementById("orderForm");
   if (!orderForm) return;
 
-  // 1️⃣ Load product from localStorage
   const selectedProduct = JSON.parse(localStorage.getItem("selectedProduct"));
   if (selectedProduct) {
     document.getElementById("productName").value = selectedProduct.name;
     document.getElementById("productPrice").value = selectedProduct.price;
   } else {
-    // No product found → redirect back
     alert("Please select a product first.");
     window.location.href = "products.html";
     return;
   }
 
-  // 2️⃣ Cancel button
   const cancelBtn = document.querySelector(".cancel-btn");
   if (cancelBtn) {
     cancelBtn.addEventListener("click", (e) => {
@@ -88,7 +110,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 3️⃣ Validation helper
   function validateOrder() {
     const fullName = document.getElementById("fullName").value.trim();
     const address = document.getElementById("address").value.trim();
@@ -100,12 +121,10 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("⚠️ Please fill all the fields.");
       return false;
     }
-
     if (quantity <= 0 || quantity > 50) {
       alert("⚠️ Quantity must be between 0.5 and 50 litres.");
       return false;
     }
-
     if (!/^\d{10}$/.test(phone)) {
       alert("⚠️ Please enter a valid 10-digit phone number.");
       return false;
@@ -113,7 +132,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
-  // 4️⃣ Submit handler
   orderForm.addEventListener("submit", (e) => {
     e.preventDefault();
     if (!validateOrder()) return;
@@ -133,26 +151,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
 // ---------- Confirm Order ----------
 onAuthStateChanged(auth, (user) => {
   const confirmBtn = document.querySelector(".confirm-btn");
   const cancelBtn = document.querySelector(".cancel-btn");
 
-  if (!confirmBtn) return; // Safety check
+  if (!confirmBtn) return;
 
-  // Fetch pending order details
   const order = JSON.parse(localStorage.getItem("pendingOrder"));
   if (order) {
     document.querySelector(".order-summary").innerHTML = `
@@ -170,7 +175,6 @@ onAuthStateChanged(auth, (user) => {
     return;
   }
 
-  // ---------- Confirm Button ----------
   confirmBtn.addEventListener("click", async () => {
     if (!user) {
       alert("Please login to confirm your order.");
@@ -192,22 +196,20 @@ onAuthStateChanged(auth, (user) => {
         createdAt: serverTimestamp(),
       });
 
-      // Clear local storage and show popup
       localStorage.removeItem("pendingOrder");
       localStorage.removeItem("selectedProduct");
       document.getElementById("successPopup").style.display = "flex";
+
     } catch (err) {
       console.error("Error saving order:", err);
       alert("❌ Failed to save order. Please try again.");
     }
   });
 
-  // ---------- Cancel Button ----------
   if (cancelBtn) {
     cancelBtn.addEventListener("click", () => {
       const confirmCancel = confirm("Are you sure you want to cancel this order?");
       if (confirmCancel) {
-        // Clear any stored order data (optional)
         localStorage.removeItem("pendingOrder");
         localStorage.removeItem("selectedProduct");
         window.location.href = "index.html";
@@ -222,7 +224,6 @@ window.closePopup = function () {
   popup.style.animation = "fadeOut 0.4s ease forwards";
   setTimeout(() => {
     popup.style.display = "none";
-    window.location.href = "order-history.html"; // Redirect after close
+    window.location.href = "order-history.html";
   }, 400);
 };
-
