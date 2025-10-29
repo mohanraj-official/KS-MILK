@@ -6,7 +6,7 @@ import {
   signOut, 
   updateProfile 
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import { setDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+import { setDoc, getDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 // ---- REGISTER ----
 const registerForm = document.getElementById("register-form");
