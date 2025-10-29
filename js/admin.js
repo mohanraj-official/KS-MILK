@@ -43,13 +43,32 @@ onAuthStateChanged(auth, async (user) => {
   loadOrders();
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 async function loadCustomers() {
   const table = document.getElementById("customerTable");
   table.innerHTML = "";
+
   const snapshot = await getDocs(collection(db, "customers"));
 
   snapshot.forEach((docSnap) => {
     const data = docSnap.data();
+
+    // ❌ Skip admin users
+    if (data.role === "admin") return;
+
     const row = `
       <tr>
         <td>${data.fullName}</td>
@@ -60,17 +79,35 @@ async function loadCustomers() {
     table.insertAdjacentHTML("beforeend", row);
   });
 
+  // Add delete button functionality
   document.querySelectorAll(".delete-btn").forEach(btn => {
     btn.addEventListener("click", async () => {
       const id = btn.dataset.id;
       if (confirm("Delete this customer?")) {
         await deleteDoc(doc(db, "customers", id));
         alert("Customer deleted.");
-        loadCustomers();
+        loadCustomers(); // refresh table
       }
     });
   });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 async function loadOrders() {
   const table = document.getElementById("orderTable");
