@@ -43,34 +43,61 @@ onAuthStateChanged(auth, async (user) => {
   loadOrders();
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
 async function loadCustomers() {
   const table = document.getElementById("customerTable");
   table.innerHTML = "";
+
   const snapshot = await getDocs(collection(db, "customers"));
 
   snapshot.forEach((docSnap) => {
     const data = docSnap.data();
+
+    // Disable delete button if the user is an admin
+    const deleteBtn = data.role === "admin"
+      ? `<button disabled style="opacity:0.5;cursor:not-allowed;">🗑️ Delete</button>`
+      : `<button class="delete-btn" data-id="${docSnap.id}">🗑️ Delete</button>`;
+
     const row = `
       <tr>
         <td>${data.fullName}</td>
         <td>${data.email}</td>
         <td>${data.role}</td>
-        <td><button class="delete-btn" data-id="${docSnap.id}">🗑️ Delete</button></td>
+        <td>${deleteBtn}</td>
       </tr>`;
     table.insertAdjacentHTML("beforeend", row);
   });
 
+  // Add click events only to enabled delete buttons
   document.querySelectorAll(".delete-btn").forEach(btn => {
     btn.addEventListener("click", async () => {
       const id = btn.dataset.id;
       if (confirm("Delete this customer?")) {
         await deleteDoc(doc(db, "customers", id));
         alert("Customer deleted.");
-        loadCustomers();
+        loadCustomers(); // Refresh table
       }
     });
   });
 }
+
+
+
+
+
+
+
 
 async function loadOrders() {
   const table = document.getElementById("orderTable");
