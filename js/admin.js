@@ -209,3 +209,33 @@ function setupNotifications() {
     });
   });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -----------------------------
+// 🧭 Tab Switching Logic
+// -----------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  const tabs = document.querySelectorAll(".tab-btn");
+  const sections = document.querySelectorAll(".tab-content");
+
+  tabs.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      // Hide all sections
+      sections.forEach((sec) => (sec.style.display = "none"));
+      // Show selected one
+      const target = document.getElementById(`${btn.dataset.tab}-section`);
+      if (target) target.style.display = "block";
+    });
+  });
+});
