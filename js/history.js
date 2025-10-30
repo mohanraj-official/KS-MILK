@@ -1,4 +1,3 @@
-// history.js
 import { auth, db } from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 import {
@@ -6,10 +5,10 @@ import {
   query,
   where,
   orderBy,
-  getDocs
+  getDocs,
+  limit
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
-// Get reference to table body
 const ordersBody = document.getElementById("orders-body");
 
 // Helper: extract numeric value from price string like "₹40 / Liter"
@@ -31,7 +30,6 @@ onAuthStateChanged(auth, async (user) => {
   try {
     console.log("Fetching orders for user:", user.uid);
 
-    // Firestore query: only orders of this user, sorted by createdAt descending
     const q = query(
       collection(db, "orders"),
       where("user", "==", user.uid),
@@ -48,18 +46,34 @@ onAuthStateChanged(auth, async (user) => {
     let html = "";
     let index = 1;
 
-    querySnapshot.forEach((docSnap) => {
+    // ✅ Use for...of to handle async delivery checks per order
+    for (const docSnap of querySnapshot.docs) {
       const data = docSnap.data();
+      const orderId = docSnap.id;
 
-      // Log data for debugging
-      console.log(docSnap.id, data);
-
-      // Format date
       const date = data.createdAt?.toDate().toLocaleString() || "Unknown date";
-
-      // Compute numeric price & total
       const numericPrice = extractNumericPrice(data.price);
       const total = numericPrice * (data.quantity || 0);
+
+      // Default status
+      let statusLabel = "Confirmed";
+
+      // ✅ Fetch delivery record for this order
+      try {
+        const dq = query(
+          collection(db, "deliveries"),
+          where("orderId", "==", orderId),
+          orderBy("processedAt", "desc"),
+          limit(1)
+        );
+        const dqSnap = await getDocs(dq);
+        if (!dqSnap.empty) {
+          const ddoc = dqSnap.docs[0].data();
+          statusLabel = ddoc.status === "delivered" ? "Delivered" : "Cancelled";
+        }
+      } catch (e) {
+        console.error("Delivery fetch error for", orderId, e);
+      }
 
       html += `
         <tr>
@@ -72,10 +86,10 @@ onAuthStateChanged(auth, async (user) => {
           <td>${data.address || "-"}</td>
           <td>${data.landmark || "-"}</td>
           <td>${data.phone || "-"}</td>
-          <td><span class="status delivered">Confirmed</span></td>
+          <td><span class="status ${statusLabel.toLowerCase()}">${statusLabel}</span></td>
         </tr>
       `;
-    });
+    }
 
     ordersBody.innerHTML = html;
 

@@ -183,6 +183,53 @@ function setupNotifications() {
 
 
 
+// Call this after admin auth check and after loadOrders() or setupNotifications()
+function setupDeliveriesSummary() {
+  const deliveriesSection = document.getElementById("deliveriesSummary"); // create a container in admin HTML
+  if (!deliveriesSection) return;
+
+  const q = query(collection(db, "deliveries"), orderBy("processedAt", "desc"));
+  onSnapshot(q, (snap) => {
+    deliveriesSection.innerHTML = ""; // clear
+    if (snap.empty) {
+      deliveriesSection.innerHTML = `<p>No deliveries yet.</p>`;
+      return;
+    }
+    // show latest 8
+    let count = 0;
+    snap.forEach((docSnap) => {
+      if (count++ > 7) return;
+      const d = docSnap.data();
+      const row = document.createElement("div");
+      row.className = "delivery-row";
+      row.innerHTML = `
+        <div style="display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #f0f0f0">
+          <div>${d.fullName} • ${d.product} (${d.quantity} L)</div>
+          <div style="text-align:right">
+            <div style="font-size:12px;color:#666">${(d.processedAt && d.processedAt.toDate) ? d.processedAt.toDate().toLocaleString() : ""}</div>
+            <div style="font-weight:600;color:${d.status === 'delivered' ? '#166534' : '#9b1c1c'}">${d.status.toUpperCase()}</div>
+          </div>
+        </div>
+      `;
+      deliveriesSection.appendChild(row);
+    });
+  }, (err) => {
+    console.error("Deliveries summary error:", err);
+  });
+}
+
+// call setupDeliveriesSummary() after admin auth checks
+// example: after setupNotifications(); add setupDeliveriesSummary();
+
+
+
+
+
+
+
+
+
+
 
 
 
