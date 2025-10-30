@@ -9,6 +9,47 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/dashboard.css">
+  <style>
+    /* Notification bell */
+    #notificationBell {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    #notificationCount {
+      background: red;
+      color: white;
+      border-radius: 50%;
+      font-size: 14px;
+      padding: 2px 6px;
+      position: absolute;
+      top: -8px;
+      right: -8px;
+    }
+
+    #notificationContainer {
+      position: fixed;
+      top: 60px;
+      right: 20px;
+      width: 250px;
+      max-height: 400px;
+      overflow-y: auto;
+      z-index: 1000;
+    }
+
+    .notification {
+      background: #f0f0f0;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-left: 4px solid green;
+      border-radius: 4px;
+      font-size: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+  </style>
 </head>
 
 <body>
@@ -17,10 +58,16 @@
   <nav class="navbar">
     <div class="logo"><a href="index.html"><span class="green">KS</span> MILK</a></div>
     <ul class="nav-links">
+      <li>
+        <span id="notificationBell">🔔<span id="notificationCount">0</span></span>
+      </li>
       <li><a href="login.html" id="logout-link">Logout</a></li>
     </ul>
     <div class="hamburger" onclick="toggleMenu()">☰</div>
   </nav>
+
+  <!-- Notification container -->
+  <div id="notificationContainer"></div>
 
   <!-- Admin Dashboard Container -->
   <div class="dashboard-container">
@@ -94,6 +141,13 @@
         sections.forEach(sec => sec.style.display = 'none');
         document.getElementById(`${btn.dataset.tab}-section`).style.display = 'block';
       });
+    });
+
+    // Toggle notification container on bell click
+    const bell = document.getElementById("notificationBell");
+    const container = document.getElementById("notificationContainer");
+    bell.addEventListener("click", () => {
+      container.style.display = container.style.display === "block" ? "none" : "block";
     });
   </script>
 

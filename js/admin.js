@@ -1,19 +1,10 @@
-// admin.js — for admin-dashboard.html
+// admin.js — with real-time notifications
 import { auth, db } from "./firebase.js";
-import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import {
-  collection,
-  getDocs,
-  deleteDoc,
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { collection, getDocs, deleteDoc, doc, getDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
+// ---------- Logout ----------
 const logoutLink = document.getElementById("logout-link");
-
 if (logoutLink) {
   logoutLink.addEventListener("click", async () => {
     await signOut(auth);
@@ -22,6 +13,7 @@ if (logoutLink) {
   });
 }
 
+// ---------- Admin Authentication ----------
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     alert("Please login as admin.");
@@ -36,25 +28,17 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
+  // Display admin info
   document.getElementById("admin-name").textContent = userDoc.data().fullName;
   document.getElementById("admin-email").textContent = userDoc.data().email;
 
+  // Load tables
   loadCustomers();
   loadOrders();
+  setupNotifications(); // Setup real-time notifications
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
+// ---------- Load Customers ----------
 async function loadCustomers() {
   const table = document.getElementById("customerTable");
   table.innerHTML = "";
@@ -64,9 +48,9 @@ async function loadCustomers() {
   snapshot.forEach((docSnap) => {
     const data = docSnap.data();
 
-    // Disable delete button if the user is an admin
+    // Disable delete button for admin users
     const deleteBtn = data.role === "admin"
-      ? `<button disabled style="opacity:0.5;cursor:not-allowed;">🗑️ Delete</button>`
+      ? `<button disabled style="opacity:0.5; cursor:not-allowed;">🗑️ Delete</button>`
       : `<button class="delete-btn" data-id="${docSnap.id}">🗑️ Delete</button>`;
 
     const row = `
@@ -79,33 +63,28 @@ async function loadCustomers() {
     table.insertAdjacentHTML("beforeend", row);
   });
 
-  // Add click events only to enabled delete buttons
   document.querySelectorAll(".delete-btn").forEach(btn => {
     btn.addEventListener("click", async () => {
       const id = btn.dataset.id;
       if (confirm("Delete this customer?")) {
         await deleteDoc(doc(db, "customers", id));
         alert("Customer deleted.");
-        loadCustomers(); // Refresh table
+        loadCustomers();
       }
     });
   });
 }
 
-
-
-
-
-
-
-
+// ---------- Load Orders ----------
 async function loadOrders() {
   const table = document.getElementById("orderTable");
   table.innerHTML = "";
+
   const snapshot = await getDocs(collection(db, "orders"));
 
   snapshot.forEach((docSnap) => {
     const data = docSnap.data();
+
     const row = `
       <tr>
         <td>${data.fullName}</td>
@@ -125,6 +104,37 @@ async function loadOrders() {
         await deleteDoc(doc(db, "orders", id));
         alert("Order deleted.");
         loadOrders();
+      }
+    });
+  });
+}
+
+// ---------- Real-time Notifications ----------
+function setupNotifications() {
+  const notificationContainer = document.getElementById("notificationContainer");
+
+  // Listen to latest orders in real-time
+  const ordersQuery = query(collection(db, "orders"), orderBy("createdAt", "desc"), limit(10));
+
+  onSnapshot(ordersQuery, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === "added") {
+        const order = change.doc.data();
+
+        // Create notification element
+        const notification = document.createElement("div");
+        notification.classList.add("notification");
+        notification.textContent = `New order from ${order.fullName}: ${order.quantity}L of ${order.product}`;
+        notificationContainer.prepend(notification);
+
+        // Optional: auto-remove after 5 seconds
+        setTimeout(() => {
+          notification.remove();
+        }, 5000);
+
+        // Optional: play sound
+        const audio = new Audio("notification-sound.mp3"); // add a short sound file in your project
+        audio.play();
       }
     });
   });
