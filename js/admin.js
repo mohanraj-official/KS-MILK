@@ -137,72 +137,37 @@ async function loadOrders() {
 
 
 
-
-// -----------------------------
-// 🔔 Smart Real-time Notifications (Fixed version)
-// -----------------------------
 function setupNotifications() {
-  const notificationContainer = document.getElementById("notificationContainer");
   const notifBell = document.getElementById("notificationBell");
   const notifCount = document.getElementById("notifCount");
   let unread = 0;
   let initialLoadDone = false;
-
   const seenOrders = new Set();
 
+  // 🔔 Click redirects to notification page
   notifBell.addEventListener("click", () => {
-    notificationContainer.classList.toggle("active");
+    window.location.href = "notifications.html"; // your notifications page
   });
 
+  // Listen to orders in real-time
   const ordersQuery = query(collection(db, "orders"), orderBy("createdAt", "desc"));
   onSnapshot(ordersQuery, (snapshot) => {
     if (!initialLoadDone) {
-      // 🧠 Skip initial load, just mark orders as seen
+      // Skip initial load, mark all existing orders as seen
       snapshot.docs.forEach((doc) => seenOrders.add(doc.id));
       initialLoadDone = true;
       return;
     }
 
-    // 👇 After first load, handle only NEWLY ADDED ones
+    // Handle newly added orders
     snapshot.docChanges().forEach((change) => {
       if (change.type === "added" && !seenOrders.has(change.doc.id)) {
         seenOrders.add(change.doc.id);
-        const order = change.doc.data();
-
         unread++;
         notifCount.textContent = unread;
         notifCount.style.display = "flex";
 
-        const notification = document.createElement("div");
-        notification.classList.add("notification");
-        notification.innerHTML = `
-          <b>🆕 New Order</b><br>
-          ${order.fullName} - ${order.quantity}L ${order.product}
-        `;
-        notification.style.cursor = "pointer";
-
-        // 👇 Click → show details + reduce count
-        notification.addEventListener("click", () => {
-          alert(
-            `Order Details:\n\n` +
-            `Customer: ${order.fullName}\n` +
-            `Product: ${order.product}\n` +
-            `Quantity: ${order.quantity} L\n` +
-            `Address: ${order.address}\n` +
-            `Phone: ${order.phone || "N/A"}`
-          );
-
-          unread = Math.max(0, unread - 1);
-          notifCount.textContent = unread;
-          if (unread === 0) notifCount.style.display = "none";
-
-          notification.classList.add("fade-out");
-          setTimeout(() => notification.remove(), 400);
-        });
-
-        notificationContainer.prepend(notification);
-
-        // Optional: sound
+        // Optional: play sound
         const audio = new Audio("notification.mp3");
         audio.play();
       }
