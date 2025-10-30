@@ -1,7 +1,7 @@
 // main.js — final refined version
 import { auth, db } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import { doc, setDoc, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+import { doc, setDoc, serverTimestamp, getDoc, collection } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 // ---------- Toggle Menu ----------
 window.toggleMenu = function () {
