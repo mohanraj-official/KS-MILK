@@ -109,6 +109,8 @@ async function loadOrders() {
   });
 }
 
+
+
 // ---------- Real-time Notifications ----------
 function setupNotifications() {
   const notificationContainer = document.getElementById("notificationContainer");
@@ -125,15 +127,16 @@ function setupNotifications() {
         const notification = document.createElement("div");
         notification.classList.add("notification");
         notification.textContent = `New order from ${order.fullName}: ${order.quantity}L of ${order.product}`;
-        notificationContainer.prepend(notification);
+        notificationContainer.appendChild(notification);
 
-        // Optional: auto-remove after 5 seconds
+        // Optional: auto-remove after 5 seconds with fade effect
         setTimeout(() => {
-          notification.remove();
+          notification.classList.add("fade-out");
+          setTimeout(() => notification.remove(), 300); // match transition duration
         }, 5000);
 
         // Optional: play sound
-        const audio = new Audio("notification-sound.mp3"); // add a short sound file in your project
+        const audio = new Audio("notification-sound.mp3"); // make sure file exists
         audio.play();
       }
     });
