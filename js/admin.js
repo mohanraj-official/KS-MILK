@@ -126,37 +126,53 @@ async function loadOrders() {
   });
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
 // -----------------------------
-// 🔔 Smart Real-time Notifications
+// 🔔 Smart Real-time Notifications (Fixed version)
 // -----------------------------
 function setupNotifications() {
   const notificationContainer = document.getElementById("notificationContainer");
   const notifBell = document.getElementById("notificationBell");
   const notifCount = document.getElementById("notifCount");
   let unread = 0;
+  let initialLoadDone = false;
 
-  // Store already-seen order IDs to prevent duplicates
   const seenOrders = new Set();
 
-  // Toggle notification panel
   notifBell.addEventListener("click", () => {
     notificationContainer.classList.toggle("active");
   });
 
-  // Real-time listener for orders
   const ordersQuery = query(collection(db, "orders"), orderBy("createdAt", "desc"));
   onSnapshot(ordersQuery, (snapshot) => {
+    if (!initialLoadDone) {
+      // 🧠 Skip initial load, just mark orders as seen
+      snapshot.docs.forEach((doc) => seenOrders.add(doc.id));
+      initialLoadDone = true;
+      return;
+    }
+
+    // 👇 After first load, handle only NEWLY ADDED ones
     snapshot.docChanges().forEach((change) => {
       if (change.type === "added" && !seenOrders.has(change.doc.id)) {
         seenOrders.add(change.doc.id);
         const order = change.doc.data();
 
-        // Increase unread count
         unread++;
         notifCount.textContent = unread;
         notifCount.style.display = "flex";
 
-        // Create clickable notification
         const notification = document.createElement("div");
         notification.classList.add("notification");
         notification.innerHTML = `
@@ -165,7 +181,7 @@ function setupNotifications() {
         `;
         notification.style.cursor = "pointer";
 
-        // On click → show details & reduce count
+        // 👇 Click → show details + reduce count
         notification.addEventListener("click", () => {
           alert(
             `Order Details:\n\n` +
@@ -176,20 +192,17 @@ function setupNotifications() {
             `Phone: ${order.phone || "N/A"}`
           );
 
-          // Decrease unread count
           unread = Math.max(0, unread - 1);
           notifCount.textContent = unread;
           if (unread === 0) notifCount.style.display = "none";
 
-          // Remove notification after clicking
           notification.classList.add("fade-out");
           setTimeout(() => notification.remove(), 400);
         });
 
-        // Append notification (latest at top)
         notificationContainer.prepend(notification);
 
-        // Optional sound effect
+        // Optional: sound
         const audio = new Audio("notification.mp3");
         audio.play();
       }
