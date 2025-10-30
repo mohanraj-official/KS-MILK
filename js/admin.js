@@ -1,9 +1,24 @@
-// admin.js — with real-time notifications
+// admin.js — Final Version with Real-Time Notifications
 import { auth, db } from "./firebase.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import { collection, getDocs, deleteDoc, doc, getDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  orderBy,
+  limit
+} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
-// ---------- Logout ----------
+// ===============================
+// 🔹 Logout Functionality
+// ===============================
 const logoutLink = document.getElementById("logout-link");
 if (logoutLink) {
   logoutLink.addEventListener("click", async () => {
@@ -13,7 +28,9 @@ if (logoutLink) {
   });
 }
 
-// ---------- Admin Authentication ----------
+// ===============================
+// 🔹 Admin Authentication
+// ===============================
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     alert("Please login as admin.");
@@ -28,17 +45,19 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  // Display admin info
+  // ✅ Display admin info
   document.getElementById("admin-name").textContent = userDoc.data().fullName;
   document.getElementById("admin-email").textContent = userDoc.data().email;
 
-  // Load tables
+  // ✅ Load dashboard data
   loadCustomers();
   loadOrders();
-  setupNotifications(); // Setup real-time notifications
+  setupNotifications(); // Start notification listener
 });
 
-// ---------- Load Customers ----------
+// ===============================
+// 🔹 Load Customers Table
+// ===============================
 async function loadCustomers() {
   const table = document.getElementById("customerTable");
   table.innerHTML = "";
@@ -49,9 +68,10 @@ async function loadCustomers() {
     const data = docSnap.data();
 
     // Disable delete button for admin users
-    const deleteBtn = data.role === "admin"
-      ? `<button disabled style="opacity:0.5; cursor:not-allowed;">🗑️ Delete</button>`
-      : `<button class="delete-btn" data-id="${docSnap.id}">🗑️ Delete</button>`;
+    const deleteBtn =
+      data.role === "admin"
+        ? `<button disabled style="opacity:0.5; cursor:not-allowed;">🗑️ Delete</button>`
+        : `<button class="delete-btn" data-id="${docSnap.id}">🗑️ Delete</button>`;
 
     const row = `
       <tr>
@@ -63,7 +83,8 @@ async function loadCustomers() {
     table.insertAdjacentHTML("beforeend", row);
   });
 
-  document.querySelectorAll(".delete-btn").forEach(btn => {
+  // Handle delete
+  document.querySelectorAll(".delete-btn").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const id = btn.dataset.id;
       if (confirm("Delete this customer?")) {
@@ -75,7 +96,9 @@ async function loadCustomers() {
   });
 }
 
-// ---------- Load Orders ----------
+// ===============================
+// 🔹 Load Orders Table
+// ===============================
 async function loadOrders() {
   const table = document.getElementById("orderTable");
   table.innerHTML = "";
@@ -97,7 +120,8 @@ async function loadOrders() {
     table.insertAdjacentHTML("beforeend", row);
   });
 
-  document.querySelectorAll(".delete-order-btn").forEach(btn => {
+  // Handle delete
+  document.querySelectorAll(".delete-order-btn").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const id = btn.dataset.id;
       if (confirm("Delete this order?")) {
@@ -109,13 +133,24 @@ async function loadOrders() {
   });
 }
 
-
-
-// ---------- Real-time Notifications ----------
+// ===============================
+// 🔔 Real-Time Notifications
+// ===============================
 function setupNotifications() {
   const notificationContainer = document.getElementById("notificationContainer");
+  const notifBell = document.getElementById("notificationBell");
+  const notifCount = document.getElementById("notifCount");
+  let unread = 0;
 
-  // Listen to latest orders in real-time
+  // 🔄 Toggle visibility of notification panel
+  notifBell.addEventListener("click", () => {
+    notificationContainer.classList.toggle("active");
+    unread = 0;
+    notifCount.textContent = "0";
+    notifCount.style.display = "none";
+  });
+
+  // 🔍 Listen for new orders (latest 10)
   const ordersQuery = query(collection(db, "orders"), orderBy("createdAt", "desc"), limit(10));
 
   onSnapshot(ordersQuery, (snapshot) => {
@@ -123,21 +158,28 @@ function setupNotifications() {
       if (change.type === "added") {
         const order = change.doc.data();
 
-        // Create notification element
+        // 🧾 Create notification element
         const notification = document.createElement("div");
         notification.classList.add("notification");
-        notification.textContent = `New order from ${order.fullName}: ${order.quantity}L of ${order.product}`;
-        notificationContainer.appendChild(notification);
+        notification.textContent = `🛒 New order from ${order.fullName} — ${order.quantity}L of ${order.product}`;
 
-        // Optional: auto-remove after 5 seconds with fade effect
+        // Add to container (latest at top)
+        notificationContainer.prepend(notification);
+
+        // 🔔 Increment counter
+        unread++;
+        notifCount.textContent = unread;
+        notifCount.style.display = "flex";
+
+        // 🎵 Optional sound (ensure file exists)
+        const audio = new Audio("notification.mp3");
+        audio.play();
+
+        // 🕒 Auto-remove notification smoothly
         setTimeout(() => {
           notification.classList.add("fade-out");
-          setTimeout(() => notification.remove(), 300); // match transition duration
-        }, 5000);
-
-        // Optional: play sound
-        const audio = new Audio("notification-sound.mp3"); // make sure file exists
-        audio.play();
+          setTimeout(() => notification.remove(), 400);
+        }, 8000);
       }
     });
   });

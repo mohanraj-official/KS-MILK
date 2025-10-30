@@ -1039,3 +1039,92 @@ body {
 
 
 
+
+
+
+
+
+
+
+
+
+
+/* ========== 🔔 Notification Styles ========== */
+#notificationBell {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: #28a745;
+  color: white;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 26px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 2000;
+  transition: transform 0.2s ease;
+}
+
+#notificationBell:hover {
+  transform: scale(1.1);
+}
+
+#notifCount {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: red;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#notificationContainer {
+  position: fixed;
+  bottom: 90px;
+  right: 25px;
+  width: 320px;
+  max-height: 400px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  padding: 10px;
+  z-index: 1500;
+  display: none;
+  flex-direction: column-reverse;
+}
+
+#notificationContainer.active {
+  display: flex;
+}
+
+.notification {
+  background: #f1f1f1;
+  padding: 10px 12px;
+  border-left: 5px solid #28a745;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.notification.fade-out {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.hidden {
+  display: none;
+}

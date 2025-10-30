@@ -6,42 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - KS Milk</title>
 
+  <!-- CSS Files -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/dashboard.css">
-  <style>
-  /* Notification container fixed at bottom-right */
-  #notificationContainer {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 300px;
-    max-height: 400px;
-    overflow-y: auto;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column-reverse; /* newest at bottom on bottom-right */
-    gap: 10px;
-  }
-
-  .notification {
-    background: #f0f0f0;
-    padding: 12px 15px;
-    border-left: 5px solid #28a745; /* green accent */
-    border-radius: 5px;
-    font-size: 14px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    opacity: 0.95;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-  }
-
-  /* Optional: fade out animation */
-  .notification.fade-out {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-</style>
-
 </head>
 
 <body>
@@ -51,15 +19,18 @@
     <div class="logo"><a href="index.html"><span class="green">KS</span> MILK</a></div>
     <ul class="nav-links">
       <li>
-        <span id="notificationBell">🔔<span id="notificationCount">0</span></span>
+        <div id="notificationBell">
+          🔔
+          <span id="notifCount">0</span>
+        </div>
       </li>
       <li><a href="login.html" id="logout-link">Logout</a></li>
     </ul>
     <div class="hamburger" onclick="toggleMenu()">☰</div>
   </nav>
 
-  <!-- Notification container -->
-  <div id="notificationContainer"></div>
+  <!-- Notification Container -->
+  <div id="notificationContainer" class="hidden"></div>
 
   <!-- Admin Dashboard Container -->
   <div class="dashboard-container">
@@ -124,24 +95,6 @@
   <script type="module" src="./js/firebase.js"></script>
   <script type="module" src="./js/admin.js"></script>
 
-  <script>
-    // Simple tab switcher
-    const tabs = document.querySelectorAll('.tab-btn');
-    const sections = document.querySelectorAll('.tab-content');
-    tabs.forEach(btn => {
-      btn.addEventListener('click', () => {
-        sections.forEach(sec => sec.style.display = 'none');
-        document.getElementById(`${btn.dataset.tab}-section`).style.display = 'block';
-      });
-    });
-
-    // Toggle notification container on bell click
-    const bell = document.getElementById("notificationBell");
-    const container = document.getElementById("notificationContainer");
-    bell.addEventListener("click", () => {
-      container.style.display = container.style.display === "block" ? "none" : "block";
-    });
-  </script>
-
 </body>
+
 </html>
