@@ -151,56 +151,95 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// ---------- Confirm Order ----------
+onAuthStateChanged(auth, (user) => {
+  const confirmBtn = document.querySelector(".confirm-btn");
+  const cancelBtn = document.querySelector(".cancel-btn");
 
+  if (!confirmBtn) return;
 
-
-
-
-
-
-
-confirmBtn.addEventListener("click", async () => {
-  if (!user) {
-    alert("Please login to confirm your order.");
-    window.location.href = "login.html";
+  const order = JSON.parse(localStorage.getItem("pendingOrder"));
+  if (order) {
+    document.querySelector(".order-summary").innerHTML = `
+      <p><b>Product:</b> ${order.productName}</p>
+      <p><b>Price:</b> ₹${order.productPrice}</p>
+      <p><b>Name:</b> ${order.fullName}</p>
+      <p><b>Address:</b> ${order.address}</p>
+      <p><b>Landmark:</b> ${order.landmark}</p>
+      <p><b>Quantity:</b> ${order.quantity} L</p>
+      <p><b>Phone:</b> ${order.phone}</p>
+    `;
+  } else {
+    alert("No order details found. Please place an order first.");
+    window.location.href = "products.html";
     return;
   }
 
-  try {
-    const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
-    await setDoc(orderRef, {
-      user: user.uid,
-      product: order.productName,
-      price: order.productPrice,
-      quantity: order.quantity,
-      fullName: order.fullName,
-      address: order.address,
-      landmark: order.landmark,
-      phone: order.phone,
-      createdAt: serverTimestamp(),
+  confirmBtn.addEventListener("click", async () => {
+    if (!user) {
+      alert("Please login to confirm your order.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    try {
+      const orderRef = doc(db, "orders", `${user.uid}_${Date.now()}`);
+      await setDoc(orderRef, {
+        user: user.uid,
+        product: order.productName,
+        price: order.productPrice,
+        quantity: order.quantity,
+        fullName: order.fullName,
+        address: order.address,
+        landmark: order.landmark,
+        phone: order.phone,
+        createdAt: serverTimestamp(),
+      });
+
+
+      const notifRef = doc(collection(db, "notifications"));
+      await setDoc(notifRef, {
+        orderId: orderRef.id,
+        userId: user.uid,
+        fullName: order.fullName,
+        phone: order.phone,
+        product: order.productName,
+        quantity: order.quantity,
+        address: order.address,
+        status: "new", // so it shows in admin page
+        createdAt: serverTimestamp()
+      });
+
+
+
+      localStorage.removeItem("pendingOrder");
+      localStorage.removeItem("selectedProduct");
+      document.getElementById("successPopup").style.display = "flex";
+
+    } catch (err) {
+      console.error("Error saving order:", err);
+      alert("❌ Failed to save order. Please try again.");
+    }
+  });
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", () => {
+      const confirmCancel = confirm("Are you sure you want to cancel this order?");
+      if (confirmCancel) {
+        localStorage.removeItem("pendingOrder");
+        localStorage.removeItem("selectedProduct");
+        window.location.href = "index.html";
+      }
     });
-
-    /* ------------------ 🔔 NEW CODE START ------------------ */
-    const notifRef = doc(collection(db, "notifications"));
-    await setDoc(notifRef, {
-      orderId: orderRef.id,
-      userId: user.uid,
-      fullName: order.fullName,
-      phone: order.phone,
-      product: order.productName,
-      quantity: order.quantity,
-      address: order.address,
-      status: "new", // so it shows in admin page
-      createdAt: serverTimestamp()
-    });
-    /* ------------------ 🔔 NEW CODE END ------------------ */
-
-    localStorage.removeItem("pendingOrder");
-    localStorage.removeItem("selectedProduct");
-    document.getElementById("successPopup").style.display = "flex";
-
-  } catch (err) {
-    console.error("Error saving order:", err);
-    alert("❌ Failed to save order. Please try again.");
   }
 });
+
+// ---------- Success Popup ----------
+window.closePopup = function () {
+  const popup = document.getElementById("successPopup");
+  popup.style.animation = "fadeOut 0.4s ease forwards";
+  setTimeout(() => {
+    popup.style.display = "none";
+    window.location.href = "order-history.html";
+  }, 400);
+};
