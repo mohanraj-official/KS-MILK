@@ -2,18 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Notifications - KS Milk</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Notifications | KS Milk</title>
 
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/dashboard.css">
-  <link rel="stylesheet" href="css/notifications.css"> <!-- new -->
-  <link rel="icon" href="https://www.google.com/favicon.ico">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/notifications.css" />
 </head>
 <body>
-  <!-- Navbar (reuse your project navbar or keep minimal) -->
+  <!-- Navbar -->
   <nav class="navbar">
-    <div class="logo"><a href="index.html"><span class="green">KS</span> MILK</a></div>
+    <div class="logo">
+      <a href="index.html"><span class="green">KS</span> MILK</a>
+    </div>
     <ul class="nav-links">
       <li><a href="admin-dashboard.html">Dashboard</a></li>
       <li><a href="#" id="logout-link">Logout</a></li>
@@ -21,32 +22,28 @@
     <div class="hamburger" onclick="toggleMenu()">☰</div>
   </nav>
 
+  <!-- Main Content -->
   <main class="container page-notifications">
     <header class="page-header">
       <h1>Notifications</h1>
-      <p class="subtitle">New orders (latest first). Click an item to view details & mark Delivered / Cancelled.</p>
+      <p class="subtitle">
+        Latest new orders. Click to view details and mark Delivered or Cancelled.
+      </p>
     </header>
 
-    <section class="notifications-list-wrapper">
-      <div id="notificationsList" class="notifications-list">
-        <!-- notifications injected here -->
-      </div>
-
-      <div id="emptyState" class="empty-state">
-        <p>No new notifications.</p>
-      </div>
+    <section class="notifications-section">
+      <div id="notificationsList" class="notifications-list"></div>
+      <div id="emptyState" class="empty-state">No new notifications.</div>
     </section>
   </main>
 
-  <!-- Modal for order details -->
+  <!-- Modal -->
   <div id="orderModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-panel">
-      <button class="modal-close" id="modalClose" title="Close">✕</button>
+      <button id="modalClose" class="modal-close" title="Close">✕</button>
       <h2 id="modalTitle">Order Details</h2>
 
-      <div id="modalBody" class="modal-body">
-        <!-- dynamic content -->
-      </div>
+      <div id="modalBody" class="modal-body"></div>
 
       <div class="modal-actions">
         <button id="deliveredBtn" class="btn btn-success">Delivered</button>
@@ -55,7 +52,6 @@
     </div>
   </div>
 
-  <!-- Firebase + page script -->
   <script type="module" src="./js/firebase.js"></script>
   <script type="module" src="./js/notifications.js"></script>
 </body>
