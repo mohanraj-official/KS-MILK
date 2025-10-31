@@ -1,233 +1,242 @@
 /* ==============================
-   KS MILK - Dashboard Styles (Final + Responsive)
-   ============================== */
+    KS MILK - Dashboard Styles (Futuristic & Sharp)
+    ============================== */
 
 /* Dashboard Container Layout */
 .dashboard-container {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 30px;
-  padding: 40px 60px;
-  background-color: #f7fdf8;
-  min-height: calc(100vh - 80px); /* space for navbar */
-  transition: all 0.4s ease;
+    /* Keep structure, increase padding for spaciousness */
+    display: grid;
+    grid-template-columns: 320px 1fr; /* Slightly wider profile column */
+    gap: 40px; /* Increased gap */
+    padding: 50px 80px; 
+    background-color: #f0fdf2; /* Very light, clean background */
+    min-height: calc(100vh - 80px);
+    transition: all 0.5s ease;
 }
 
+
+
+
 /* =============================
-   Profile Card (Modern Futuristic)
-   ============================= */
+    Profile Card (Futuristic Defined)
+    ============================= */
 .profile-card {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(232, 250, 236, 0.9));
-  backdrop-filter: blur(10px);
-  border-radius: 24px;
-  padding: 30px;
-  text-align: left;
-  box-shadow: 0 8px 25px rgba(46, 125, 50, 0.12);
-  border: 1px solid rgba(67, 160, 71, 0.15);
-  transition: all 0.4s ease;
-  position: sticky;
-  top: 100px;
-  animation: fadeInUp 0.6s ease forwards;
+    /* Clean white background, eliminating blur/gradient for crispness */
+    background: #ffffff; 
+    border-radius: 12px; /* Sharper corners */
+    padding: 40px 30px; /* Increased internal padding */
+    text-align: left;
+    /* Futuristic, layered shadow for sharp depth */
+    box-shadow: 
+        8px 8px 0px #4caf50, /* Bold color shadow (Neo-Brutalism influence) */
+        0 0 0 1px #4caf50; /* Thin, sharp outline */
+    border: none; /* Border is now part of the shadow */
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: sticky;
+    top: 100px;
+    animation: fadeInUp 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 .profile-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 35px rgba(46, 125, 50, 0.18);
-  border-color: rgba(67, 160, 71, 0.3);
+    /* Interactive 'press-in' effect */
+    transform: translate(4px, 4px);
+    /* Shadow shifts with the element */
+    box-shadow: 
+        4px 4px 0px #388e3c, 
+        0 0 0 1px #388e3c;
 }
 
 /* Heading */
 .profile-card h2 {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #2e7d32;
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 20px;
-  background: linear-gradient(90deg, #2e7d32, #66bb6a);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: glowText 2.5s infinite alternate;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #1e8449; /* Deep, solid color */
+    font-size: 2rem; /* Larger title */
+    font-weight: 800;
+    margin-bottom: 30px;
+    /* Remove gradient/glow for a solid, crisp title */
+    -webkit-background-clip: unset; 
+    -webkit-text-fill-color: initial;
+    text-shadow: none;
+    animation: none; 
 }
 
 /* Info Text */
 .profile-card p {
-  font-size: 1rem;
-  color: #2e2e2e;
-  margin: 10px 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  line-height: 1.5;
-  transition: transform 0.3s ease, color 0.3s ease;
+    font-size: 1.05rem;
+    color: #333;
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    line-height: 1.5;
+    /* Smoother, defined interaction */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
 }
 
 .profile-card p:hover {
-  transform: translateX(5px);
-  color: #1b5e20;
+    transform: translateX(8px); /* More pronounced slide */
+    color: #4caf50;
+    font-weight: 600; /* Subtle weight increase on hover */
 }
 
-/* Glow animation */
-@keyframes glowText {
-  from { text-shadow: 0 0 5px rgba(102,187,106,0.4); }
-  to { text-shadow: 0 0 15px rgba(67,160,71,0.7); }
+/* Icons (Assuming icons are part of the structure) */
+.profile-card p svg, 
+.profile-card p i {
+    color: #4caf50; /* Icon color */
+    font-size: 1.2rem;
 }
 
-/* Entry animation */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(25px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+
+
 
 /* =============================
-   Dashboard Content
-   ============================= */
+    Dashboard Content
+    ============================= */
 .dashboard-content {
-  background: #fff;
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-  animation: fadeIn 0.7s ease forwards;
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px; /* Increased padding */
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    transition: all 0.5s ease;
+    animation: fadeIn 0.7s ease forwards;
 }
 
 .dashboard-content h2 {
-  color: #2e7d32;
-  margin-bottom: 10px;
-  font-size: 1.6rem;
+    color: #1e8449;
+    margin-bottom: 5px;
+    font-size: 2rem;
+    font-weight: 700;
 }
 
 .dashboard-content p {
-  color: #666;
-  margin-bottom: 25px;
-  font-size: 1rem;
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1.05rem;
 }
 
 /* =============================
-   Dashboard Cards
-   ============================= */
+    Dashboard Cards (Animated Border Glow)
+    ============================= */
 .dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Slightly larger min-width */
+    gap: 30px; /* Increased gap */
 }
 
 .card {
-  background: linear-gradient(180deg, #f1fff1, #ffffff);
-  border-radius: 18px;
-  padding: 20px;
-  text-decoration: none;
-  color: #333;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    text-decoration: none;
+    color: #333;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    /* All transitions centralized here */
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e0e0e0; /* Clean default border */
 }
 
 .card h3 {
-  color: #2e7d32;
-  font-size: 1.2rem;
-  margin-bottom: 8px;
+    color: #2e7d32;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    font-weight: 700;
 }
 
 .card p {
-  font-size: 0.95rem;
-  color: #555;
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 0;
 }
 
-/* Hover Animation */
+/* Hover Animation (Lift + Border Glow) */
 .card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 6px 20px rgba(67,160,71,0.15);
-  background: linear-gradient(180deg, #e8f5e9, #ffffff);
+    transform: translateY(-8px) scale(1.02); /* More lift */
+    box-shadow: 0 15px 30px rgba(67,160,71,0.2);
+    border-color: #4caf50; /* Border becomes the primary green */
 }
 
+/* Animated Border Highlight (Cleaner than the fill animation) */
+.card::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0; /* Starts hidden */
+    height: 5px;
+    background: linear-gradient(90deg, #4caf50, #1e8449);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover::after {
+    width: 100%; /* Sweeps across the bottom */
+}
+/* The old .card::before fill animation is removed for clarity and speed */
 .card::before {
-  content: "";
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: rgba(67,160,71,0.08);
-  transition: all 0.4s ease;
-}
-.card:hover::before {
-  left: 0;
+    content: none;
 }
 
-/* =============================
-   Animations
-   ============================= */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+
+
+
+
+
 
 /* =============================
-   Responsive Design
-   ============================= */
+    Responsive Design
+    ============================= */
 
 /* Tablets */
-@media (max-width: 992px) {
-  .dashboard-container {
-    grid-template-columns: 1fr;
-    padding: 30px 25px;
-  }
-
-  .profile-card {
-    position: relative;
-    top: 0;
-    margin-bottom: 25px;
-    text-align: center;
-  }
-
-  .profile-card h2 {
-    justify-content: center;
-  }
-
-  .profile-card p {
-    justify-content: center;
-  }
+@media (max-width: 1100px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+        padding: 40px 40px;
+        gap: 30px;
+    }
+    .profile-card {
+        position: relative;
+        top: 0;
+        margin-bottom: 10px;
+        text-align: center;
+        /* Reset shadow for smaller screens to be less aggressive */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+    }
+    .profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+    .profile-card h2,
+    .profile-card p {
+        justify-content: center;
+    }
+    .dashboard-content {
+        padding: 30px;
+    }
 }
 
 /* Mobiles */
-@media (max-width: 600px) {
-  .dashboard-container {
-    padding: 20px 15px;
-    gap: 20px;
-  }
-
-  .profile-card {
-    padding: 20px;
-    border-radius: 18px;
-  }
-
-  .profile-card h2 {
-    font-size: 1.5rem;
-  }
-
-  .profile-card p {
-    font-size: 0.9rem;
-  }
-
-  .dashboard-content {
-    padding: 20px;
-  }
-
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-
-  .card {
-    padding: 18px;
-    text-align: center;
-  }
-
-  .card h3 {
-    font-size: 1rem;
-  }
-
-  .card p {
-    font-size: 0.85rem;
-  }
+@media (max-width: 650px) {
+    .dashboard-container {
+        padding: 25px 20px;
+        gap: 25px;
+    }
+    .profile-card {
+        padding: 25px;
+    }
+    .profile-card h2 {
+        font-size: 1.7rem;
+    }
+    .dashboard-content h2 {
+        font-size: 1.7rem;
+    }
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .card {
+        padding: 20px;
+    }
 }
