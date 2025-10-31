@@ -79,9 +79,18 @@ onAuthStateChanged(auth, async (user) => {
 
 // ---------- Product → Place Order ----------
 document.querySelectorAll(".order-btn").forEach((button) => {
-  button.addEventListener("click", () => {
+  button.addEventListener("click", async () => {
     const name = button.getAttribute("data-name");
     const price = button.getAttribute("data-price");
+
+    // 🔒 Check if user is logged in before allowing order
+    const user = auth.currentUser;
+    if (!user) {
+      alert("Please login to place an order.");
+      window.location.href = "login.html";
+      return;
+    }
+
     localStorage.setItem("selectedProduct", JSON.stringify({ name, price }));
     window.location.href = "place-order.html";
   });
@@ -143,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
       address: document.getElementById("address").value,
       landmark: document.getElementById("landmark").value,
       quantity: parseFloat(document.getElementById("quantity").value),
-      phone: document.getElementById("phone").value
+      phone: document.getElementById("phone").value,
     };
 
     localStorage.setItem("pendingOrder", JSON.stringify(orderData));
@@ -196,7 +205,6 @@ onAuthStateChanged(auth, (user) => {
         createdAt: serverTimestamp(),
       });
 
-
       const notifRef = doc(collection(db, "notifications"));
       await setDoc(notifRef, {
         orderId: orderRef.id,
@@ -206,16 +214,13 @@ onAuthStateChanged(auth, (user) => {
         product: order.productName,
         quantity: order.quantity,
         address: order.address,
-        status: "new", // so it shows in admin page
-        createdAt: serverTimestamp()
+        status: "new", // show in admin page
+        createdAt: serverTimestamp(),
       });
-
-
 
       localStorage.removeItem("pendingOrder");
       localStorage.removeItem("selectedProduct");
       document.getElementById("successPopup").style.display = "flex";
-
     } catch (err) {
       console.error("Error saving order:", err);
       alert("❌ Failed to save order. Please try again.");
