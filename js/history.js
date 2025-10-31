@@ -90,19 +90,21 @@ onAuthStateChanged(auth, async (user) => {
       }
 
       html += `
-        <tr>
-          <td>${index++}</td>
-          <td>${date}</td>
-          <td>${data.product || "—"}</td>
-          <td>${data.price || "—"}</td>
-          <td>${data.quantity || "—"}</td>
-          <td>₹${total.toFixed(2)}</td>
-          <td>${data.address || "—"}</td>
-          <td>${data.landmark || "—"}</td>
-          <td>${data.phone || "—"}</td>
-          <td><span class="status ${statusLabel.toLowerCase()}">${statusLabel}</span></td>
-        </tr>
-      `;
+    <tr>
+        <td data-label="#">${index++}</td>
+        <td data-label="Date">${date}</td>
+        <td data-label="Product">${data.product || "—"}</td>
+        <td data-label="Price">${data.price || "—"}</td>
+        <td data-label="Qty (L)">${data.quantity || "—"}</td>
+        <td data-label="Total">₹${total.toFixed(2)}</td>
+        <td data-label="Address">${data.address || "—"}</td>
+        <td data-label="Landmark">${data.landmark || "—"}</td>
+        <td data-label="Phone">${data.phone || "—"}</td>
+        <td data-label="Status">
+            <span class="badge ${statusLabel.toLowerCase()}">${statusLabel}</span>
+        </td>
+    </tr>
+`;
     }
 
     ordersBody.innerHTML = html;

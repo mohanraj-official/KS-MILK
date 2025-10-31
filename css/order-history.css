@@ -1,193 +1,205 @@
-/* ==============================
-    KS MILK - Order History Section (Crystal Clear)
-    ============================== */
+/* GLOBAL RESET: ESSENTIAL for scroll-proofing */
+* {
+    box-sizing: border-box; 
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Inter", system-ui, sans-serif;
+    background: #f7fdf8;
+    color: #222;
+    overflow-x: hidden; 
+}
 
+/* Navbar (Clean Style Adaptation) */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.logo a {
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+.logo .green { color: #16a34a; } 
+.nav-links { list-style: none; display: flex; gap: 25px; }
+.nav-links a { text-decoration: none; color: #444; font-weight: 500; transition: color 0.3s ease; }
+.nav-links a:hover { color: #16a34a; }
+.hamburger { display: none; font-size: 24px; cursor: pointer; }
+
+
+
+/* ==================================================
+    2. Orders Section - Desktop/Tablet (Clean Table)
+    ================================================== */
 .orders-section {
-    padding: 80px 40px; /* More vertical space */
-    text-align: center;
-    background: #ffffff; /* Clean white background */
-    font-family: 'Poppins', sans-serif;
-    animation: fadeIn 0.7s ease forwards;
+    padding: 40px 60px; /* Safe padding for desktop */
+    max-width: 1300px;
+    margin: 0 auto;
+    min-height: calc(100vh - 80px);
 }
 
-/* Section Headings (Refined Glow) */
-.orders-section h2 {
-    font-size: 2.5rem; /* Larger, more impactful title */
-    font-weight: 800;
-    color: #2e7d32;
-    margin-bottom: 5px;
-    /* Use the gradient for a modern text effect */
-    background: linear-gradient(90deg, #1e8449, #4caf50);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: glowText 3s infinite alternate;
+.orders-section h2 { 
+    font-size: 28px; 
+    margin: 0 0 4px 0; 
+    color: #183826; 
+}
+.orders-section p { 
+    color: #5b5b5b; 
+    font-size: 15px; 
+    margin-bottom: 25px; 
 }
 
-.orders-section .subtitle,
-.orders-section > p {
-    color: #666; /* Softer subtext color */
-    font-size: 1.05rem;
-    margin-bottom: 40px;
-}
-
-/* ==============================
-    Orders Table Container (Crisp & Defined)
-    ============================== */
+/* Table Container (Shadowed Box) */
 .orders-table-container {
-    overflow-x: auto;
-    max-width: 1200px; /* Slightly wider */
-    margin: auto;
-    border-radius: 18px;
-    background: #ffffff; /* Crystal clear white */
-    /* Cleaner, sharper shadow */
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); 
-    border: 1px solid #e0e0e0; /* Subtle, crisp frame border */
-    transition: all 0.4s ease;
+    overflow-x: auto; /* Allows horizontal scrolling ONLY for the table content */
+    background: #fff;
+    border: 1px solid #e6e8ea;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.orders-table-container:hover {
-    /* Subtle lift and refined shadow */
-    transform: translateY(-5px); 
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.12);
-}
-
-/* ==============================
-    Orders Table Styles (Data-Focused)
-    ============================== */
 .orders-table {
     width: 100%;
     border-collapse: collapse;
-    overflow: hidden;
-    border-radius: 18px;
-    background: #ffffff;
+    min-width: 1000px; /* Ensures table width is adequate for all 10 columns */
 }
 
-.orders-table th,
-.orders-table td {
-    padding: 16px 15px; /* Increased padding for air */
-    text-align: left; /* Left align text in columns (more professional for data) */
-    font-size: 0.95rem;
-    border-bottom: 1px solid #f0f0f0; /* Very light, clean separator */
-    color: #333;
-    transition: background 0.2s ease, transform 0.2s ease;
-}
-
+/* Table Head */
 .orders-table th {
-    background: #4caf50; /* Solid primary color */
-    color: #fff;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    position: sticky; /* Keep header visible on horizontal scroll */
-    top: 0;
-}
-
-/* Table Row Hover (Highlight) */
-.orders-table tr:not(:first-child):hover {
-    background: #f7fff7;
-    /* Prominent left border highlight */
-    border-left: 5px solid #4caf50;
-    transform: none; /* Keep transform off the rows, put it on the container */
-}
-
-/* Highlight Total Column */
-.orders-table th:nth-child(6),
-.orders-table td:nth-child(6) {
-    font-weight: 700;
-    color: #1e8449; /* Green total */
-    text-align: right; /* Right align numbers */
-}
-
-/* Total Column Header */
-.orders-table th:nth-child(6) {
-    color: #fff;
-}
-
-
-/* ==============================
-    Status Chip Styling (Crucial for Clarity)
-    ============================== */
-
-/* Apply this class to the <td> containing the status text */
-.status-cell {
-    text-align: center !important; 
+    background: #f7fafc;
+    color: #333;
+    font-size: 14px;
     font-weight: 600;
-    min-width: 120px;
-}
-
-.status-chip {
-    display: inline-block;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.3px;
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid #e6e8ea;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap; /* Keeps headers on one line */
+}
+.orders-table th:first-child { text-align: center; }
+.orders-table th:nth-child(6) { text-align: right; } /* Total */
+
+
+/* Table Body */
+.orders-table td {
+    font-size: 14px;
+    padding: 12px 14px;
+    color: #444;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s ease;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Delivered - Primary Green */
-.status-delivered {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-    border: 1px solid #a5d6a7;
+.orders-table tbody tr:hover {
+    background: #f9fffb;
 }
 
-/* Pending - Secondary Blue/Grey */
-.status-pending {
-    background-color: #f0f4f7;
-    color: #1e88e5;
-    border: 1px solid #bbdefb;
+/* Highlighted Columns */
+.orders-table td:first-child { text-align: center; }
+.orders-table td:nth-child(6) { 
+    font-weight: 700;
+    color: #183826; 
+    text-align: right;
 }
 
-/* Cancelled/Failed - Warning Red */
-.status-cancelled {
-    background-color: #ffebee;
-    color: #d32f2f;
-    border: 1px solid #ef9a9a;
+/* Status Badges (Reused from clean style) */
+.badge { 
+    padding: 5px 10px; 
+    border-radius: 999px; 
+    font-size: 12px; 
+    font-weight: 600; 
 }
+.badge.delivered { background:#ecfdf5; color:#166534; border:1px solid #bbf7d0; }
+.badge.cancelled { background:#fff1f0; color:#9b1c1c; border:1px solid #fecaca; }
+.badge.pending { background:#fefce8; color:#a16207; border:1px solid #fde68a; }
 
 
-/* ==============================
-    Animations & Responsiveness
-    ============================== */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(25px); }
-    to { opacity: 1; transform: translateY(0); }
-}
 
-@keyframes glowText {
-    from { text-shadow: 0 0 5px rgba(67,160,71,0.2); }
-    to { text-shadow: 0 0 10px rgba(46, 125, 50, 0.4); }
-}
-
-@media (max-width: 992px) {
+/* ==================================================
+    3. Responsive Design (Mobile Card View)
+    ================================================== */
+@media (max-width: 768px) {
     .orders-section {
-        padding: 60px 20px;
+        /* Reduced safe padding */
+        padding: 25px 20px; 
     }
-    .orders-section h2 {
-        font-size: 2rem;
+    .navbar { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .hamburger { display: block; }
+
+    /* Hide the actual table header on mobile */
+    .orders-table thead {
+        display: none;
     }
-    .orders-table th,
+
+    /* Treat the body and rows as blocks */
+    .orders-table tbody,
+    .orders-table tr {
+        display: block;
+        width: 100%;
+        margin-bottom: 15px; /* Spacing between cards */
+    }
+
+    .orders-table tr {
+        background: #fff;
+        border: 1px solid #e6e8ea;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        padding: 15px;
+    }
+    .orders-table tr:hover {
+        background: #f9fffb;
+    }
     .orders-table td {
-        padding: 14px 10px;
-        font-size: 0.9rem;
+        display: block;
+        text-align: right !important; /* Align data to the right */
+        border-bottom: 1px solid #f0f0f0;
+        padding: 8px 0;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    /* Pseudo-elements to display the column header name */
+    .orders-table td::before {
+        content: attr(data-label); /* Requires data-label attribute in HTML <td> */
+        float: left;
+        font-weight: 600;
+        color: #183826;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+    }
+
+    .orders-table td:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    
+    /* Specific overrides for the Total column */
+    .orders-table td:nth-child(6) {
+        font-size: 16px;
+        padding-top: 15px;
+        border-top: 1px solid #e6e8ea;
     }
 }
 
-@media (max-width: 600px) {
+/* Very Small Mobiles */
+@media (max-width: 480px) {
     .orders-section {
-        padding: 40px 10px;
-    }
-    .orders-section h2 {
-        font-size: 1.7rem;
-    }
-    .orders-table th,
-    .orders-table td {
-        padding: 12px 8px;
-        font-size: 0.85rem;
-    }
-    .status-chip {
-        padding: 4px 8px;
-        font-size: 0.75rem;
+        padding: 20px 10px;
     }
 }
