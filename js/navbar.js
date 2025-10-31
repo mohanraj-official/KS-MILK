@@ -1,9 +1,10 @@
-// This function should be placed in your 'js/main.js' file.
+// js/navbar.js
 
 function toggleMenu() {
-    // Select the navigation links element
-    const navLinks = document.querySelector('.nav-links');
-    
-    // Toggle the 'active' class
-    navLinks.classList.toggle('active');
+    const nav = document.querySelector(".nav-links");
+    // CRITICAL: Now toggles the 'active' class
+    if (nav) nav.classList.toggle("active"); 
 }
+
+// Attach the function to the window object so the HTML can find it
+window.toggleMenu = toggleMenu;
