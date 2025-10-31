@@ -143,24 +143,34 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   try {
-    // Try both "customers" and "users" (some admins are in users)
-    let role = "customer";
-    const custSnap = await getDoc(doc(db, "customers", user.uid));
-    const userSnap = await getDoc(doc(db, "users", user.uid));
+    // 🔍 Get user role
+    const userRef = doc(db, "customers", user.uid);
+    const userSnap = await getDoc(userRef);
+    const role = userSnap.exists() ? (userSnap.data().role || "customer") : "customer";
 
-    if (custSnap.exists() && custSnap.data().role) {
-      role = custSnap.data().role;
-    } else if (userSnap.exists() && userSnap.data().role) {
-      role = userSnap.data().role;
+    // 🧭 Update Navbar based on Role
+    const navLinks = document.querySelector(".nav-links");
+    navLinks.innerHTML = ""; // clear default links
+
+    if (role === "admin") {
+      navLinks.innerHTML = `
+        <li><a href="admin-dashboard.html">Dashboard</a></li>
+        <li><a href="#" id="logout-link">Logout</a></li>
+      `;
+    } else {
+      navLinks.innerHTML = `
+        <li><a href="index.html">Home</a></li>
+        <li><a href="founders.html">Founders</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="#" id="logout-link">Logout</a></li>
+      `;
     }
 
-    // Build query
+    // 📦 Firestore Query
     let deliveriesQuery;
     if (role === "admin") {
-      deliveriesQuery = query(
-        collection(db, "deliveries"),
-        orderBy("processedAt", "desc")
-      );
+      deliveriesQuery = query(collection(db, "deliveries"), orderBy("processedAt", "desc"));
     } else {
       deliveriesQuery = query(
         collection(db, "deliveries"),
@@ -169,24 +179,30 @@ onAuthStateChanged(auth, async (user) => {
       );
     }
 
-    // Listen to Firestore in real time
+    // 🧠 Real-time listener
     onSnapshot(
       deliveriesQuery,
       (snapshot) => {
-        deliveriesCache = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data()
-        }));
+        deliveriesCache = [];
+        snapshot.forEach((doc) => deliveriesCache.push({ id: doc.id, data: doc.data() }));
         applyFilters();
       },
       (err) => {
         console.error("Deliveries listener error:", err);
-        emptyState.textContent = "Failed to load deliveries.";
+        emptyState.textContent = "Failed to load deliveries";
         emptyState.style.display = "block";
       }
     );
+
+    // 🔒 Logout handler
+    const logoutLink = document.getElementById("logout-link");
+    logoutLink?.addEventListener("click", async () => {
+      await auth.signOut();
+      window.location.href = "login.html";
+    });
+
   } catch (err) {
-    console.error("Error fetching deliveries:", err);
+    console.error("Error loading user role or deliveries:", err);
     emptyState.textContent = "Error loading data.";
     emptyState.style.display = "block";
   }
