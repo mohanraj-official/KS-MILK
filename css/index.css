@@ -1,0 +1,57 @@
+/* ==================================================
+    KS MILK - Home Page Hero Section Styles
+    ================================================== */
+
+.hero {
+    /* Ensure the hero section takes up the remaining viewport height */
+    min-height: calc(100vh - 80px); /* Assuming navbar is ~80px tall */
+    width: 100%;
+    position: relative;
+    overflow: hidden; /* Important to keep the image contained */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #e5ffe7; /* Very light green/milky background */
+}
+
+.cow-img {
+    /* Image sizing and positioning for a good look */
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the hero area without distortion */
+    object-position: center 30%; /* Focus on the lower part (cow) */
+    
+    /* Apply subtle effects for depth/quality */
+    filter: brightness(95%) contrast(105%); 
+    transition: transform 0.5s ease;
+}
+
+.hero:hover .cow-img {
+    transform: scale(1.02); /* Slight zoom on hover for interactivity */
+}
+
+/* Optional: Overlay a slight gradient or shade to prepare for any text in future */
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to top,
+        rgba(247, 253, 248, 0.5) 0%, /* Transparent milk color at bottom */
+        rgba(247, 253, 248, 0.1) 50%,
+        transparent 100%
+    );
+}
+
+/* --- Mobile Adjustments --- */
+@media (max-width: 600px) {
+    .hero {
+        min-height: calc(100vh - 60px); /* Adjust height for potentially smaller mobile navbar */
+    }
+    .cow-img {
+        object-position: center 50%; /* Center the cow more vertically */
+    }
+}
