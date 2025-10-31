@@ -1,134 +1,198 @@
-/* Common container (use same as login) */
+/* ------------------------------------------------------------------- */
+/* 1. Common Container (Base) */
+/* ------------------------------------------------------------------- */
 .auth-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: radial-gradient(circle at top left, #e8fdeb, #f8fff9);
+    /* Smoother, less contrasting background gradient */
+    background: radial-gradient(circle at top left, #f3fcf4, #e8f9eb);
     font-family: 'Poppins', sans-serif;
+    /* Smoother animation for initial load/resize */
+    transition: background 0.5s ease;
 }
 
-/* Box styling */
+/* ------------------------------------------------------------------- */
+/* 2. Box Styling (Enhanced Depth) */
+/* ------------------------------------------------------------------- */
 .auth-box {
     background: #ffffff;
     padding: 50px 40px;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    /* Modern, layered shadow for better depth perception */
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.05),
+        0 20px 40px rgba(0, 0, 0, 0.08);
     text-align: center;
     width: 100%;
-    max-width: 380px;
-    transition: all 0.3s ease;
+    max-width: 400px; /* Slightly wider for better space */
+    /* Master transition for all animated elements */
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     position: relative;
+    /* Subtle 'lift' on hover */
+    /* animation: ease-in-out */
 }
 
-/* Title */
+.auth-box:hover {
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.08),
+        0 25px 50px rgba(0, 0, 0, 0.12);
+    /* Slightly lift and scale the box */
+    transform: translateY(-5px) scale(1.005);
+}
+
+/* ------------------------------------------------------------------- */
+/* 3. Title */
+/* ------------------------------------------------------------------- */
 .auth-box h2 {
-    color: #2f9b41;
-    font-weight: 600;
-    margin-bottom: 25px;
-    text-shadow: 0 0 8px rgba(47, 155, 65, 0.3);
+    color: #1e8449; /* Darker, more professional green */
+    font-weight: 700; /* Bolder title */
+    margin-bottom: 30px;
+    /* Subtle text shadow for a glow effect */
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
-/* Input fields */
+/* ------------------------------------------------------------------- */
+/* 4. Input Fields (Smooth Interaction) */
+/* ------------------------------------------------------------------- */
 .auth-box input {
-    width: 90%;
-    padding: 12px 15px;
-    margin: 10px 0;
-    border: 1px solid #dce7de;
-    border-radius: 10px;
+    width: 100%; /* Use 100% width for better alignment */
+    padding: 14px 18px;
+    margin: 12px 0;
+    border: 2px solid #e1e8ed; /* Thicker, defined border */
+    border-radius: 12px;
     font-size: 1rem;
-    background: #f0f7ff;
+    color: #333;
+    background: #f7f9fb; /* Very light background for contrast */
     outline: none;
-    transition: 0.3s ease;
+    /* Smooth transition for border and shadow */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
 .auth-box input:focus {
-    border-color: #66d36e;
-    box-shadow: 0 0 6px rgba(102, 211, 110, 0.5);
+    border-color: #28a745; /* Brand green border on focus */
+    background: #fff;
+    /* Professional inner shadow/glow */
+    box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2); 
 }
 
-/* Buttons */
+.auth-box input::placeholder {
+    color: #999;
+}
+
+/* ------------------------------------------------------------------- */
+/* 5. Buttons (Tactile Feedback) */
+/* ------------------------------------------------------------------- */
 .auth-btn,
 .register-btn {
     width: 100%;
-    padding: 12px;
-    margin-top: 15px;
+    padding: 15px; /* Taller padding for a better touch target */
+    margin-top: 20px;
     border: none;
-    border-radius: 10px;
-    font-size: 1rem;
+    border-radius: 12px;
+    font-size: 1.05rem; /* Slightly larger font */
     font-weight: 600;
     color: white;
     cursor: pointer;
-    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    /* Professional transition for all button properties */
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-/* Login Button (Green) */
+/* Login Button (Primary Green) */
 .auth-btn {
-    background: linear-gradient(135deg, #4ecf60, #2fa748);
-    box-shadow: 0 5px 10px rgba(78, 207, 96, 0.3);
+    background: linear-gradient(135deg, #28a745, #1e8449);
+    box-shadow: 0 8px 15px rgba(40, 167, 69, 0.4);
 }
 
 .auth-btn:hover {
-    background: linear-gradient(135deg, #3bb351, #228e3f);
+    background: linear-gradient(135deg, #1e8449, #156637);
+    /* Subtle press down effect */
     transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(40, 167, 69, 0.5);
 }
 
-/* Register Button (Yellow) */
+.auth-btn:active {
+    transform: translateY(1px); /* Press down */
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+}
+
+/* Register Button (Secondary Teal/Blue - better contrast/hierarchy than yellow) */
 .register-btn {
-    background: linear-gradient(135deg, #008113, #28c847);
-    box-shadow: 0 5px 10px rgba(255, 214, 51, 0.3);
+    background: linear-gradient(135deg, #42a5f5, #1976d2); /* Professional blue gradient */
+    box-shadow: 0 8px 15px rgba(66, 165, 245, 0.3);
+    margin-top: 10px; /* Closer to the main button */
 }
 
 .register-btn:hover {
-    background: linear-gradient(135deg, #30aa6b, #528a31);
+    background: linear-gradient(135deg, #1976d2, #1565c0);
     transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(66, 165, 245, 0.5);
 }
 
-/* Link section */
+.register-btn:active {
+    transform: translateY(1px); /* Press down */
+    box-shadow: 0 4px 10px rgba(66, 165, 245, 0.3);
+}
+
+/* ------------------------------------------------------------------- */
+/* 6. Link Section */
+/* ------------------------------------------------------------------- */
 .auth-link,
 .auth-note {
-    margin-top: 20px;
+    margin-top: 25px;
     font-size: 0.9rem;
-    color: #555;
+    color: #666; /* Slightly darker for better readability */
 }
 
 .auth-link a,
 .auth-note a {
-    color: #2f9b41;
+    color: #28a745;
     font-weight: 600;
     text-decoration: none;
-    transition: 0.2s;
+    /* Subtle color/underline change on hover */
+    transition: color 0.2s ease, text-decoration 0.2s ease;
 }
 
 .auth-link a:hover,
 .auth-note a:hover {
-    color: #228e3f;
+    color: #1e8449;
+    text-decoration: underline;
 }
 
-/* Close Button */
+/* ------------------------------------------------------------------- */
+/* 7. Close Button (Interactive) */
+/* ------------------------------------------------------------------- */
 .close-btn {
     position: absolute;
-    top: 15px;
+    top: 20px;
     right: 25px;
-    font-size: 26px;
-    color: #000000;
+    font-size: 28px;
+    color: #aaa; /* Softer color */
     cursor: pointer;
-    transition: color 0.3s;
+    /* Smooth transition for interaction */
+    transition: color 0.3s ease, transform 0.3s ease;
+    line-height: 1; /* Ensures correct vertical alignment */
 }
 
 .close-btn:hover {
-    color: #2f9b41;
-    transform: scale(1.1);
+    color: #1e8449;
+    transform: rotate(90deg) scale(1.1); /* Fun, smooth animation */
 }
 
-/* Responsive */
-@media (max-width: 480px) {
+/* ------------------------------------------------------------------- */
+/* 8. Responsive */
+/* ------------------------------------------------------------------- */
+@media (max-width: 500px) {
     .auth-box {
-        width: 75%;
-        padding: 40px 20px;
+        width: 90%; /* More relative space on smaller screens */
+        padding: 40px 25px;
+        margin: 0 15px; /* Add margin to sides */
     }
 
     .auth-box h2 {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
     }
 }
