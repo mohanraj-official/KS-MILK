@@ -1,6 +1,6 @@
-// delivery.js
+// delivery.js — Final Refined Version (Admin & Customer)
 import { auth, db } from "./firebase.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 import {
   collection,
   query,
@@ -11,6 +11,9 @@ import {
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
+// -----------------------------
+// 🔹 DOM Elements
+// -----------------------------
 const deliveriesList = document.getElementById("deliveriesList");
 const emptyState = document.getElementById("emptyState");
 const searchInput = document.getElementById("searchInput");
@@ -19,9 +22,22 @@ const deliveryModal = document.getElementById("deliveryModal");
 const modalBody = document.getElementById("modalBody");
 const modalClose = document.getElementById("modalClose");
 const modalCloseBtn = document.getElementById("modalCloseBtn");
+const logoutLink = document.getElementById("logout-link");
 
 let deliveriesCache = []; // stores {id, data}
 
+// -----------------------------
+// 🔹 Logout
+// -----------------------------
+logoutLink?.addEventListener("click", async () => {
+  await signOut(auth);
+  alert("You have logged out.");
+  window.location.href = "login.html";
+});
+
+// -----------------------------
+// 🧾 Render Deliveries
+// -----------------------------
 function renderList(items) {
   deliveriesList.innerHTML = "";
   if (!items.length) {
@@ -57,11 +73,15 @@ function renderList(items) {
         <div class="${badgeClass}" style="margin-top:8px">${data.status?.toUpperCase() || "PENDING"}</div>
       </div>
     `;
+
     el.addEventListener("click", () => openModal(rec));
     deliveriesList.appendChild(el);
   });
 }
 
+// -----------------------------
+// 🪟 Modal Handling
+// -----------------------------
 function openModal(rec) {
   const d = rec.data;
   modalBody.innerHTML = `
@@ -73,29 +93,31 @@ function openModal(rec) {
     <p><strong>Order ID:</strong> ${d.orderId || "-"}</p>
     <p><strong>Notification ID:</strong> ${d.notificationId || "-"}</p>
     <p><strong>Status:</strong> ${d.status || "-"}</p>
-    <p><strong>Processed:</strong> ${(d.processedAt && d.processedAt.toDate)
-      ? d.processedAt.toDate().toLocaleString()
-      : "-"}</p>
+    <p><strong>Processed:</strong> ${
+      d.processedAt?.toDate?.().toLocaleString?.() || "-"
+    }</p>
   `;
   deliveryModal.classList.remove("hidden");
 }
 
-// Modal close handlers
-[modalClose, modalCloseBtn, deliveryModal].forEach((el) => {
-  el?.addEventListener("click", (e) => {
-    if (e.target === deliveryModal || e.target === modalClose || e.target === modalCloseBtn) {
-      deliveryModal.classList.add("hidden");
-    }
-  });
+// Close modal only when clicking overlay or close buttons
+[modalClose, modalCloseBtn].forEach((btn) =>
+  btn?.addEventListener("click", () => deliveryModal.classList.add("hidden"))
+);
+deliveryModal?.addEventListener("click", (e) => {
+  if (e.target === deliveryModal) deliveryModal.classList.add("hidden");
 });
 
-// Filtering and search
+// -----------------------------
+// 🔎 Search + Filter
+// -----------------------------
 function applyFilters() {
   const term = (searchInput?.value || "").toLowerCase().trim();
-  const filter = filterSelect?.value || "all";
+  const filter = (filterSelect?.value || "all").toLowerCase();
 
   const filtered = deliveriesCache.filter((r) => {
-    if (filter !== "all" && r.data.status !== filter) return false;
+    const status = (r.data.status || "").toLowerCase();
+    if (filter !== "all" && status !== filter) return false;
     if (!term) return true;
     return (
       (r.data.fullName || "").toLowerCase().includes(term) ||
@@ -111,7 +133,9 @@ function applyFilters() {
 searchInput?.addEventListener("input", applyFilters);
 filterSelect?.addEventListener("change", applyFilters);
 
-// Main logic - detect role and fetch deliveries
+// -----------------------------
+// 🚀 Main Logic: Role-based Fetch
+// -----------------------------
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "login.html";
@@ -119,18 +143,25 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   try {
-    // 🔍 Get the logged-in user’s role
-    const userRef = doc(db, "customers", user.uid);
-    const userSnap = await getDoc(userRef);
-    const role = userSnap.exists() ? (userSnap.data().role || "customer") : "customer";
+    // Try both "customers" and "users" (some admins are in users)
+    let role = "customer";
+    const custSnap = await getDoc(doc(db, "customers", user.uid));
+    const userSnap = await getDoc(doc(db, "users", user.uid));
 
-    // 📦 Build Firestore query
+    if (custSnap.exists() && custSnap.data().role) {
+      role = custSnap.data().role;
+    } else if (userSnap.exists() && userSnap.data().role) {
+      role = userSnap.data().role;
+    }
+
+    // Build query
     let deliveriesQuery;
     if (role === "admin") {
-      // Admin sees all
-      deliveriesQuery = query(collection(db, "deliveries"), orderBy("processedAt", "desc"));
+      deliveriesQuery = query(
+        collection(db, "deliveries"),
+        orderBy("processedAt", "desc")
+      );
     } else {
-      // Customer sees only their own deliveries
       deliveriesQuery = query(
         collection(db, "deliveries"),
         where("userId", "==", user.uid),
@@ -138,22 +169,24 @@ onAuthStateChanged(auth, async (user) => {
       );
     }
 
-    // 🧠 Real-time listener
+    // Listen to Firestore in real time
     onSnapshot(
       deliveriesQuery,
       (snapshot) => {
-        deliveriesCache = [];
-        snapshot.forEach((doc) => deliveriesCache.push({ id: doc.id, data: doc.data() }));
+        deliveriesCache = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data()
+        }));
         applyFilters();
       },
       (err) => {
         console.error("Deliveries listener error:", err);
-        emptyState.textContent = "Failed to load deliveries";
+        emptyState.textContent = "Failed to load deliveries.";
         emptyState.style.display = "block";
       }
     );
   } catch (err) {
-    console.error("Error loading user role or deliveries:", err);
+    console.error("Error fetching deliveries:", err);
     emptyState.textContent = "Error loading data.";
     emptyState.style.display = "block";
   }
