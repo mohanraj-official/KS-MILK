@@ -2,68 +2,58 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Confirm Order - KS Milk</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/confirm-order.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Order - KS Milk</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/confirm-order.css">
 </head>
 
 <body>
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="logo"><a href="index.html"><span class="green">KS</span> MILK</a></div>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="products.html">Products</a></li>
-      <li><a href="founders.html">Founders</a></li>
-      <li id="login-link"><a href="login.html">Login</a></li>
-      <li id="register-link"><a href="register.html">Register</a></li>
-    </ul>
-    <div class="hamburger" onclick="toggleMenu()">☰</div>
-  </nav>
+    <nav class="navbar">
+        <div class="logo"><a href="index.html"><span class="green">KS</span> MILK</a></div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="founders.html">Founders</a></li>
+            <li id="login-link"><a href="login.html">Login</a></li>
+            <li id="register-link"><a href="register.html">Register</a></li>
+        </ul>
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+    </nav>
 
-  <!-- Confirm Order Section -->
-  <div class="confirm-container">
-    <div class="confirm-box">
-      <h2>Confirm Your Order</h2>
-      <p>Please check your details before final submission.</p>
+    <div class="confirm-container">
+        <div class="confirm-box">
+            <h2>Confirm Your Order</h2>
+            <p>Please check your details before final submission.</p>
 
-      <!-- Order Summary -->
-      <div class="order-summary">
-        <p><b>Name:</b> Krishna Sundar</p>
-        <p><b>Address:</b> Temple Road, Near Main Market</p>
-        <p><b>Landmark:</b> Main Market</p>
-        <p><b>Milk Quantity:</b> 2 Litres</p>
-        <p><b>Phone:</b> 9876543210</p>
-      </div>
+            <div class="order-summary">
+                <p><b>Name:</b> Krishna Sundar</p>
+                <p><b>Address:</b> Temple Road, Near Main Market</p>
+                <p><b>Landmark:</b> Main Market</p>
+                <p><b>Milk Quantity:</b> 2 Litres</p>
+                <p><b>Phone:</b> 9876543210</p>
+            </div>
 
-      <!-- Actions -->
-      <div class="confirm-actions">
-        <button class="edit-btn" onclick="window.history.back()">✏️ Edit</button>
-        <button class="confirm-btn">✅ Confirm Order</button>
-        <button class="cancel-btn" onclick="window.location.href='index.html'">&times;</button>
-
-
-      </div>
+            <div class="confirm-actions">
+                <button class="edit-btn" onclick="window.history.back()">✏️ Edit</button>
+                <button class="confirm-btn">✅ Confirm Order</button>
+                <button class="cancel-btn" onclick="window.location.href='index.html'">&times;</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Popup -->
-  <div id="successPopup" class="popup">
-    <div class="popup-content">
-      <h3>🎉 Order Confirmed!</h3>
-      <p>Your Order will be delivered soon by <b>KS Milk</b>.</p>
-      <button onclick="closePopup()">OK</button>
+    <div id="successPopup" class="popup">
+        <div class="popup-content">
+            <h3>🎉 Order Confirmed!</h3>
+            <p>Your Order will be delivered soon by <b>KS Milk</b>.</p>
+            <button onclick="closePopup()">OK</button>
+        </div>
     </div>
-  </div>
 
 
-  <!-- Example at bottom of page, before </body> -->
-  <script src="js/firebase.js"></script>
-  <script type="module" src="js/main.js"></script>
-
-
+    <script src="js/firebase.js"></script>
+    <script type="module" src="js/main.js"></script>
 
 </body>
 
