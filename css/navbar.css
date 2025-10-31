@@ -48,26 +48,25 @@ body {
     user-select: none;
 }
 
+
+
 /* ==========================================================
-    2. MOBILE RESPONSIIVENESS (Activation/Display Logic)
+    2. MOBILE RESPONSIIVENESS (Activation/Display Logic) - FIXED
     ========================================================== */
 
 @media (max-width: 768px) {
     .navbar { 
         padding: 16px 20px; 
-        position: relative; /* Essential for menu positioning */
+        position: relative;
     }
     
     .nav-links { 
-        display: none; /* MOBILE DEFAULT: Hides the menu */
+        display: none; /* MOBILE DEFAULT: Hides the entire menu UL */
         flex-direction: column;
         width: 100%;
-        
-        /* Dropdown positioning */
         position: absolute;
         top: 52px; 
         left: 0;
-        
         background: #ffffff;
         box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         padding: 10px 0;
@@ -78,15 +77,15 @@ body {
         text-align: center;
         padding: 10px 0;
         border-bottom: 1px solid #f7f7f7;
-        display:none;
+        /* 💡 FIX: REMOVE 'display: none;' HERE */
     }
     
     /* CRITICAL: CLASS TOGGLED BY JAVASCRIPT */
     .nav-links.active {
-        display: flex; /* MOBILE ACTIVE: Shows the links */
+        display: flex; /* This overrides 'display: none' on the UL and shows the menu */
     }
     
     .hamburger { 
-        display: block; /* MOBILE: Show hamburger icon */
+        display: block;
     }
 }
