@@ -1,3 +1,4 @@
+// history.js — FINAL REFINED VERSION
 import { auth, db } from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 import {
@@ -6,19 +7,19 @@ import {
   where,
   orderBy,
   getDocs,
-  limit
+  limit,
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 const ordersBody = document.getElementById("orders-body");
 
-// Helper: extract numeric value from price string like "₹40 / Liter"
+// ---------- Helper: Extract numeric value from price string ----------
 function extractNumericPrice(priceStr) {
   if (!priceStr) return 0;
-  const match = priceStr.match(/\d+/);
+  const match = priceStr.match(/\d+(\.\d+)?/);
   return match ? parseFloat(match[0]) : 0;
 }
 
-// Fetch and display orders for logged-in user
+// ---------- Fetch and display user's order history ----------
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     ordersBody.innerHTML = `
@@ -46,19 +47,20 @@ onAuthStateChanged(auth, async (user) => {
     let html = "";
     let index = 1;
 
-    // ✅ Use for...of to handle async delivery checks per order
     for (const docSnap of querySnapshot.docs) {
       const data = docSnap.data();
       const orderId = docSnap.id;
 
-      const date = data.createdAt?.toDate().toLocaleString() || "Unknown date";
+      const date = data.createdAt?.toDate
+        ? data.createdAt.toDate().toLocaleString()
+        : "Unknown date";
+
       const numericPrice = extractNumericPrice(data.price);
       const total = numericPrice * (data.quantity || 0);
 
-      // Default status
-      let statusLabel = "Confirmed";
+      let statusLabel = "Confirmed"; // default
 
-      // ✅ Fetch delivery record for this order
+      // ---------- Check delivery status ----------
       try {
         const dq = query(
           collection(db, "deliveries"),
@@ -68,8 +70,13 @@ onAuthStateChanged(auth, async (user) => {
         );
         const dqSnap = await getDocs(dq);
         if (!dqSnap.empty) {
-          const ddoc = dqSnap.docs[0].data();
-          statusLabel = ddoc.status === "delivered" ? "Delivered" : "Cancelled";
+          const deliveryDoc = dqSnap.docs[0].data();
+          statusLabel =
+            deliveryDoc.status === "delivered"
+              ? "Delivered"
+              : deliveryDoc.status === "cancelled"
+              ? "Cancelled"
+              : "Confirmed";
         }
       } catch (e) {
         console.error("Delivery fetch error for", orderId, e);
@@ -92,9 +99,10 @@ onAuthStateChanged(auth, async (user) => {
     }
 
     ordersBody.innerHTML = html;
-
   } catch (err) {
     console.error("Error fetching orders:", err);
-    ordersBody.innerHTML = `<tr><td colspan="10">❌ Failed to load orders. Please try again later.</td></tr>`;
+    ordersBody.innerHTML = `
+      <tr><td colspan="10">❌ Failed to load orders. Please try again later.</td></tr>
+    `;
   }
 });
