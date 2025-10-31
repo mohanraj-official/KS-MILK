@@ -1,0 +1,253 @@
+/* ================================
+    Products Section (Glassmorphism Dairy Theme)
+================================ */
+.products {
+    padding: 100px 20px; /* Increased padding for more "air" */
+    text-align: center;
+    /* Soft, creamy background */
+    background: linear-gradient(180deg, #fcfcfc 0%, #e8f9eb 100%); 
+    position: relative;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Subtle floating background animation (Refined for a softer look) */
+.products::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    /* Soft, creamy cloud effect */
+    background: radial-gradient(circle at center, rgba(135, 206, 235, 0.1), transparent 65%);
+    animation: floatBg 12s ease-in-out infinite alternate; /* Slower animation */
+    z-index: 0;
+}
+
+@keyframes floatBg {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(8%, 8%) scale(1.15); }
+}
+
+.products h2 {
+    font-size: 2.8rem; /* Larger, more dominant title */
+    font-weight: 800;
+    color: #1e8449; /* Deep, natural green */
+    margin-bottom: 50px;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 2;
+    /* Retain smooth entrance animation */
+    animation: fadeSlideDown 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; 
+}
+
+@keyframes fadeSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Product Grid Layout */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Slightly wider cards */
+    gap: 40px; /* Increased gap */
+    justify-content: center;
+    max-width: 1300px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* ------------------------------------------------------------------- */
+/* Glassmorphism Card Styling */
+/* ------------------------------------------------------------------- */
+.product-card {
+    /* Glassmorphism Core */
+    background: rgba(255, 255, 255, 0.2); /* Translucent background */
+    backdrop-filter: blur(20px) saturate(150%); /* High blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.5); /* Light, defining border */
+    border-right-color: rgba(255, 255, 255, 0.2);
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+    
+    border-radius: 25px; /* Softer rounded corners */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15); /* Glass shadow */
+    overflow: hidden;
+    
+    /* Animation and Layout */
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    padding-bottom: 30px;
+    height: 100%;
+    position: relative;
+    animation: fadeInUp 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; /* Bouncier entrance */
+}
+
+/* Removal of the ::before glow as Glassmorphism uses the solid white border */
+.product-card::before {
+    display: none; 
+}
+
+/* Enhanced Hover Effect (Lift and shadow intensify) */
+.product-card:hover {
+    transform: translateY(-15px) scale(1.03);
+    /* Deeper, more noticeable shadow on lift */
+    box-shadow: 0 20px 40px rgba(31, 38, 135, 0.25); 
+}
+
+/* Image */
+.product-card img {
+    width: 100%;
+    height: 250px; /* Taller image area */
+    object-fit: cover;
+    /* Soft top border to separate image from glass */
+    border-bottom: 2px solid rgba(255, 255, 255, 0.7); 
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.6s ease;
+}
+
+.product-card:hover img {
+    transform: scale(1.1); /* Deeper zoom */
+    filter: brightness(1.1);
+}
+
+/* Product Details */
+.product-card h3 {
+    font-size: 1.4rem; /* Prominent title */
+    margin: 25px 0 10px;
+    color: #1e8449; /* Deep Green */
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+
+.product-card:hover h3 {
+    color: #5cb85c; /* Lighter green on hover */
+}
+
+.product-card p {
+    font-size: 1.05rem;
+    color: #444; /* Darker text for readability over glass */
+    padding: 0 15px; /* Add padding to description */
+    margin-bottom: 25px;
+    line-height: 1.6;
+    transition: color 0.3s ease;
+}
+
+/* ------------------------------------------------------------------- */
+/* Order Button (Modern and Tactile) */
+/* ------------------------------------------------------------------- */
+.order-btn {
+    /* Dairy-themed gradient: Natural Green to Deeper Green */
+    background: linear-gradient(90deg, #5cb85c, #3c763d);
+    border: none;
+    color: white;
+    padding: 14px 30px;
+    border-radius: 15px; /* Match card radius */
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bouncier transition */
+    box-shadow: 0 8px 20px rgba(92, 184, 92, 0.4);
+    width: 180px; /* Fixed width */
+    align-self: center;
+    position: relative;
+    overflow: hidden;
+    z-index: 1; /* Ensure text is above the shimmer */
+}
+
+/* Shimmer Effect (More defined and faster) */
+.order-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%; /* Start further left */
+    width: 80%; /* Wider shimmer */
+    height: 100%;
+    background: rgba(255, 255, 255, 0.4); /* Brighter shimmer */
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+}
+
+.order-btn:hover::after {
+    left: 150%; /* End further right */
+}
+
+.order-btn:hover {
+    background: linear-gradient(90deg, #3c763d, #2f6430);
+    transform: scale(1.1); /* More pronounced lift */
+    box-shadow: 0 12px 25px rgba(92, 184, 92, 0.5);
+}
+
+.order-btn:active {
+    transform: scale(1.05) translateY(2px); /* Press down effect */
+    box-shadow: 0 5px 10px rgba(92, 184, 92, 0.3);
+    transition: all 0.1s ease;
+}
+
+/* Fade-in animation for grid items */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ------------------------------------------------------------------- */
+/* Responsive Design */
+/* ------------------------------------------------------------------- */
+@media (max-width: 992px) {
+    .products h2 {
+        font-size: 2.5rem;
+    }
+    .product-grid {
+        gap: 30px;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    .product-card {
+        padding-bottom: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .products {
+        padding: 80px 15px;
+    }
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+    .product-card {
+        max-width: 450px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .products h2 {
+        font-size: 2rem;
+    }
+    .product-card img {
+        height: 200px;
+    }
+    .product-card h3 {
+        font-size: 1.2rem;
+    }
+    .product-card p {
+        font-size: 0.95rem;
+    }
+    .order-btn {
+        width: 80%;
+    }
+}
