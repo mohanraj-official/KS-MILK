@@ -11,7 +11,6 @@ import {
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
-// DOM elements
 const deliveriesList = document.getElementById("deliveriesList");
 const emptyState = document.getElementById("emptyState");
 const searchInput = document.getElementById("searchInput");
@@ -23,9 +22,6 @@ const modalCloseBtn = document.getElementById("modalCloseBtn");
 
 let deliveriesCache = []; // stores {id, data}
 
-// ==========================
-// RENDER LIST
-// ==========================
 function renderList(items) {
   deliveriesList.innerHTML = "";
   if (!items.length) {
@@ -66,9 +62,6 @@ function renderList(items) {
   });
 }
 
-// ==========================
-// MODAL HANDLERS
-// ==========================
 function openModal(rec) {
   const d = rec.data;
   modalBody.innerHTML = `
@@ -87,6 +80,7 @@ function openModal(rec) {
   deliveryModal.classList.remove("hidden");
 }
 
+// Modal close handlers
 [modalClose, modalCloseBtn, deliveryModal].forEach((el) => {
   el?.addEventListener("click", (e) => {
     if (e.target === deliveryModal || e.target === modalClose || e.target === modalCloseBtn) {
@@ -95,9 +89,7 @@ function openModal(rec) {
   });
 });
 
-// ==========================
-// SEARCH + FILTER
-// ==========================
+// Filtering and search
 function applyFilters() {
   const term = (searchInput?.value || "").toLowerCase().trim();
   const filter = filterSelect?.value || "all";
@@ -119,9 +111,7 @@ function applyFilters() {
 searchInput?.addEventListener("input", applyFilters);
 filterSelect?.addEventListener("change", applyFilters);
 
-// ==========================
-// MAIN AUTH + FIRESTORE LOGIC
-// ==========================
+// Main logic - detect role and fetch deliveries
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "login.html";
@@ -129,32 +119,18 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   try {
-    // 🧠 Try both collections for user role (admin or customer)
-    const customerRef = doc(db, "customers", user.uid);
-    const adminRef = doc(db, "users", user.uid);
+    // 🔍 Get the logged-in user’s role
+    const userRef = doc(db, "customers", user.uid);
+    const userSnap = await getDoc(userRef);
+    const role = userSnap.exists() ? (userSnap.data().role || "customer") : "customer";
 
-    let userSnap = await getDoc(customerRef);
-    let role = "customer";
-
-    if (!userSnap.exists()) {
-      userSnap = await getDoc(adminRef);
-      if (userSnap.exists()) role = userSnap.data().role || "admin";
-    } else {
-      role = userSnap.data().role || "customer";
-    }
-
-    console.log("Logged-in role:", role);
-
-    // 🔍 Build Firestore query
+    // 📦 Build Firestore query
     let deliveriesQuery;
     if (role === "admin") {
-      // ✅ Admin sees all deliveries
-      deliveriesQuery = query(
-        collection(db, "deliveries"),
-        orderBy("processedAt", "desc")
-      );
+      // Admin sees all
+      deliveriesQuery = query(collection(db, "deliveries"), orderBy("processedAt", "desc"));
     } else {
-      // ✅ Customer sees only their own deliveries
+      // Customer sees only their own deliveries
       deliveriesQuery = query(
         collection(db, "deliveries"),
         where("userId", "==", user.uid),
@@ -162,7 +138,7 @@ onAuthStateChanged(auth, async (user) => {
       );
     }
 
-    // 🔄 Real-time listener
+    // 🧠 Real-time listener
     onSnapshot(
       deliveriesQuery,
       (snapshot) => {
@@ -172,7 +148,7 @@ onAuthStateChanged(auth, async (user) => {
       },
       (err) => {
         console.error("Deliveries listener error:", err);
-        emptyState.textContent = "Failed to load deliveries.";
+        emptyState.textContent = "Failed to load deliveries";
         emptyState.style.display = "block";
       }
     );
