@@ -31,7 +31,7 @@ export async function requestNotificationPermission() {
     if (permission === "granted") {
       console.log("🔔 Notification permission granted.");
       const token = await getToken(messaging, {
-        vapidKey: "YOUR_PUBLIC_VAPID_KEY_HERE"
+        vapidKey: "BOkG8TYzCuySeqmDGJ_4qTMTPcyTMl8nKmfRVJ6_VEh2eLq0sEb8cRpeY6rvO1Gk6E8vXFbfkwKqZzR6_gc03B0"
       });
       console.log("📱 FCM Token:", token);
       return token;
