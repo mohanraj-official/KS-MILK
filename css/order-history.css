@@ -18,7 +18,7 @@ body {
     align-items: center;
     padding: 16px 40px;
     background: #ffffff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Minimal shadow for definition */
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -36,12 +36,11 @@ body {
 .hamburger { display: none; font-size: 24px; cursor: pointer; }
 
 
-
 /* ==================================================
     2. Orders Section - Desktop/Tablet (Clean Table)
     ================================================== */
 .orders-section {
-    padding: 40px 60px; /* Safe padding for desktop */
+    padding: 40px 60px;
     max-width: 1300px;
     margin: 0 auto;
     min-height: calc(100vh - 80px);
@@ -60,17 +59,17 @@ body {
 
 /* Table Container (Shadowed Box) */
 .orders-table-container {
-    overflow-x: auto; /* Allows horizontal scrolling ONLY for the table content */
+    overflow-x: auto; 
     background: #fff;
     border: 1px solid #e6e8ea;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Retain clean, slight lift */
 }
 
 .orders-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 1000px; /* Ensures table width is adequate for all 10 columns */
+    min-width: 1000px; 
 }
 
 /* Table Head */
@@ -84,7 +83,7 @@ body {
     border-bottom: 1px solid #e6e8ea;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    white-space: nowrap; /* Keeps headers on one line */
+    white-space: nowrap;
 }
 .orders-table th:first-child { text-align: center; }
 .orders-table th:nth-child(6) { text-align: right; } /* Total */
@@ -104,7 +103,7 @@ body {
 }
 
 .orders-table tbody tr:hover {
-    background: #f9fffb;
+    background: #f9fffb; /* Minimal hover highlight */
 }
 
 /* Highlighted Columns */
@@ -115,12 +114,13 @@ body {
     text-align: right;
 }
 
-/* Status Badges (Reused from clean style) */
+/* Status Badges */
 .badge { 
     padding: 5px 10px; 
     border-radius: 999px; 
     font-size: 12px; 
     font-weight: 600; 
+    /* The colors below are clean and defined, not 'glowing' */
 }
 .badge.delivered { background:#ecfdf5; color:#166534; border:1px solid #bbf7d0; }
 .badge.cancelled { background:#fff1f0; color:#9b1c1c; border:1px solid #fecaca; }
@@ -133,24 +133,33 @@ body {
     ================================================== */
 @media (max-width: 768px) {
     .orders-section {
-        /* Reduced safe padding */
         padding: 25px 20px; 
     }
     .navbar { padding: 16px 20px; }
     .nav-links { display: none; }
     .hamburger { display: block; }
 
-    /* Hide the actual table header on mobile */
+    /* CRITICAL FIX for mobile data visibility */
+    .orders-table-container {
+        overflow-x: visible; /* Allows content to flow vertically */
+        box-shadow: none;    
+        border: none;        
+        background: transparent; 
+    }
+    .orders-table {
+        min-width: unset; 
+        width: 100%;
+    }
     .orders-table thead {
         display: none;
     }
 
-    /* Treat the body and rows as blocks */
+    /* Treat the body and rows as cards */
     .orders-table tbody,
     .orders-table tr {
         display: block;
         width: 100%;
-        margin-bottom: 15px; /* Spacing between cards */
+        margin-bottom: 15px; 
     }
 
     .orders-table tr {
@@ -165,7 +174,7 @@ body {
     }
     .orders-table td {
         display: block;
-        text-align: right !important; /* Align data to the right */
+        text-align: right !important; 
         border-bottom: 1px solid #f0f0f0;
         padding: 8px 0;
         white-space: normal;
@@ -175,7 +184,7 @@ body {
 
     /* Pseudo-elements to display the column header name */
     .orders-table td::before {
-        content: attr(data-label); /* Requires data-label attribute in HTML <td> */
+        content: attr(data-label); 
         float: left;
         font-weight: 600;
         color: #183826;
