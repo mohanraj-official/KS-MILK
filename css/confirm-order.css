@@ -1,4 +1,6 @@
-/* GLOBAL RESET: ESSENTIAL */
+/* ==========================================================
+    1. GLOBAL RESET & NAVBAR SETUP (style.css content)
+    ========================================================== */
 * {
     box-sizing: border-box; 
     margin: 0;
@@ -38,8 +40,6 @@ body {
     .navbar { padding: 16px 20px; }
     .nav-links { display: none; }
     .hamburger { display: block; }
-
-    /* Mobile Menu Display */
     .nav-links {
         flex-direction: column;
         width: 100%;
@@ -51,25 +51,21 @@ body {
         padding: 10px 0;
         border-top: 1px solid #f0f0f0;
     }
-
     .nav-links li {
         text-align: center;
         padding: 10px 0;
         border-bottom: 1px solid #f7f7f7;
     }
-    
     .nav-links.active {
         display: flex;
     }
 }
 
 
-/* ==================================================
-    KS MILK - Confirm Order Styles (Clean Card Look)
-    ================================================== */
-
+/* ==========================================================
+    2. CONFIRM ORDER STYLES (confirm-order.css content)
+    ========================================================== */
 .confirm-container {
-    /* ... (unchanged) ... */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -78,7 +74,7 @@ body {
     background: #f7fdf8;
 }
 
-/* Confirmation Box - MUST BE POSITION: RELATIVE */
+/* Confirmation Box - Must be position: relative */
 .confirm-box {
     width: 100%;
     max-width: 500px;
@@ -88,16 +84,16 @@ body {
     padding: 30px;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); 
     text-align: center;
-    position: relative; /* CRITICAL: Sets positioning context */
+    position: relative; /* CRITICAL: Sets positioning context for cancel-btn */
 }
 
+/* Title adjustments for the top-right button */
 .confirm-box h2 {
     font-size: 26px;
     color: #183826;
-    /* Increase bottom margin to prevent text overlap with the close button */
-    margin-bottom: 25px; 
-    padding-right: 40px; /* Push the H2 text away from the top-right button */
+    margin-bottom: 8px;
     font-weight: 700;
+    padding-right: 40px; /* Make room for the 'X' button */
 }
 
 .confirm-box > p {
@@ -107,69 +103,160 @@ body {
 }
 
 /* --- Absolute Positioned Cancel Button --- */
-.cancel-btn.top-right {
+.cancel-btn {
     position: absolute; 
-    top: 15px;
-    right: 15px;
-    /* Style the button as a small 'x' */
-    background: #fef2f2; 
-    color: #dc2626; 
-    border-color: #fecaca;
+    top: 15px;          /* Distance from top */
+    right: 15px;        /* Distance from right */
+    
+    /* Styling the 'X' button */
+    background: #fef2f2; /* Very light background */
+    color: #dc2626; /* Red 'X' */
+    border: 1px solid #fecaca;
     font-size: 20px;
     line-height: 1;
-    width: 35px; /* Fixed small width */
-    height: 35px; /* Fixed small height */
+    width: 35px; /* Fixed width */
+    height: 35px; /* Fixed height */
     padding: 0;
     display: grid;
-    place-content: center;
-    border-radius: 50%; /* Make it a circular button */
+    place-content: center; /* Center the 'X' symbol */
+    border-radius: 50%; /* Circular shape */
+    cursor: pointer;
+    transition: background 0.2s ease;
     z-index: 10;
-    flex-basis: auto; /* Override flex-basis from other styles */
 }
 
-.cancel-btn.top-right:hover {
+.cancel-btn:hover {
     background: #fecaca;
-    transform: none; /* Override hover transform if any */
 }
 
-/* --- Action Buttons (Bottom) - REMOVE CANCEL BUTTON STYLES --- */
+/* Order Summary Details (Clean Block) */
+.order-summary {
+    text-align: left;
+    background: #f9fbfb;
+    border: 1px solid #eef1f3;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 25px;
+}
+.order-summary p {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.6;
+    margin: 4px 0;
+}
+.order-summary b {
+    color: #1a1a1a;
+    display: inline-block;
+    min-width: 100px; 
+    font-weight: 600;
+}
+
+/* --- Action Buttons (Bottom) --- */
 .confirm-actions {
     display: flex;
     gap: 10px; 
     align-items: center;
-    justify-content: flex-end; /* Push remaining buttons to the right */
+    justify-content: flex-end; /* Align buttons to the right */
 }
 
 .confirm-btn,
 .edit-btn {
-    /* ... (unchanged) ... */
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background 0.3s ease, transform 0.1s;
+    border: 1px solid transparent; 
 }
 
-/* The original .cancel-btn styles are now obsolete since the element was moved/renamed/restyled */
-/* We still need a placeholder style for the original .cancel-btn if you keep it: */
-.cancel-btn {
-    display: none; /* Hide the old button if it wasn't removed from HTML */
+.confirm-btn {
+    flex-grow: 1; 
+    background: #16a34a; 
+    color: #ffffff;
+    border-color: #16a34a;
+}
+.confirm-btn:hover {
+    background: #15803d;
 }
 
-/* --- Mobile Responsiveness Adjustments --- */
+.edit-btn {
+    background: #fef3c7; 
+    color: #a16207;
+    border-color: #fde68a;
+    flex-basis: 90px;
+}
+.edit-btn:hover {
+    background: #fde68a;
+}
+
+
+/* --- Popup (Success Message) Styles --- */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; 
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+}
+
+.popup-content {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 90%;
+    max-width: 350px;
+}
+
+.popup-content h3 { color: #16a34a; margin-bottom: 10px; font-size: 24px; }
+.popup-content p { color: #5b5b5b; margin-bottom: 20px; }
+.popup-content button {
+    background: #16a34a;
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+
+/* --- Mobile Responsiveness --- */
 @media (max-width: 600px) {
-    /* ... (unchanged container/box styles) ... */
-
+    .confirm-container {
+        padding: 20px 15px;
+    }
+    .confirm-box {
+        padding: 20px;
+        border-radius: 10px;
+    }
+    .confirm-box h2 {
+        font-size: 24px;
+        /* Adjust for smaller X button on mobile */
+        padding-right: 35px; 
+    }
+    
     /* Adjust the absolute button for mobile */
-    .cancel-btn.top-right {
+    .cancel-btn {
         top: 10px;
         right: 10px;
         width: 30px;
         height: 30px;
         font-size: 18px;
     }
-
+    
     .confirm-actions {
         flex-direction: column; 
         justify-content: center;
     }
     
-    /* Ensure the remaining action buttons still take full width on mobile */
     .confirm-btn,
     .edit-btn {
         width: 100%; 
