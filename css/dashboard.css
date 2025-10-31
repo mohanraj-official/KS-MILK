@@ -1,227 +1,265 @@
-/* ==============================
-    Dashboard Container Layout
-    ============================== */
-.dashboard-container {
-    display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: 40px;
-    /* Use padding that will be adjusted in media queries */
-    padding: 50px 80px; 
-    background-color: #f0fdf2; 
-    min-height: calc(100vh - 80px);
-    transition: all 0.5s ease;
+/* ==============================================================
+    KS MILK - Dashboard Styles (Clean, Modern Card-Based)
+    ============================================================== */
+
+/* 1. GLOBAL RESET (CRUCIAL for scroll-proofing) */
+* {
+    box-sizing: border-box; /* Ensures padding/border are inside the element's defined width/height */
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Inter", system-ui, sans-serif;
+    background: #f7fdf8;
+    color: #222;
+    overflow-x: hidden; /* Explicitly prevents horizontal scrolling */
 }
 
-/* =============================
-    Profile Card (Futuristic Defined)
-    ============================= */
+/* -------------------------------------------------------------- */
+/* 2. NAVBAR (Clean Style Adaptation) */
+/* -------------------------------------------------------------- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.logo a {
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+.logo .green { color: #16a34a; } /* Stronger green */
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+}
+.nav-links a {
+    text-decoration: none;
+    color: #444;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+.nav-links a:hover { color: #16a34a; }
+.hamburger {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* -------------------------------------------------------------- */
+/* 3. DASHBOARD CONTAINER & LAYOUT */
+/* -------------------------------------------------------------- */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 300px 1fr; /* Defined profile width */
+    gap: 30px;
+    padding: 40px 60px; /* Base padding */
+    min-height: calc(100vh - 80px);
+    transition: all 0.4s ease;
+}
+
+/* -------------------------------------------------------------- */
+/* 4. PROFILE CARD (Clean, Soft Depth) */
+/* -------------------------------------------------------------- */
 .profile-card {
-    background: #ffffff; 
+    background: #ffffff;
     border-radius: 12px;
-    padding: 40px 30px; 
+    padding: 30px;
     text-align: left;
-    /* Futuristic, layered shadow for sharp depth */
-    box-shadow: 
-        8px 8px 0px #4caf50, 
-        0 0 0 1px #4caf50;
-    border: none;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    /* Clean, defined box style */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); 
+    border: 1px solid #e6e8ea;
+    transition: all 0.3s ease;
     position: sticky;
     top: 100px;
-    animation: fadeInUp 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    animation: fadeInUp 0.5s ease forwards;
 }
 
 .profile-card:hover {
-    transform: translate(4px, 4px);
-    box-shadow: 
-        4px 4px 0px #388e3c, 
-        0 0 0 1px #388e3c;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Heading */
 .profile-card h2 {
     display: flex;
     align-items: center;
-    gap: 12px;
-    color: #1e8449;
-    font-size: 2rem;
-    font-weight: 800;
-    margin-bottom: 30px;
-    /* Clean, solid text */
-    text-shadow: none; 
+    gap: 8px;
+    color: #183826; /* Deep green */
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 25px;
 }
 
 /* Info Text */
 .profile-card p {
-    font-size: 1.05rem;
-    color: #333;
-    margin: 15px 0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    font-size: 15px;
+    color: #444;
+    margin: 12px 0;
     line-height: 1.5;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
+    transition: color 0.3s ease;
 }
 
 .profile-card p:hover {
-    transform: translateX(8px);
-    color: #4caf50;
-    font-weight: 600;
+    color: #16a34a;
 }
 
-
-
-
-
-/* =============================
-    Dashboard Content
-    ============================= */
+/* -------------------------------------------------------------- */
+/* 5. DASHBOARD CONTENT & CARDS */
+/* -------------------------------------------------------------- */
 .dashboard-content {
-    background: #fff;
-    border-radius: 12px;
-    padding: 40px; 
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
-    transition: all 0.5s ease;
-    animation: fadeIn 0.7s ease forwards;
+    background: transparent; /* Keep background clean */
+    padding: 0; /* Remove padding here, handled by container */
+    animation: fadeIn 0.6s ease forwards;
 }
 
 .dashboard-content h2 {
-    color: #1e8449;
+    color: #183826;
     margin-bottom: 5px;
-    font-size: 2rem;
+    font-size: 28px;
     font-weight: 700;
 }
 
 .dashboard-content p {
-    color: #666;
+    color: #5b5b5b;
     margin-bottom: 30px;
-    font-size: 1.05rem;
+    font-size: 15px;
 }
 
-/* =============================
-    Dashboard Cards (Animated Border Glow)
-    ============================= */
+/* Dashboard Cards Grid */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
 }
 
 .card {
     background: #ffffff;
-    border-radius: 12px;
-    padding: 25px;
+    border-radius: 10px;
+    padding: 20px 25px;
     text-decoration: none;
     color: #333;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    /* Soft shadow from the clean style */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+    border: 1px solid #e6e8ea;
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    border: 1px solid #e0e0e0;
 }
 
 .card h3 {
-    color: #2e7d32;
-    font-size: 1.4rem;
-    margin-bottom: 10px;
-    font-weight: 700;
+    color: #183826;
+    font-size: 18px;
+    margin-bottom: 4px;
+    font-weight: 600;
 }
 
 .card p {
-    font-size: 1rem;
-    color: #666;
+    font-size: 14px;
+    color: #555;
     margin-bottom: 0;
+    line-height: 1.4;
 }
 
-/* Hover Animation (Lift + Border Color) */
+/* Hover Animation (Lift and Green Shadow/Outline) */
 .card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 15px 30px rgba(67,160,71,0.2);
-    border-color: #4caf50;
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px rgba(22, 163, 74, 0.15);
+    border-color: #16a34a; /* Highlight border */
 }
 
-/* Animated Border Highlight */
-.card::after {
-    content: "";
+/* Simple Icon/Glow Effect (Replaces complex animations) */
+.card::before {
+    content: '';
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
-    width: 0;
-    height: 5px;
-    background: linear-gradient(90deg, #4caf50, #1e8449);
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 4px;
+    height: 100%;
+    background: #16a34a;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s ease-out;
 }
 
-.card:hover::after {
-    width: 100%;
+.card:hover::before {
+    transform: scaleY(1);
 }
 
+/* -------------------------------------------------------------- */
+/* 6. ANIMATIONS */
+/* -------------------------------------------------------------- */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 
+/* -------------------------------------------------------------- */
+/* 7. FULL RESPONSIVE DESIGN (SCROLL-PROOFING) */
+/* -------------------------------------------------------------- */
 
+/* Tablets/Mid-Size Screens (992px and below) */
+@media (max-width: 992px) {
+    .navbar { padding: 16px 20px; }
+    .nav-links { display: none; } /* Hide links for mobile menu */
+    .hamburger { display: block; }
 
-/* =============================
-    Responsive Design
-    ============================= */
-
-/* Tablets */
-@media (max-width: 1100px) {
     .dashboard-container {
-        grid-template-columns: 1fr;
-        /* REDUCED HORIZONTAL PADDING to prevent scrollbar */
-        padding: 40px 40px; 
-        gap: 30px;
-    }
-    .profile-card {
-        position: relative;
-        top: 0;
-        margin-bottom: 10px;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
-    }
-    .profile-card:hover {
-        transform: translateY(-5px);
-        /* Disable the harsh neo-brutalism shadow effect on mobile/tablet hover */
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        transform: none; 
-    }
-    .profile-card h2,
-    .profile-card p {
-        justify-content: center;
-    }
-    .dashboard-content {
-        padding: 30px;
-    }
-}
-
-/* Mobiles */
-@media (max-width: 650px) {
-    .navbar {
-        padding: 18px 20px;
-    }
-    .dashboard-container {
-        /* FURTHER REDUCED HORIZONTAL PADDING */
-        padding: 25px 20px; 
+        grid-template-columns: 1fr; /* Single column layout */
+        /* Adjusted padding to be safe on small screens */
+        padding: 30px 25px; 
         gap: 25px;
     }
-    .dashboard-content {
-        padding: 20px;
-    }
+
     .profile-card {
-        padding: 25px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        position: relative; /* Remove sticky on mobile */
+        top: 0;
+        margin-bottom: 5px;
+        text-align: center; /* Center content */
     }
-    .profile-card h2 {
-        font-size: 1.7rem;
+
+    .profile-card h2,
+    .profile-card p {
+        justify-content: center; /* Center profile text/icons */
     }
-    .dashboard-content h2 {
-        font-size: 1.7rem;
-    }
-    .dashboard-grid {
-        grid-template-columns: 1fr;
+
+    .dashboard-content h2 { font-size: 24px; }
+}
+
+/* Mobiles (600px and below) */
+@media (max-width: 600px) {
+    .dashboard-container {
+        /* Minimal safe padding */
+        padding: 20px 15px; 
         gap: 20px;
     }
-    .card {
+
+    .profile-card {
         padding: 20px;
+        border-radius: 10px;
+    }
+
+    .dashboard-grid {
+        /* Force single column for very small screens */
+        grid-template-columns: 1fr; 
+        gap: 15px;
+    }
+
+    .card {
+        padding: 18px 20px;
     }
 }
