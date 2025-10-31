@@ -1,14 +1,14 @@
 // delivery.js
 import { auth, db } from "./firebase.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 import {
   collection,
   query,
   where,
   orderBy,
   onSnapshot,
-  getDocs,
-  limit
+  doc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 const deliveriesList = document.getElementById("deliveriesList");
@@ -20,7 +20,7 @@ const modalBody = document.getElementById("modalBody");
 const modalClose = document.getElementById("modalClose");
 const modalCloseBtn = document.getElementById("modalCloseBtn");
 
-let deliveriesCache = []; // array of {id, data}
+let deliveriesCache = []; // stores {id, data}
 
 function renderList(items) {
   deliveriesList.innerHTML = "";
@@ -35,15 +35,26 @@ function renderList(items) {
     const el = document.createElement("div");
     el.className = "delivery-item";
     el.dataset.id = rec.id;
-    const badgeClass = data.status === "delivered" ? "badge delivered" : "badge cancelled";
+
+    const badgeClass =
+      data.status === "delivered"
+        ? "badge delivered"
+        : data.status === "cancelled"
+        ? "badge cancelled"
+        : "badge pending";
+
     el.innerHTML = `
       <div class="delivery-left">
-        <div class="delivery-title">${data.fullName} — ${data.product}</div>
-        <div class="delivery-meta">Qty: ${data.quantity} L • ${data.address}</div>
+        <div class="delivery-title">${data.fullName || "Unknown"} — ${data.product || "N/A"}</div>
+        <div class="delivery-meta">Qty: ${data.quantity || 0} L • ${data.address || "N/A"}</div>
       </div>
       <div style="text-align:right">
-        <div class="delivery-time">${(data.processedAt && data.processedAt.toDate) ? data.processedAt.toDate().toLocaleString() : ""}</div>
-        <div class="${badgeClass}" style="margin-top:8px">${data.status.toUpperCase()}</div>
+        <div class="delivery-time">
+          ${(data.processedAt && data.processedAt.toDate)
+            ? data.processedAt.toDate().toLocaleString()
+            : ""}
+        </div>
+        <div class="${badgeClass}" style="margin-top:8px">${data.status?.toUpperCase() || "PENDING"}</div>
       </div>
     `;
     el.addEventListener("click", () => openModal(rec));
@@ -57,21 +68,28 @@ function openModal(rec) {
     <p><strong>Customer:</strong> ${d.fullName || "-"}</p>
     <p><strong>Phone:</strong> ${d.phone || "-"}</p>
     <p><strong>Product:</strong> ${d.product || "-"}</p>
-    <p><strong>Quantity:</strong> ${d.quantity || "-" } L</p>
+    <p><strong>Quantity:</strong> ${d.quantity || "-"} L</p>
     <p><strong>Address:</strong> ${d.address || "-"}</p>
     <p><strong>Order ID:</strong> ${d.orderId || "-"}</p>
     <p><strong>Notification ID:</strong> ${d.notificationId || "-"}</p>
-    <p><strong>Status:</strong> ${d.status}</p>
-    <p><strong>Processed:</strong> ${(d.processedAt && d.processedAt.toDate) ? d.processedAt.toDate().toLocaleString() : "-"}</p>
+    <p><strong>Status:</strong> ${d.status || "-"}</p>
+    <p><strong>Processed:</strong> ${(d.processedAt && d.processedAt.toDate)
+      ? d.processedAt.toDate().toLocaleString()
+      : "-"}</p>
   `;
   deliveryModal.classList.remove("hidden");
 }
 
-modalClose?.addEventListener("click", () => deliveryModal.classList.add("hidden"));
-modalCloseBtn?.addEventListener("click", () => deliveryModal.classList.add("hidden"));
-deliveryModal?.addEventListener("click", (e) => { if (e.target === deliveryModal) deliveryModal.classList.add("hidden"); });
+// Modal close handlers
+[modalClose, modalCloseBtn, deliveryModal].forEach((el) => {
+  el?.addEventListener("click", (e) => {
+    if (e.target === deliveryModal || e.target === modalClose || e.target === modalCloseBtn) {
+      deliveryModal.classList.add("hidden");
+    }
+  });
+});
 
-// filter + search
+// Filtering and search
 function applyFilters() {
   const term = (searchInput?.value || "").toLowerCase().trim();
   const filter = filterSelect?.value || "all";
@@ -86,47 +104,57 @@ function applyFilters() {
       (r.data.notificationId || "").toLowerCase().includes(term)
     );
   });
+
   renderList(filtered);
 }
 
 searchInput?.addEventListener("input", applyFilters);
 filterSelect?.addEventListener("change", applyFilters);
 
-// auth + listen
+// Main logic - detect role and fetch deliveries
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "login.html";
     return;
   }
 
-  // check role quickly from customers doc (admin sees all)
-  const userDocRef = collection(db, "customers"); // placeholder to avoid extra import
-  // simple approach: show admin all, customers only their records
-  // fetch customers doc
   try {
-    const custRef = collection(db, "customers"); // not used directly
-  } catch (err) {}
+    // 🔍 Get the logged-in user’s role
+    const userRef = doc(db, "customers", user.uid);
+    const userSnap = await getDoc(userRef);
+    const role = userSnap.exists() ? (userSnap.data().role || "customer") : "customer";
 
-  // Determine role by reading customers/user doc
-  const { getDoc, doc } = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js");
-  const userDoc = await getDoc(doc(db, "customers", user.uid));
-  const role = userDoc.exists() ? (userDoc.data().role || "customer") : "customer";
+    // 📦 Build Firestore query
+    let deliveriesQuery;
+    if (role === "admin") {
+      // Admin sees all
+      deliveriesQuery = query(collection(db, "deliveries"), orderBy("processedAt", "desc"));
+    } else {
+      // Customer sees only their own deliveries
+      deliveriesQuery = query(
+        collection(db, "deliveries"),
+        where("userId", "==", user.uid),
+        orderBy("processedAt", "desc")
+      );
+    }
 
-  // Build query
-  let q;
-  if (role === "admin") {
-    q = query(collection(db, "deliveries"), orderBy("processedAt", "desc"));
-  } else {
-    q = query(collection(db, "deliveries"), where("userId", "==", user.uid), orderBy("processedAt", "desc"));
-  }
-
-  onSnapshot(q, (snap) => {
-    deliveriesCache = [];
-    snap.forEach((s) => deliveriesCache.push({ id: s.id, data: s.data() }));
-    applyFilters();
-  }, (err) => {
-    console.error("Deliveries listener error:", err);
-    emptyState.textContent = "Failed to load deliveries";
+    // 🧠 Real-time listener
+    onSnapshot(
+      deliveriesQuery,
+      (snapshot) => {
+        deliveriesCache = [];
+        snapshot.forEach((doc) => deliveriesCache.push({ id: doc.id, data: doc.data() }));
+        applyFilters();
+      },
+      (err) => {
+        console.error("Deliveries listener error:", err);
+        emptyState.textContent = "Failed to load deliveries";
+        emptyState.style.display = "block";
+      }
+    );
+  } catch (err) {
+    console.error("Error loading user role or deliveries:", err);
+    emptyState.textContent = "Error loading data.";
     emptyState.style.display = "block";
-  });
+  }
 });
