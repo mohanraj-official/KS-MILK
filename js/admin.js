@@ -1,4 +1,8 @@
-// admin.js — Final Version with Smart Notifications
+// admin.js — KS MILK (Final Refined Version)
+// -------------------------------------------
+// Handles admin authentication, logout, customers, orders,
+// live notifications, delivery summary, and tab navigation.
+
 import { auth, db } from "./firebase.js";
 import {
   onAuthStateChanged,
@@ -16,48 +20,68 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 // -----------------------------
-// 🔹 Logout
+// 🔹 LOGOUT
 // -----------------------------
-const logoutLink = document.getElementById("logout-link");
-if (logoutLink) {
-  logoutLink.addEventListener("click", async () => {
-    await signOut(auth);
-    alert("You have logged out.");
-    window.location.href = "login.html";
-  });
-}
-
-// -----------------------------
-// 🔹 Admin Authentication
-// -----------------------------
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    alert("Please login as admin.");
-    window.location.href = "login.html";
-    return;
+document.addEventListener("DOMContentLoaded", () => {
+  const logoutLink = document.getElementById("logout-link");
+  if (logoutLink) {
+    logoutLink.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        alert("You have logged out.");
+        // Redirect happens automatically by onAuthStateChanged below
+      } catch (error) {
+        console.error("Logout failed:", error);
+        alert("Error logging out. Try again.");
+      }
+    });
   }
-
-  const userDoc = await getDoc(doc(db, "customers", user.uid));
-  if (!userDoc.exists() || userDoc.data().role !== "admin") {
-    alert("Access denied. Admins only.");
-    window.location.href = "index.html";
-    return;
-  }
-
-  // ✅ Display admin info
-  document.getElementById("admin-name").textContent = userDoc.data().fullName;
-  document.getElementById("admin-email").textContent = userDoc.data().email;
-
-  loadCustomers();
-  loadOrders();
-  setupNotifications();
 });
 
 // -----------------------------
-// 👥 Load Customers
+// 🔹 ADMIN AUTHENTICATION
+// -----------------------------
+onAuthStateChanged(auth, async (user) => {
+  // If user logged out or not logged in
+  if (!user) {
+    if (!window.location.pathname.includes("login.html")) {
+      window.location.href = "login.html";
+    }
+    return;
+  }
+
+  try {
+    const userDoc = await getDoc(doc(db, "customers", user.uid));
+
+    if (!userDoc.exists() || userDoc.data().role !== "admin") {
+      alert("Access denied. Admins only.");
+      window.location.href = "index.html";
+      return;
+    }
+
+    // ✅ Display admin info
+    const adminData = userDoc.data();
+    document.getElementById("admin-name").textContent = adminData.fullName;
+    document.getElementById("admin-email").textContent = adminData.email;
+
+    // Load core data
+    loadCustomers();
+    loadOrders();
+    setupNotifications();
+    setupDeliveriesSummary();
+
+  } catch (err) {
+    console.error("Admin check failed:", err);
+    alert("Error verifying admin access.");
+  }
+});
+
+// -----------------------------
+// 👥 LOAD CUSTOMERS
 // -----------------------------
 async function loadCustomers() {
   const table = document.getElementById("customerTable");
+  if (!table) return;
   table.innerHTML = "";
 
   const snapshot = await getDocs(collection(db, "customers"));
@@ -92,10 +116,11 @@ async function loadCustomers() {
 }
 
 // -----------------------------
-// 📦 Load Orders
+// 📦 LOAD ORDERS
 // -----------------------------
 async function loadOrders() {
   const table = document.getElementById("orderTable");
+  if (!table) return;
   table.innerHTML = "";
 
   const snapshot = await getDocs(collection(db, "orders"));
@@ -109,7 +134,9 @@ async function loadOrders() {
         <td>${data.quantity} L</td>
         <td>${data.address}</td>
         <td>${data.createdAt?.toDate?.().toLocaleString?.() || "N/A"}</td>
-        <td><button class="delete-order-btn" data-id="${docSnap.id}">🗑️ Delete</button></td>
+        <td>
+          <button class="delete-order-btn" data-id="${docSnap.id}">🗑️ Delete</button>
+        </td>
       </tr>`;
     table.insertAdjacentHTML("beforeend", row);
   });
@@ -126,40 +153,30 @@ async function loadOrders() {
   });
 }
 
-
-
-
-
-
-
-
-
-
-
-
+// -----------------------------
+// 🔔 REAL-TIME NOTIFICATIONS
+// -----------------------------
 function setupNotifications() {
   const notifBell = document.getElementById("notificationBell");
   const notifCount = document.getElementById("notifCount");
+  if (!notifBell || !notifCount) return;
+
   let unread = 0;
   let initialLoadDone = false;
   const seenOrders = new Set();
 
-  // 🔔 Click redirects to notification page
   notifBell.addEventListener("click", () => {
-    window.location.href = "notifications.html"; // your notifications page
+    window.location.href = "notifications.html";
   });
 
-  // Listen to orders in real-time
   const ordersQuery = query(collection(db, "orders"), orderBy("createdAt", "desc"));
   onSnapshot(ordersQuery, (snapshot) => {
     if (!initialLoadDone) {
-      // Skip initial load, mark all existing orders as seen
       snapshot.docs.forEach((doc) => seenOrders.add(doc.id));
       initialLoadDone = true;
       return;
     }
 
-    // Handle newly added orders
     snapshot.docChanges().forEach((change) => {
       if (change.type === "added" && !seenOrders.has(change.doc.id)) {
         seenOrders.add(change.doc.id);
@@ -167,47 +184,53 @@ function setupNotifications() {
         notifCount.textContent = unread;
         notifCount.style.display = "flex";
 
-        // Optional: play sound
-        const audio = new Audio("notification.mp3");
-        audio.play();
+        // 🔊 Optional notification sound
+        try {
+          const audio = new Audio("notification.mp3");
+          audio.play();
+        } catch (e) {
+          console.warn("Notification sound failed:", e);
+        }
       }
     });
   });
 }
 
-
-
-
-
-
-
-
-
-// Call this after admin auth check and after loadOrders() or setupNotifications()
+// -----------------------------
+// 🚚 DELIVERIES SUMMARY
+// -----------------------------
 function setupDeliveriesSummary() {
-  const deliveriesSection = document.getElementById("deliveriesSummary"); // create a container in admin HTML
+  const deliveriesSection = document.getElementById("deliveriesSummary");
   if (!deliveriesSection) return;
 
   const q = query(collection(db, "deliveries"), orderBy("processedAt", "desc"));
   onSnapshot(q, (snap) => {
-    deliveriesSection.innerHTML = ""; // clear
+    deliveriesSection.innerHTML = "";
+
     if (snap.empty) {
       deliveriesSection.innerHTML = `<p>No deliveries yet.</p>`;
       return;
     }
-    // show latest 8
+
     let count = 0;
     snap.forEach((docSnap) => {
       if (count++ > 7) return;
       const d = docSnap.data();
+
       const row = document.createElement("div");
       row.className = "delivery-row";
       row.innerHTML = `
         <div style="display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #f0f0f0">
           <div>${d.fullName} • ${d.product} (${d.quantity} L)</div>
           <div style="text-align:right">
-            <div style="font-size:12px;color:#666">${(d.processedAt && d.processedAt.toDate) ? d.processedAt.toDate().toLocaleString() : ""}</div>
-            <div style="font-weight:600;color:${d.status === 'delivered' ? '#166534' : '#9b1c1c'}">${d.status.toUpperCase()}</div>
+            <div style="font-size:12px;color:#666">
+              ${(d.processedAt && d.processedAt.toDate)
+                ? d.processedAt.toDate().toLocaleString()
+                : ""}
+            </div>
+            <div style="font-weight:600;color:${d.status === "delivered" ? "#166534" : "#9b1c1c"}">
+              ${d.status.toUpperCase()}
+            </div>
           </div>
         </div>
       `;
@@ -218,24 +241,8 @@ function setupDeliveriesSummary() {
   });
 }
 
-// call setupDeliveriesSummary() after admin auth checks
-// example: after setupNotifications(); add setupDeliveriesSummary();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // -----------------------------
-// 🧭 Tab Switching Logic
+// 🧭 TAB SWITCHING
 // -----------------------------
 document.addEventListener("DOMContentLoaded", () => {
   const tabs = document.querySelectorAll(".tab-btn");
@@ -243,9 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   tabs.forEach((btn) => {
     btn.addEventListener("click", () => {
-      // Hide all sections
       sections.forEach((sec) => (sec.style.display = "none"));
-      // Show selected one
       const target = document.getElementById(`${btn.dataset.tab}-section`);
       if (target) target.style.display = "block";
     });
