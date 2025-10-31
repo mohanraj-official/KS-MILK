@@ -6,7 +6,7 @@
 }
 body {
     font-family: "Inter", system-ui, sans-serif;
-    background: #f7fdf8; /* Clean, light background */
+    background: #f7fdf8;
     color: #222;
     overflow-x: hidden; 
 }
@@ -33,13 +33,36 @@ body {
 
 .hamburger { display: none; font-size: 24px; cursor: pointer; }
 
-/* Responsive Navbar Media Query (Required for hamburger icon) */
+/* Responsive Navbar Media Query */
 @media (max-width: 768px) {
     .navbar { padding: 16px 20px; }
     .nav-links { display: none; }
     .hamburger { display: block; }
-    /* ... (Add mobile menu display styles here if needed) ... */
+
+    /* Mobile Menu Display */
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 52px; 
+        left: 0;
+        background: #ffffff;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        padding: 10px 0;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    .nav-links li {
+        text-align: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #f7f7f7;
+    }
+    
+    .nav-links.active {
+        display: flex;
+    }
 }
+
 
 /* ==================================================
     KS MILK - Place Order Form Styles
@@ -50,18 +73,19 @@ body {
     justify-content: center;
     align-items: center;
     padding: 40px 20px;
-    min-height: calc(100vh - 80px); /* Fill remaining viewport height */
+    min-height: calc(100vh - 80px); 
 }
 
-/* Order Box - The Clean Card */
+/* Order Box - Positioning Context */
 .order-box {
     width: 100%;
-    max-width: 500px; /* Suitable width for a form */
+    max-width: 500px;
     background: #ffffff;
     border: 1px solid #e6e8ea;
     border-radius: 12px;
     padding: 30px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); /* Defined clean shadow */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    position: relative; /* CRITICAL: Sets positioning context for .close-btn */
 }
 
 .order-box h2 {
@@ -72,13 +96,30 @@ body {
     font-weight: 700;
 }
 
+/* Close Button - ABSOLUTELY POSITIONED TOP RIGHT */
+.close-btn {
+    position: absolute; 
+    top: 15px;          
+    right: 15px;        
+    font-size: 30px;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.3s;
+    z-index: 10; 
+}
+
+.close-btn:hover {
+    color: #dc2626; 
+}
+
 #orderForm {
     display: flex;
     flex-direction: column;
-    gap: 15px; /* Spacing between form fields */
+    gap: 15px;
 }
 
-/* Input, Textarea, Select Styling (Clean Input Look) */
+/* Input, Textarea, Select Styling */
 #orderForm input,
 #orderForm textarea,
 #orderForm select {
@@ -95,44 +136,38 @@ body {
 #orderForm input:focus,
 #orderForm textarea:focus,
 #orderForm select:focus {
-    border-color: #16a34a; /* Primary green focus */
+    border-color: #16a34a; 
     box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
     outline: none;
 }
 
-/* Readonly fields styling (Product details) */
+/* Readonly fields styling */
 #productName,
 #productPrice {
-    background-color: #f0f4f2; /* Light grey background */
+    background-color: #f0f4f2; 
     font-weight: 600;
     color: #183826;
     border-style: dashed;
     border-color: #c7d5cf;
 }
 
-/* Textarea specific height */
 #address {
     resize: vertical;
     min-height: 80px;
 }
 
-/* Select placeholder styling */
-#landmark option:first-child[disabled] {
-    color: #999;
-}
-
-/* --- Action Buttons --- */
 .order-actions {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end; /* Align button to the right */
     align-items: center;
     margin-top: 10px;
     padding-top: 15px;
 }
 
 .submit-btn {
-    flex-grow: 1; /* Allows button to take up most of the space */
-    background: #16a34a; /* Primary Green */
+    width: 100%;
+    max-width: 250px; /* Limit width */
+    background: #16a34a; 
     color: #ffffff;
     border: none;
     padding: 12px 20px;
@@ -151,19 +186,6 @@ body {
     transform: scale(0.99);
 }
 
-.close-btn {
-    margin-left: 20px;
-    font-size: 30px;
-    color: #999;
-    cursor: pointer;
-    line-height: 1;
-    transition: color 0.3s;
-}
-
-.close-btn:hover {
-    color: #dc2626; /* Red on hover for closing */
-}
-
 /* --- Mobile Responsiveness --- */
 @media (max-width: 600px) {
     .order-container {
@@ -176,5 +198,11 @@ body {
     .order-box h2 {
         font-size: 24px;
         margin-bottom: 20px;
+    }
+    /* Adjust close button position for smaller screens */
+    .close-btn {
+        top: 10px;
+        right: 10px;
+        font-size: 26px;
     }
 }
