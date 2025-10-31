@@ -1,194 +1,229 @@
-/* notifications.css - professional dashboard look */
+/* ==================================================
+    KS MILK - Notifications Page Styles
+    ================================================== */
 
-.page-notifications {
-  padding: 32px 20px;
-  max-width: 1000px;
-  margin: 0 auto;
-  font-family: "Inter", system-ui, sans-serif;
-  color: #222;
-  background: #fafafa;
-  min-height: calc(100vh - 80px);
+/* --- Main Page Container --- */
+.container.page-notifications {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    min-height: calc(100vh - 120px);
+    font-family: "Inter", system-ui, sans-serif;
+}
+
+.page-header {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eef1f3;
+    text-align: center;
 }
 
 .page-header h1 {
-  font-size: 28px;
-  font-weight: 600;
-  color: #1b3b2f;
-  margin-bottom: 4px;
+    font-size: 36px;
+    color: #183826;
+    margin-bottom: 5px;
+    font-weight: 700;
 }
 
-.page-header .subtitle {
-  font-size: 15px;
-  color: #555;
-  margin-bottom: 20px;
+.subtitle {
+    font-size: 15px;
+    color: #5b5b5b;
 }
 
-.notifications-section {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
+/* --- Notification List (The Cards) --- */
 .notifications-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-height: 70vh;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #ccc transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-/* Notification Card */
+/* Base style for a single notification item (Dynamically added by JS) */
 .notification-item {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-left: 5px solid #22c55e;
-  border-radius: 8px;
-  padding: 14px 18px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    background: #ffffff;
+    border: 1px solid #e6e8ea;
+    border-radius: 10px;
+    padding: 15px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
 }
 
 .notification-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
-.notification-left {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+/* Styling for UNREAD notifications */
+.notification-item.unread {
+    background: #ecfdf5; /* Very light green background */
+    border-left: 5px solid #16a34a; /* Prominent green border */
+    font-weight: 600;
+}
+
+.notification-details {
+    flex-grow: 1;
 }
 
 .notification-title {
-  font-weight: 600;
-  font-size: 15px;
-  color: #173f2e;
-}
-
-.notification-meta {
-  font-size: 13px;
-  color: #444;
+    font-size: 16px;
+    color: #183826;
+    margin-bottom: 4px;
 }
 
 .notification-time {
-  font-size: 12px;
-  color: #777;
-  text-align: right;
+    font-size: 12px;
+    color: #71717a;
 }
 
-.notification-badge {
-  font-size: 12px;
-  background: #ecfdf5;
-  color: #166534;
-  padding: 4px 8px;
-  border-radius: 999px;
-  border: 1px solid #bbf7d0;
+.view-icon {
+    font-size: 20px;
+    color: #16a34a;
+    margin-left: 20px;
 }
 
-/* Empty State */
+/* --- Empty State --- */
 .empty-state {
-  display: none;
-  text-align: center;
-  color: #666;
-  padding: 20px;
-  font-size: 15px;
+    text-align: center;
+    padding: 50px 20px;
+    border: 2px dashed #e6e8ea;
+    border-radius: 10px;
+    color: #9ca3af;
+    font-size: 18px;
+    font-style: italic;
+    background: #fcfcfc;
 }
 
-/* Modal */
+/* ==================================================
+    Modal (Pop-up) Styles
+    ================================================== */
 .modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  display: grid;
-  place-items: center;
-  z-index: 3000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+    /* Class for hiding the modal (used by JS) */
 }
-
 .modal.hidden {
-  display: none;
+    display: none;
 }
 
 .modal-panel {
-  width: 94%;
-  max-width: 600px;
-  background: #fff;
-  border-radius: 10px;
-  padding: 20px 24px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
-  position: relative;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
 }
 
 .modal-close {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  background: transparent;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  color: #555;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.modal-close:hover {
+    color: #dc2626;
+}
+
+#modalTitle {
+    font-size: 24px;
+    color: #183826;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eef1f3;
 }
 
 .modal-body {
-  margin-top: 10px;
-  display: grid;
-  gap: 8px;
-  font-size: 15px;
-  color: #333;
+    text-align: left;
+    margin-bottom: 30px;
+    line-height: 1.6;
 }
 
+/* Styling for details inside modal body (Dynamically added by JS) */
+.modal-body p {
+    font-size: 15px;
+    color: #374151;
+    margin: 5px 0;
+}
+.modal-body b {
+    display: inline-block;
+    min-width: 80px;
+    color: #1a1a1a;
+}
+
+/* Modal Actions */
 .modal-actions {
-  margin-top: 16px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
 }
 
-/* Buttons */
 .btn {
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    flex-grow: 1;
+    transition: background 0.2s;
 }
 
 .btn-success {
-  background: #22c55e;
-  color: #fff;
+    background: #16a34a;
+    color: white;
 }
-
 .btn-success:hover {
-  background: #16a34a;
+    background: #15803d;
 }
 
 .btn-danger {
-  background: #ef4444;
-  color: #fff;
+    background: #ef4444;
+    color: white;
 }
-
 .btn-danger:hover {
-  background: #dc2626;
+    background: #dc2626;
 }
 
-/* Responsive */
-@media (max-width: 720px) {
-  .page-notifications {
-    padding: 20px 14px;
-  }
-  .notification-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-  .modal-panel {
-    padding: 16px;
-  }
+/* --- Mobile Responsiveness --- */
+@media (max-width: 600px) {
+    .container.page-notifications {
+        margin: 20px auto;
+        padding: 10px;
+    }
+    .page-header h1 {
+        font-size: 30px;
+    }
+    .notification-item {
+        padding: 12px 15px;
+        flex-direction: column; /* Stack details and icon vertically on small screens */
+        align-items: flex-start;
+    }
+    .view-icon {
+        margin: 5px 0 0 0;
+        align-self: flex-end;
+    }
+    
+    .modal-panel {
+        padding: 20px;
+    }
+    .modal-actions {
+        flex-direction: column;
+    }
 }
