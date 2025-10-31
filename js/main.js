@@ -1,7 +1,7 @@
-// main.js — final refined version
+// main.js — FINAL STABLE VERSION for KS-MILK
 import { auth, db } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import { doc, setDoc, serverTimestamp, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+import { doc, setDoc, serverTimestamp, getDoc, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 // ---------- Toggle Menu ----------
 window.toggleMenu = function () {
@@ -16,7 +16,6 @@ onAuthStateChanged(auth, async (user) => {
   const nav = document.querySelector(".nav-links");
 
   if (!user) {
-    // Not logged in → show login/register, remove dashboard/logout
     if (loginLink) loginLink.style.display = "inline-block";
     if (registerLink) registerLink.style.display = "inline-block";
     document.getElementById("dashboard-link")?.remove();
@@ -24,24 +23,19 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  // Logged in → hide login/register
   if (loginLink) loginLink.style.display = "none";
   if (registerLink) registerLink.style.display = "none";
 
-  // Fetch user role from Firestore
   const userDoc = await getDoc(doc(db, "customers", user.uid));
   const role = userDoc.exists() ? userDoc.data().role || "customer" : "customer";
 
-  // Remove any existing dashboard link
   document.getElementById("dashboard-link")?.remove();
 
   if (role === "admin") {
-    // ---------- ADMIN NAVBAR ----------
     if (!document.getElementById("logout-link") && nav) {
       const li = document.createElement("li");
       li.innerHTML = `<a href="#" id="logout-link">Logout</a>`;
       nav.appendChild(li);
-
       li.querySelector("a").addEventListener("click", async (e) => {
         e.preventDefault();
         await signOut(auth);
@@ -50,12 +44,10 @@ onAuthStateChanged(auth, async (user) => {
       });
     }
 
-    // Redirect to admin-dashboard if not already there
     if (!window.location.href.includes("admin-dashboard.html")) {
       window.location.href = "admin-dashboard.html";
     }
   } else {
-    // ---------- CUSTOMER NAVBAR ----------
     if (!document.getElementById("dashboard-link") && nav) {
       const li = document.createElement("li");
       li.innerHTML = `<a href="dashboard.html" id="dashboard-link">Dashboard</a>`;
@@ -66,7 +58,6 @@ onAuthStateChanged(auth, async (user) => {
       const li = document.createElement("li");
       li.innerHTML = `<a href="#" id="logout-link">Logout</a>`;
       nav.appendChild(li);
-
       li.querySelector("a").addEventListener("click", async (e) => {
         e.preventDefault();
         await signOut(auth);
@@ -83,7 +74,6 @@ document.querySelectorAll(".order-btn").forEach((button) => {
     const name = button.getAttribute("data-name");
     const price = button.getAttribute("data-price");
 
-    // 🔒 Check if user is logged in before allowing order
     const user = auth.currentUser;
     if (!user) {
       alert("Please login to place an order.");
@@ -205,8 +195,8 @@ onAuthStateChanged(auth, (user) => {
         createdAt: serverTimestamp(),
       });
 
-      const notifRef = doc(collection(db, "notifications"));
-      await setDoc(notifRef, {
+      // Store a new notification for admin dashboard
+      await addDoc(collection(db, "notifications"), {
         orderId: orderRef.id,
         userId: user.uid,
         fullName: order.fullName,
@@ -214,10 +204,11 @@ onAuthStateChanged(auth, (user) => {
         product: order.productName,
         quantity: order.quantity,
         address: order.address,
-        status: "new", // show in admin page
+        status: "new",
         createdAt: serverTimestamp(),
       });
 
+      // ✅ Push notification trigger is handled by Cloud Function, not client
       localStorage.removeItem("pendingOrder");
       localStorage.removeItem("selectedProduct");
       document.getElementById("successPopup").style.display = "flex";
@@ -248,37 +239,3 @@ window.closePopup = function () {
     window.location.href = "order-history.html";
   }, 400);
 };
-
-
-
-
-
-// after saving notifRef
-try {
-  // 🔹 Get all admin tokens from Firestore
-  const adminTokensSnap = await getDocs(collection(db, "adminTokens"));
-  const tokens = adminTokensSnap.docs.map(doc => doc.data().token).filter(Boolean);
-
-  // 🔹 Send push notification using FCM REST API
-  for (const token of tokens) {
-    await fetch("https://fcm.googleapis.com/fcm/send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "key=YOUR_SERVER_KEY_HERE" // ⚠️ replace with your actual Server Key
-      },
-      body: JSON.stringify({
-        to: token,
-        notification: {
-          title: "🥛 New Order Received",
-          body: `${order.fullName} ordered ${order.quantity}L of ${order.productName}`
-        }
-      })
-    });
-  }
-
-  console.log("📩 Push notifications sent to admin(s)");
-
-} catch (err) {
-  console.error("❌ Error sending push notification:", err);
-}
