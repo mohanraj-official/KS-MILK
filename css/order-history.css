@@ -1,4 +1,8 @@
-/* GLOBAL RESET: ESSENTIAL for scroll-proofing */
+/* ==========================================================
+    KS MILK - Order History (Desktop Fixed, Mobile Scrollable)
+    ========================================================== */
+
+/* 1. GLOBAL RESET & NAVBAR SETUP */
 * {
     box-sizing: border-box; 
     margin: 0;
@@ -8,11 +12,9 @@ body {
     font-family: "Inter", system-ui, sans-serif;
     background: #f7fdf8;
     color: #222;
-    /* overflow-x: hidden is REMOVED to allow body scroll if necessary, 
-       but we will contain scrolling within the table container. */
+    /* Allow body to scroll if content is long, but we primarily use container scrolling */
 }
 
-/* Navbar (Clean Style Adaptation) */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -24,12 +26,7 @@ body {
     top: 0;
     z-index: 1000;
 }
-.logo a {
-    text-decoration: none;
-    font-size: 24px;
-    font-weight: 700;
-    color: #1a1a1a;
-}
+.logo a { text-decoration: none; font-size: 24px; font-weight: 700; color: #1a1a1a; }
 .logo .green { color: #16a34a; } 
 .nav-links { list-style: none; display: flex; gap: 25px; }
 .nav-links a { text-decoration: none; color: #444; font-weight: 500; transition: color 0.3s ease; }
@@ -38,12 +35,11 @@ body {
 
 
 /* ==================================================
-    2. Orders Section - Single Scrollable Table
+    2. Orders Section - DESKTOP/TABLET (Non-Scrolling)
     ================================================== */
 .orders-section {
-    /* Use percentage max-width and horizontal auto padding for better centering */
-    max-width: 95%; 
-    padding: 40px 20px; 
+    padding: 40px 60px; 
+    max-width: 1300px;
     margin: 0 auto;
     min-height: calc(100vh - 80px);
 }
@@ -59,13 +55,13 @@ body {
     margin-bottom: 25px; 
 }
 
-/* Table Container - HANDLES ALL SCROLLING */
+/* Table Container - DEFAULT STATE (Desktop) */
 .orders-table-container {
-    /* Horizontal Scroll: Necessary for mobile when table is wider than screen */
-    /* overflow-x: auto;  */
+    /* HORIZONTAL SCROLL: Hidden by default (Desktop) */
+    overflow-x: hidden; 
     
-    /* Vertical Scroll: Applied when content exceeds a fixed height */
-    max-height: 70vh; /* Adjust this value (e.g., 500px or 70vh) to control when vertical scrolling appears */
+    /* VERTICAL SCROLL: Active if content is too long (Both sizes) */
+    max-height: 70vh; 
     overflow-y: auto; 
     
     background: #fff;
@@ -77,11 +73,11 @@ body {
 .orders-table {
     width: 100%;
     border-collapse: collapse;
-    /* FORCE MINIMUM WIDTH to ensure horizontal scrollbar appears on mobile */
-    min-width: 1500px;
+    /* CRITICAL: No forced min-width on desktop */
+    min-width: auto; 
 }
 
-/* Table Head */
+/* Table Head - Sticky Header for Vertical Scroll */
 .orders-table th {
     background: #f7fafc;
     color: #333;
@@ -94,15 +90,15 @@ body {
     letter-spacing: 0.5px;
     white-space: nowrap;
     
-    /* Keep the header sticky when scrolling vertically within the container */
+    /* Sticky header for vertical scroll */
     position: sticky; 
     top: 0;
-    z-index: 1; /* Ensure it stays above the scrolling rows */
+    z-index: 1; 
 }
 .orders-table th:first-child { text-align: center; }
 .orders-table th:nth-child(6) { text-align: right; } 
 
-/* Table Body */
+/* Table Body Styles */
 .orders-table td {
     font-size: 14px;
     padding: 12px 14px;
@@ -114,47 +110,40 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
-.orders-table tbody tr:hover {
-    background: #f9fffb;
-}
-
-/* Highlighted Columns */
+.orders-table tbody tr:hover { background: #f9fffb; }
 .orders-table td:first-child { text-align: center; }
-.orders-table td:nth-child(6) { 
-    font-weight: 700;
-    color: #183826; 
-    text-align: right;
-}
+.orders-table td:nth-child(6) { font-weight: 700; color: #183826; text-align: right; }
 
 /* Status Badges */
 .badge { 
-    padding: 5px 10px; 
-    border-radius: 999px; 
-    font-size: 12px; 
-    font-weight: 600; 
+    padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; 
 }
 .badge.delivered { background:#ecfdf5; color:#166534; border:1px solid #bbf7d0; }
 .badge.cancelled { background:#fff1f0; color:#9b1c1c; border:1px solid #fecaca; }
 .badge.pending { background:#fefce8; color:#a16207; border:1px solid #fde68a; }
 
 
-
 /* ==================================================
-    3. Responsive Design (Simplified Mobile Styles)
+    3. Responsive Design - MOBILE (Horizontal Scroll ONLY)
     ================================================== */
 @media (max-width: 768px) {
+    /* Navbar override */
     .orders-section {
-        padding: 25px 10px; /* Minimal side padding for mobile */
+        padding: 25px 10px; /* Reduced side padding */
         max-width: 100%;
     }
     .navbar { padding: 16px 15px; }
     .nav-links { display: none; }
     .hamburger { display: block; }
     
-    /* Ensure the table container uses full screen width for scrolling */
+    /* CRITICAL: ENABLE HORIZONTAL SCROLLING ON MOBILE ONLY */
     .orders-table-container {
-        border-radius: 8px;
-        overflow-x: auto;
+        overflow-x: auto; /* ENABLE horizontal scroll for mobile */
+    }
+
+    .orders-table {
+        /* CRITICAL: FORCE MINIMUM WIDTH ON MOBILE ONLY 
+           to ensure the horizontal scrollbar appears */
+        min-width: 1200px; 
     }
 }
