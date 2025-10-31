@@ -1,10 +1,8 @@
-// admin.js — KS MILK (Final Refined Version)
-// -------------------------------------------
-// Handles admin authentication, logout, customers, orders,
-// live notifications, delivery summary, and tab navigation.
-import { messaging } from "./firebase.js";
-import { getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js";
-import { auth, db, requestNotificationPermission } from "./firebase.js";
+// admin.js — KS MILK (Clean + Working Version)
+// ---------------------------------------------------
+// Handles admin login, customers, orders, deliveries, logout, and notifications.
+
+import { auth, db, messaging, requestNotificationPermission } from "./firebase.js";
 import {
   onAuthStateChanged,
   signOut
@@ -17,107 +15,22 @@ import {
   getDoc,
   onSnapshot,
   query,
-  orderBy, setDoc
+  orderBy,
+  setDoc
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+import { getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js";
 
-
-
+// ---------------------------------------------------
+// 🔹 AUTH CHECK (Runs on page load)
+// ---------------------------------------------------
 onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const token = await requestNotificationPermission();
-    if (token) {
-      await setDoc(doc(db, "adminTokens", user.uid), { token }, { merge: true });
-      console.log("✅ Admin FCM token saved to Firestore");
-    }
-  }
-});
-
-
-
-
-
-
-async function requestPermission() {
-  const permission = await Notification.requestPermission();
-  if (permission === "granted") {
-    const token = await getToken(messaging, { vapidKey: "YOUR_VAPID_KEY" });
-    console.log("✅ FCM Token:", token);
-    // Save this token in Firestore under adminTokens
-  } else {
-    console.log("❌ Notification permission denied.");
-  }
-}
-
-onMessage(messaging, (payload) => {
-  console.log("📩 New notification:", payload);
-  alert(payload.notification.title + ": " + payload.notification.body);
-});
-
-requestPermission();
-
-
-import { requestNotificationPermission } from "./firebase.js";
-
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const token = await requestNotificationPermission();
-    if (token) {
-      // Save token to Firestore (so customers can send notifications)
-      await setDoc(doc(db, "adminTokens", user.uid), { token }, { merge: true });
-    }
-  }
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// -----------------------------
-// 🔹 LOGOUT
-// -----------------------------
-document.addEventListener("DOMContentLoaded", () => {
-  const logoutLink = document.getElementById("logout-link");
-  if (logoutLink) {
-    logoutLink.addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        alert("You have logged out.");
-        // Redirect happens automatically by onAuthStateChanged below
-      } catch (error) {
-        console.error("Logout failed:", error);
-        alert("Error logging out. Try again.");
-      }
-    });
-  }
-});
-
-// -----------------------------
-// 🔹 ADMIN AUTHENTICATION
-// -----------------------------
-onAuthStateChanged(auth, async (user) => {
-  // If user logged out or not logged in
   if (!user) {
-    if (!window.location.pathname.includes("login.html")) {
-      window.location.href = "login.html";
-    }
+    window.location.href = "login.html";
     return;
   }
 
   try {
+    // ✅ Check admin role (Change "customers" → "admins" if needed)
     const userDoc = await getDoc(doc(db, "customers", user.uid));
 
     if (!userDoc.exists() || userDoc.data().role !== "admin") {
@@ -127,190 +40,210 @@ onAuthStateChanged(auth, async (user) => {
     }
 
     // ✅ Display admin info
-    const adminData = userDoc.data();
-    document.getElementById("admin-name").textContent = adminData.fullName;
-    document.getElementById("admin-email").textContent = adminData.email;
+    const data = userDoc.data();
+    document.getElementById("admin-name").textContent = data.fullName || "Admin";
+    document.getElementById("admin-email").textContent = data.email || "—";
 
-    // Load core data
+    // ✅ Request notification permission
+    const token = await requestNotificationPermission();
+    if (token) {
+      await setDoc(doc(db, "adminTokens", user.uid), { token }, { merge: true });
+      console.log("✅ FCM token saved.");
+    }
+
+    // ✅ Load core data
     loadCustomers();
     loadOrders();
     setupNotifications();
     setupDeliveriesSummary();
 
   } catch (err) {
-    console.error("Admin check failed:", err);
+    console.error("Error verifying admin:", err);
     alert("Error verifying admin access.");
   }
 });
 
-// -----------------------------
+// ---------------------------------------------------
+// 🔹 LOGOUT
+// ---------------------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  const logoutLink = document.getElementById("logout-link");
+  if (logoutLink) {
+    logoutLink.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        alert("Logged out successfully.");
+        window.location.href = "login.html";
+      } catch (err) {
+        console.error("Logout failed:", err);
+      }
+    });
+  }
+});
+
+// ---------------------------------------------------
 // 👥 LOAD CUSTOMERS
-// -----------------------------
+// ---------------------------------------------------
 async function loadCustomers() {
   const table = document.getElementById("customerTable");
   if (!table) return;
   table.innerHTML = "";
 
-  const snapshot = await getDocs(collection(db, "customers"));
-  snapshot.forEach((docSnap) => {
-    const data = docSnap.data();
+  try {
+    const snapshot = await getDocs(collection(db, "customers"));
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      const deleteBtn =
+        data.role === "admin"
+          ? `<button disabled style="opacity:0.5;cursor:not-allowed;">🗑️ Delete</button>`
+          : `<button class="delete-btn" data-id="${docSnap.id}">🗑️ Delete</button>`;
 
-    const deleteBtn =
-      data.role === "admin"
-        ? `<button disabled style="opacity:0.5; cursor:not-allowed;">🗑️ Delete</button>`
-        : `<button class="delete-btn" data-id="${docSnap.id}">🗑️ Delete</button>`;
-
-    const row = `
-      <tr>
-        <td>${data.fullName}</td>
-        <td>${data.email}</td>
-        <td>${data.role}</td>
-        <td>${deleteBtn}</td>
-      </tr>`;
-    table.insertAdjacentHTML("beforeend", row);
-  });
-
-  document.querySelectorAll(".delete-btn").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const id = btn.dataset.id;
-      if (confirm("Delete this customer?")) {
-        await deleteDoc(doc(db, "customers", id));
-        alert("Customer deleted.");
-        loadCustomers();
-      }
+      const row = `
+        <tr>
+          <td>${data.fullName || "—"}</td>
+          <td>${data.email || "—"}</td>
+          <td>${data.role || "user"}</td>
+          <td>${deleteBtn}</td>
+        </tr>`;
+      table.insertAdjacentHTML("beforeend", row);
     });
-  });
+
+    // Handle delete
+    document.querySelectorAll(".delete-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.id;
+        if (confirm("Delete this customer?")) {
+          await deleteDoc(doc(db, "customers", id));
+          alert("Customer deleted.");
+          loadCustomers();
+        }
+      });
+    });
+  } catch (err) {
+    console.error("Error loading customers:", err);
+  }
 }
 
-// -----------------------------
+// ---------------------------------------------------
 // 📦 LOAD ORDERS
-// -----------------------------
+// ---------------------------------------------------
 async function loadOrders() {
   const table = document.getElementById("orderTable");
   if (!table) return;
   table.innerHTML = "";
 
-  const snapshot = await getDocs(collection(db, "orders"));
-  snapshot.forEach((docSnap) => {
-    const data = docSnap.data();
+  try {
+    const snapshot = await getDocs(collection(db, "orders"));
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
 
-    const row = `
-      <tr>
-        <td>${data.fullName}</td>
-        <td>${data.product}</td>
-        <td>${data.quantity} L</td>
-        <td>${data.address}</td>
-        <td>${data.createdAt?.toDate?.().toLocaleString?.() || "N/A"}</td>
-        <td>
-          <button class="delete-order-btn" data-id="${docSnap.id}">🗑️ Delete</button>
-        </td>
-      </tr>`;
-    table.insertAdjacentHTML("beforeend", row);
-  });
-
-  document.querySelectorAll(".delete-order-btn").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const id = btn.dataset.id;
-      if (confirm("Delete this order?")) {
-        await deleteDoc(doc(db, "orders", id));
-        alert("Order deleted.");
-        loadOrders();
-      }
+      const row = `
+        <tr>
+          <td>${data.fullName || "—"}</td>
+          <td>${data.product || "—"}</td>
+          <td>${data.quantity || 0} L</td>
+          <td>${data.address || "—"}</td>
+          <td>${data.createdAt?.toDate?.().toLocaleString?.() || "N/A"}</td>
+          <td><button class="delete-order-btn" data-id="${docSnap.id}">🗑️ Delete</button></td>
+        </tr>`;
+      table.insertAdjacentHTML("beforeend", row);
     });
-  });
+
+    document.querySelectorAll(".delete-order-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.id;
+        if (confirm("Delete this order?")) {
+          await deleteDoc(doc(db, "orders", id));
+          alert("Order deleted.");
+          loadOrders();
+        }
+      });
+    });
+  } catch (err) {
+    console.error("Error loading orders:", err);
+  }
 }
 
-// -----------------------------
-// 🔔 REAL-TIME NOTIFICATIONS
-// -----------------------------
+// ---------------------------------------------------
+// 🔔 LIVE NOTIFICATIONS
+// ---------------------------------------------------
 function setupNotifications() {
-  const notifBell = document.getElementById("notificationBell");
-  const notifCount = document.getElementById("notifCount");
-  if (!notifBell || !notifCount) return;
+  const bell = document.getElementById("notificationBell");
+  const count = document.getElementById("notifCount");
+  if (!bell || !count) return;
 
   let unread = 0;
-  let initialLoadDone = false;
-  const seenOrders = new Set();
+  let seen = new Set();
+  let initialized = false;
 
-  notifBell.addEventListener("click", () => {
-    window.location.href = "notifications.html";
+  bell.addEventListener("click", () => {
+    count.style.display = "none";
+    unread = 0;
   });
 
-  const ordersQuery = query(collection(db, "orders"), orderBy("createdAt", "desc"));
-  onSnapshot(ordersQuery, (snapshot) => {
-    if (!initialLoadDone) {
-      snapshot.docs.forEach((doc) => seenOrders.add(doc.id));
-      initialLoadDone = true;
+  const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+  onSnapshot(q, (snap) => {
+    if (!initialized) {
+      snap.docs.forEach((doc) => seen.add(doc.id));
+      initialized = true;
       return;
     }
 
-    snapshot.docChanges().forEach((change) => {
-      if (change.type === "added" && !seenOrders.has(change.doc.id)) {
-        seenOrders.add(change.doc.id);
+    snap.docChanges().forEach((change) => {
+      if (change.type === "added" && !seen.has(change.doc.id)) {
+        seen.add(change.doc.id);
         unread++;
-        notifCount.textContent = unread;
-        notifCount.style.display = "flex";
+        count.textContent = unread;
+        count.style.display = "flex";
 
-        // 🔊 Optional notification sound
         try {
-          const audio = new Audio("notification.mp3");
-          audio.play();
+          new Audio("notification.mp3").play();
         } catch (e) {
-          console.warn("Notification sound failed:", e);
+          console.warn("Notification sound error:", e);
         }
       }
     });
   });
 }
 
-// -----------------------------
+// ---------------------------------------------------
 // 🚚 DELIVERIES SUMMARY
-// -----------------------------
+// ---------------------------------------------------
 function setupDeliveriesSummary() {
-  const deliveriesSection = document.getElementById("deliveriesSummary");
-  if (!deliveriesSection) return;
+  const section = document.getElementById("deliveriesSummary");
+  if (!section) return;
 
   const q = query(collection(db, "deliveries"), orderBy("processedAt", "desc"));
   onSnapshot(q, (snap) => {
-    deliveriesSection.innerHTML = "";
+    section.innerHTML = "";
 
     if (snap.empty) {
-      deliveriesSection.innerHTML = `<p>No deliveries yet.</p>`;
+      section.innerHTML = `<p>No deliveries yet.</p>`;
       return;
     }
 
-    let count = 0;
-    snap.forEach((docSnap) => {
-      if (count++ > 7) return;
+    snap.docs.slice(0, 8).forEach((docSnap) => {
       const d = docSnap.data();
-
-      const row = document.createElement("div");
-      row.className = "delivery-row";
-      row.innerHTML = `
-        <div style="display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #f0f0f0">
-          <div>${d.fullName} • ${d.product} (${d.quantity} L)</div>
+      const html = `
+        <div style="display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #eee">
+          <div>${d.fullName || "—"} • ${d.product || ""} (${d.quantity || 0} L)</div>
           <div style="text-align:right">
             <div style="font-size:12px;color:#666">
-              ${(d.processedAt && d.processedAt.toDate)
-          ? d.processedAt.toDate().toLocaleString()
-          : ""}
+              ${d.processedAt?.toDate?.().toLocaleString?.() || ""}
             </div>
             <div style="font-weight:600;color:${d.status === "delivered" ? "#166534" : "#9b1c1c"}">
-              ${d.status.toUpperCase()}
+              ${d.status?.toUpperCase?.() || "PENDING"}
             </div>
           </div>
-        </div>
-      `;
-      deliveriesSection.appendChild(row);
+        </div>`;
+      section.insertAdjacentHTML("beforeend", html);
     });
-  }, (err) => {
-    console.error("Deliveries summary error:", err);
   });
 }
 
-// -----------------------------
+// ---------------------------------------------------
 // 🧭 TAB SWITCHING
-// -----------------------------
+// ---------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   const tabs = document.querySelectorAll(".tab-btn");
   const sections = document.querySelectorAll(".tab-content");
