@@ -20,6 +20,14 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 import { getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js";
 
+
+
+
+
+
+
+
+
 // ---------------------------------------------------
 // 🔹 AUTH CHECK (Runs on page load)
 // ---------------------------------------------------
@@ -44,12 +52,8 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById("admin-name").textContent = data.fullName || "Admin";
     document.getElementById("admin-email").textContent = data.email || "—";
 
-    // ✅ Request notification permission
-    const token = await requestNotificationPermission();
-    if (token) {
-      await setDoc(doc(db, "adminTokens", user.uid), { token }, { merge: true });
-      console.log("✅ FCM token saved.");
-    }
+    // ✅ Request notification permission (call function below)
+    await requestNotificationPermission();
 
     // ✅ Load core data
     loadCustomers();
@@ -62,6 +66,48 @@ onAuthStateChanged(auth, async (user) => {
     alert("Error verifying admin access.");
   }
 });
+
+// ---------------------------------------------------
+// 🔹 FCM NOTIFICATION PERMISSION FUNCTION
+// ---------------------------------------------------
+export async function requestNotificationPermission() {
+  try {
+    // ✅ Register the Service Worker manually
+    const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+    console.log("✅ Service Worker registered:", registration);
+
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      console.log("🔔 Notification permission granted.");
+
+      // ✅ Get FCM token with registered service worker
+      const token = await getToken(messaging, {
+        vapidKey: "BOkG8TYzCuySeqmDGJ_4qTMTPcyTMl8nKmfRVJ6_VEh2eLq0sEb8cRpeY6rvO1Gk6E8vXFbfkwKqZzR6_gc03B0",
+        serviceWorkerRegistration: registration,
+      });
+
+      console.log("📱 FCM Token:", token);
+      return token;
+    } else {
+      console.warn("❌ Notification permission denied.");
+    }
+  } catch (error) {
+    console.error("⚠️ Error getting FCM token:", error);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ---------------------------------------------------
 // 🔹 LOGOUT
