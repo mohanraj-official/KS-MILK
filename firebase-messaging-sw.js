@@ -1,7 +1,8 @@
 // firebase-messaging-sw.js — KS MILK Push Notifications
 
-importScripts('https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js');
+importScripts("https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging-compat.js");
+
 
 // ✅ Your Firebase config
 const firebaseConfig = {
