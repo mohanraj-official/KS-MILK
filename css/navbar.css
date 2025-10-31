@@ -1,5 +1,5 @@
 /* ==========================================================
-    KS MILK - NAVBAR STYLES (css/navbar.css)
+    KS MILK - EXACT ORIGINAL NAVBAR STYLES
     ========================================================== */
 
 /* --- Global & Desktop Navbar Styles --- */
@@ -40,11 +40,11 @@
     user-select: none;
 }
 
-/* --- Mobile Responsiveness: Hamburger Menu Logic --- */
+/* --- Mobile Responsiveness: Hamburger Menu Logic (Functional Block) --- */
 @media (max-width: 768px) {
     .navbar { 
         padding: 16px 20px; 
-        position: relative; 
+        position: relative; /* Container needs relative positioning */
     }
     
     .nav-links { 
@@ -67,10 +67,10 @@
         text-align: center;
         padding: 10px 0;
         border-bottom: 1px solid #f7f7f7;
-        /* FIX: No display: none; here */
+        /* FIX: Ensure no 'display: none;' here */
     }
     
-    /* CLASS TOGGLED BY JAVASCRIPT (The toggleMenu function adds/removes 'active') */
+    /* CRITICAL: CLASS TOGGLED BY JAVASCRIPT */
     .nav-links.active {
         display: flex; /* Mobile Active: Show links */
     }
