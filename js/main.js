@@ -3,11 +3,7 @@ import { auth, db } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 import { doc, setDoc, serverTimestamp, getDoc, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
-// ---------- Toggle Menu ----------
-window.toggleMenu = function () {
-  const nav = document.querySelector(".nav-links");
-  if (nav) nav.classList.toggle("show");
-};
+
 
 // ---------- Navbar Auth Links ----------
 onAuthStateChanged(auth, async (user) => {
