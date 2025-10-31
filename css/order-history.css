@@ -62,7 +62,7 @@ body {
 /* Table Container - HANDLES ALL SCROLLING */
 .orders-table-container {
     /* Horizontal Scroll: Necessary for mobile when table is wider than screen */
-    overflow-x: auto; 
+    /* overflow-x: auto;  */
     
     /* Vertical Scroll: Applied when content exceeds a fixed height */
     max-height: 70vh; /* Adjust this value (e.g., 500px or 70vh) to control when vertical scrolling appears */
@@ -155,5 +155,6 @@ body {
     /* Ensure the table container uses full screen width for scrolling */
     .orders-table-container {
         border-radius: 8px;
+        overflow-x: auto;
     }
 }
