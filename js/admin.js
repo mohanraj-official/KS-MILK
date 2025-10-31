@@ -1,8 +1,13 @@
-// admin.js — KS MILK (Clean + Working Version)
 // ---------------------------------------------------
-// Handles admin login, customers, orders, deliveries, logout, and notifications.
+// 🥛 KS MILK — Admin Dashboard Script (Final Version)
+// ---------------------------------------------------
+// Handles: admin authentication, customer management, orders, deliveries,
+// logout, and real-time notifications.
 
-import { auth, db, messaging, requestNotificationPermission } from "./firebase.js";
+// ---------------------------------------------------
+// 🔹 IMPORTS
+// ---------------------------------------------------
+import { auth, db, messaging } from "./firebase.js";
 import {
   onAuthStateChanged,
   signOut
@@ -15,18 +20,9 @@ import {
   getDoc,
   onSnapshot,
   query,
-  orderBy,
-  setDoc
+  orderBy
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
-import { getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js";
-
-
-
-
-
-
-
-
+import { getToken } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js";
 
 // ---------------------------------------------------
 // 🔹 AUTH CHECK (Runs on page load)
@@ -38,7 +34,6 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   try {
-    // ✅ Check admin role (Change "customers" → "admins" if needed)
     const userDoc = await getDoc(doc(db, "customers", user.uid));
 
     if (!userDoc.exists() || userDoc.data().role !== "admin") {
@@ -52,10 +47,10 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById("admin-name").textContent = data.fullName || "Admin";
     document.getElementById("admin-email").textContent = data.email || "—";
 
-    // ✅ Request notification permission (call function below)
-    await requestNotificationPermission();
+    // ✅ Enable notifications
+    await requestNotificationPermission(user.uid);
 
-    // ✅ Load core data
+    // ✅ Load dashboard data
     loadCustomers();
     loadOrders();
     setupNotifications();
@@ -68,25 +63,31 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 // ---------------------------------------------------
-// 🔹 FCM NOTIFICATION PERMISSION FUNCTION
+// 🔹 REQUEST NOTIFICATION PERMISSION + FCM TOKEN
 // ---------------------------------------------------
-export async function requestNotificationPermission() {
+async function requestNotificationPermission(userId) {
   try {
-    // ✅ Register the Service Worker manually
+    // Register service worker for background messages
     const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
     console.log("✅ Service Worker registered:", registration);
 
     const permission = await Notification.requestPermission();
+
     if (permission === "granted") {
       console.log("🔔 Notification permission granted.");
 
-      // ✅ Get FCM token with registered service worker
       const token = await getToken(messaging, {
         vapidKey: "BOkG8TYzCuySeqmDGJ_4qTMTPcyTMl8nKmfRVJ6_VEh2eLq0sEb8cRpeY6rvO1Gk6E8vXFbfkwKqZzR6_gc03B0",
         serviceWorkerRegistration: registration,
       });
 
       console.log("📱 FCM Token:", token);
+
+      // Optionally: Save FCM token to Firestore (for targeted notifications)
+      if (token && userId) {
+        await setDoc(doc(db, "adminTokens", userId), { token }, { merge: true });
+      }
+
       return token;
     } else {
       console.warn("❌ Notification permission denied.");
@@ -96,21 +97,8 @@ export async function requestNotificationPermission() {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ---------------------------------------------------
-// 🔹 LOGOUT
+// 🔹 LOGOUT HANDLER
 // ---------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   const logoutLink = document.getElementById("logout-link");
@@ -139,22 +127,22 @@ async function loadCustomers() {
     const snapshot = await getDocs(collection(db, "customers"));
     snapshot.forEach((docSnap) => {
       const data = docSnap.data();
-      const deleteBtn =
-        data.role === "admin"
-          ? `<button disabled style="opacity:0.5;cursor:not-allowed;">🗑️ Delete</button>`
-          : `<button class="delete-btn" data-id="${docSnap.id}">🗑️ Delete</button>`;
+      const isAdmin = data.role === "admin";
+      const deleteBtn = isAdmin
+        ? `<button disabled style="opacity:0.5;cursor:not-allowed;">🗑️ Delete</button>`
+        : `<button class="delete-btn" data-id="${docSnap.id}">🗑️ Delete</button>`;
 
-      const row = `
-        <tr>
+      table.insertAdjacentHTML(
+        "beforeend",
+        `<tr>
           <td>${data.fullName || "—"}</td>
           <td>${data.email || "—"}</td>
           <td>${data.role || "user"}</td>
           <td>${deleteBtn}</td>
-        </tr>`;
-      table.insertAdjacentHTML("beforeend", row);
+        </tr>`
+      );
     });
 
-    // Handle delete
     document.querySelectorAll(".delete-btn").forEach((btn) => {
       btn.addEventListener("click", async () => {
         const id = btn.dataset.id;
@@ -182,17 +170,17 @@ async function loadOrders() {
     const snapshot = await getDocs(collection(db, "orders"));
     snapshot.forEach((docSnap) => {
       const data = docSnap.data();
-
-      const row = `
-        <tr>
+      table.insertAdjacentHTML(
+        "beforeend",
+        `<tr>
           <td>${data.fullName || "—"}</td>
           <td>${data.product || "—"}</td>
           <td>${data.quantity || 0} L</td>
           <td>${data.address || "—"}</td>
           <td>${data.createdAt?.toDate?.().toLocaleString?.() || "N/A"}</td>
           <td><button class="delete-order-btn" data-id="${docSnap.id}">🗑️ Delete</button></td>
-        </tr>`;
-      table.insertAdjacentHTML("beforeend", row);
+        </tr>`
+      );
     });
 
     document.querySelectorAll(".delete-order-btn").forEach((btn) => {
@@ -211,7 +199,7 @@ async function loadOrders() {
 }
 
 // ---------------------------------------------------
-// 🔔 LIVE NOTIFICATIONS
+// 🔔 LIVE NOTIFICATIONS (NEW ORDERS)
 // ---------------------------------------------------
 function setupNotifications() {
   const bell = document.getElementById("notificationBell");
@@ -219,7 +207,7 @@ function setupNotifications() {
   if (!bell || !count) return;
 
   let unread = 0;
-  let seen = new Set();
+  const seen = new Set();
   let initialized = false;
 
   bell.addEventListener("click", () => {
@@ -241,7 +229,6 @@ function setupNotifications() {
         unread++;
         count.textContent = unread;
         count.style.display = "flex";
-
         try {
           new Audio("notification.mp3").play();
         } catch (e) {
@@ -261,34 +248,31 @@ function setupDeliveriesSummary() {
 
   const q = query(collection(db, "deliveries"), orderBy("processedAt", "desc"));
   onSnapshot(q, (snap) => {
-    section.innerHTML = "";
-
-    if (snap.empty) {
-      section.innerHTML = `<p>No deliveries yet.</p>`;
-      return;
-    }
-
-    snap.docs.slice(0, 8).forEach((docSnap) => {
-      const d = docSnap.data();
-      const html = `
-        <div style="display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #eee">
-          <div>${d.fullName || "—"} • ${d.product || ""} (${d.quantity || 0} L)</div>
-          <div style="text-align:right">
-            <div style="font-size:12px;color:#666">
-              ${d.processedAt?.toDate?.().toLocaleString?.() || ""}
-            </div>
-            <div style="font-weight:600;color:${d.status === "delivered" ? "#166534" : "#9b1c1c"}">
-              ${d.status?.toUpperCase?.() || "PENDING"}
-            </div>
-          </div>
-        </div>`;
-      section.insertAdjacentHTML("beforeend", html);
-    });
+    section.innerHTML = snap.empty
+      ? `<p>No deliveries yet.</p>`
+      : snap.docs
+          .slice(0, 8)
+          .map((docSnap) => {
+            const d = docSnap.data();
+            return `
+              <div style="display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #eee">
+                <div>${d.fullName || "—"} • ${d.product || ""} (${d.quantity || 0} L)</div>
+                <div style="text-align:right">
+                  <div style="font-size:12px;color:#666">
+                    ${d.processedAt?.toDate?.().toLocaleString?.() || ""}
+                  </div>
+                  <div style="font-weight:600;color:${d.status === "delivered" ? "#166534" : "#9b1c1c"}">
+                    ${d.status?.toUpperCase?.() || "PENDING"}
+                  </div>
+                </div>
+              </div>`;
+          })
+          .join("");
   });
 }
 
 // ---------------------------------------------------
-// 🧭 TAB SWITCHING
+// 🧭 TAB SWITCHING (Dashboard Navigation)
 // ---------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   const tabs = document.querySelectorAll(".tab-btn");
