@@ -1,8 +1,6 @@
 /* ==========================================================
-    KS MILK - Order History (Desktop Fixed, Mobile Scrollable)
+    1. GLOBAL RESET & NAVBAR SETUP (Desktop/Base Styles)
     ========================================================== */
-
-/* 1. GLOBAL RESET & NAVBAR SETUP */
 * {
     box-sizing: border-box; 
     margin: 0;
@@ -12,7 +10,6 @@ body {
     font-family: "Inter", system-ui, sans-serif;
     background: #f7fdf8;
     color: #222;
-    /* Allow body to scroll if content is long, but we primarily use container scrolling */
 }
 
 .navbar {
@@ -28,7 +25,67 @@ body {
 }
 .logo a { text-decoration: none; font-size: 24px; font-weight: 700; color: #1a1a1a; }
 .logo .green { color: #16a34a; } 
-.nav-links { list-style: none; display: flex; gap: 25px; }
-.nav-links a { text-decoration: none; color: #444; font-weight: 500; transition: color 0.3s ease; }
-.nav-links a:hover { color: #16a34a; }
-.hamburger { display: none; font-size: 24px; cursor: pointer; }
+
+.nav-links { 
+    list-style: none; 
+    display: flex; /* Desktop: Show links side-by-side */
+    gap: 25px; 
+}
+.nav-links a { 
+    text-decoration: none; 
+    color: #444; 
+    font-weight: 500; 
+    transition: color 0.3s ease; 
+}
+.nav-links a:hover { 
+    color: #16a34a; 
+}
+
+.hamburger { 
+    display: none; /* Desktop: Hide hamburger */
+    font-size: 24px; 
+    cursor: pointer; 
+    user-select: none;
+}
+
+/* ==========================================================
+    2. MOBILE RESPONSIIVENESS (Activation/Display Logic)
+    ========================================================== */
+
+@media (max-width: 768px) {
+    .navbar { 
+        padding: 16px 20px; 
+        position: relative; /* Essential for menu positioning */
+    }
+    
+    .nav-links { 
+        display: none; /* MOBILE DEFAULT: Hides the menu */
+        flex-direction: column;
+        width: 100%;
+        
+        /* Dropdown positioning */
+        position: absolute;
+        top: 52px; 
+        left: 0;
+        
+        background: #ffffff;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        padding: 10px 0;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    .nav-links li {
+        text-align: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #f7f7f7;
+    }
+    
+    /* CRITICAL: CLASS TOGGLED BY JAVASCRIPT */
+    .nav-links.active {
+        display: flex; /* MOBILE ACTIVE: Shows the links */
+    }
+    
+    .hamburger { 
+        display: block; /* MOBILE: Show hamburger icon */
+    }
+}
