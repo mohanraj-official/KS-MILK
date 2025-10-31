@@ -1,17 +1,8 @@
 /* ==========================================================
-    1. GLOBAL RESET & NAVBAR SETUP (Desktop/Base Styles)
+    KS MILK - NAVBAR STYLES (css/navbar.css)
     ========================================================== */
-* {
-    box-sizing: border-box; 
-    margin: 0;
-    padding: 0;
-}
-body {
-    font-family: "Inter", system-ui, sans-serif;
-    background: #f7fdf8;
-    color: #222;
-}
 
+/* --- Global & Desktop Navbar Styles --- */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -37,7 +28,8 @@ body {
     font-weight: 500; 
     transition: color 0.3s ease; 
 }
-.nav-links a:hover { 
+.nav-links a:hover,
+.nav-links a.active { 
     color: #16a34a; 
 }
 
@@ -48,25 +40,23 @@ body {
     user-select: none;
 }
 
-
-
-/* ==========================================================
-    2. MOBILE RESPONSIIVENESS (Activation/Display Logic) - FIXED
-    ========================================================== */
-
+/* --- Mobile Responsiveness: Hamburger Menu Logic --- */
 @media (max-width: 768px) {
     .navbar { 
         padding: 16px 20px; 
-        position: relative;
+        position: relative; 
     }
     
     .nav-links { 
-        display: none; /* MOBILE DEFAULT: Hides the entire menu UL */
+        display: none; /* Mobile Default: Hide links */
         flex-direction: column;
         width: 100%;
+        
+        /* Positioning the menu to drop down below the navbar */
         position: absolute;
-        top: 52px; 
+        top: 52px; /* Adjust based on navbar height */
         left: 0;
+        
         background: #ffffff;
         box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         padding: 10px 0;
@@ -77,15 +67,15 @@ body {
         text-align: center;
         padding: 10px 0;
         border-bottom: 1px solid #f7f7f7;
-        /* 💡 FIX: REMOVE 'display: none;' HERE */
+        /* FIX: No display: none; here */
     }
     
-    /* CRITICAL: CLASS TOGGLED BY JAVASCRIPT */
+    /* CLASS TOGGLED BY JAVASCRIPT (The toggleMenu function adds/removes 'active') */
     .nav-links.active {
-        display: flex; /* This overrides 'display: none' on the UL and shows the menu */
+        display: flex; /* Mobile Active: Show links */
     }
     
     .hamburger { 
-        display: block;
+        display: block; /* Mobile: Show hamburger */
     }
 }
