@@ -1,132 +1,160 @@
-// delivery.js — Final Role-Based Delivery View
+// delivery.js
 import { auth, db } from "./firebase.js";
-import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 import {
   collection,
   query,
   where,
   orderBy,
   onSnapshot,
-  getDoc,
-  doc
+  doc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
-// -----------------------------
-// 🔹 Logout
-// -----------------------------
-const logoutLink = document.getElementById("logout-link");
-if (logoutLink) {
-  logoutLink.addEventListener("click", async () => {
-    await signOut(auth);
-    alert("You have logged out.");
-    window.location.href = "login.html";
+const deliveriesList = document.getElementById("deliveriesList");
+const emptyState = document.getElementById("emptyState");
+const searchInput = document.getElementById("searchInput");
+const filterSelect = document.getElementById("filterSelect");
+const deliveryModal = document.getElementById("deliveryModal");
+const modalBody = document.getElementById("modalBody");
+const modalClose = document.getElementById("modalClose");
+const modalCloseBtn = document.getElementById("modalCloseBtn");
+
+let deliveriesCache = []; // stores {id, data}
+
+function renderList(items) {
+  deliveriesList.innerHTML = "";
+  if (!items.length) {
+    emptyState.style.display = "block";
+    return;
+  }
+  emptyState.style.display = "none";
+
+  items.forEach((rec) => {
+    const data = rec.data;
+    const el = document.createElement("div");
+    el.className = "delivery-item";
+    el.dataset.id = rec.id;
+
+    const badgeClass =
+      data.status === "delivered"
+        ? "badge delivered"
+        : data.status === "cancelled"
+        ? "badge cancelled"
+        : "badge pending";
+
+    el.innerHTML = `
+      <div class="delivery-left">
+        <div class="delivery-title">${data.fullName || "Unknown"} — ${data.product || "N/A"}</div>
+        <div class="delivery-meta">Qty: ${data.quantity || 0} L • ${data.address || "N/A"}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="delivery-time">
+          ${(data.processedAt && data.processedAt.toDate)
+            ? data.processedAt.toDate().toLocaleString()
+            : ""}
+        </div>
+        <div class="${badgeClass}" style="margin-top:8px">${data.status?.toUpperCase() || "PENDING"}</div>
+      </div>
+    `;
+    el.addEventListener("click", () => openModal(rec));
+    deliveriesList.appendChild(el);
   });
 }
 
-// -----------------------------
-// 🔹 Load Deliveries based on Role
-// -----------------------------
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    alert("Please login to view deliveries.");
-    window.location.href = "login.html";
-    return;
-  }
+function openModal(rec) {
+  const d = rec.data;
+  modalBody.innerHTML = `
+    <p><strong>Customer:</strong> ${d.fullName || "-"}</p>
+    <p><strong>Phone:</strong> ${d.phone || "-"}</p>
+    <p><strong>Product:</strong> ${d.product || "-"}</p>
+    <p><strong>Quantity:</strong> ${d.quantity || "-"} L</p>
+    <p><strong>Address:</strong> ${d.address || "-"}</p>
+    <p><strong>Order ID:</strong> ${d.orderId || "-"}</p>
+    <p><strong>Notification ID:</strong> ${d.notificationId || "-"}</p>
+    <p><strong>Status:</strong> ${d.status || "-"}</p>
+    <p><strong>Processed:</strong> ${(d.processedAt && d.processedAt.toDate)
+      ? d.processedAt.toDate().toLocaleString()
+      : "-"}</p>
+  `;
+  deliveryModal.classList.remove("hidden");
+}
 
-  const userDoc = await getDoc(doc(db, "customers", user.uid));
-
-  if (!userDoc.exists()) {
-    alert("User not found in database.");
-    signOut(auth);
-    return;
-  }
-
-  const role = userDoc.data().role || "customer";
-
-  // Admin: show all deliveries
-  if (role === "admin") {
-    loadDeliveriesForAdmin();
-  } else {
-    loadDeliveriesForCustomer(user.uid);
-  }
+// Modal close handlers
+[modalClose, modalCloseBtn, deliveryModal].forEach((el) => {
+  el?.addEventListener("click", (e) => {
+    if (e.target === deliveryModal || e.target === modalClose || e.target === modalCloseBtn) {
+      deliveryModal.classList.add("hidden");
+    }
+  });
 });
 
-// -----------------------------
-// 🚚 For Admin → Load All Deliveries
-// -----------------------------
-function loadDeliveriesForAdmin() {
-  const deliveriesList = document.getElementById("deliveriesList");
-  const emptyState = document.getElementById("emptyState");
+// Filtering and search
+function applyFilters() {
+  const term = (searchInput?.value || "").toLowerCase().trim();
+  const filter = filterSelect?.value || "all";
 
-  const q = query(collection(db, "deliveries"), orderBy("processedAt", "desc"));
-  onSnapshot(q, (snapshot) => {
-    deliveriesList.innerHTML = "";
-    if (snapshot.empty) {
-      emptyState.style.display = "block";
-      return;
-    }
-    emptyState.style.display = "none";
-
-    snapshot.forEach((docSnap) => {
-      const d = docSnap.data();
-      addDeliveryRow(d);
-    });
+  const filtered = deliveriesCache.filter((r) => {
+    if (filter !== "all" && r.data.status !== filter) return false;
+    if (!term) return true;
+    return (
+      (r.data.fullName || "").toLowerCase().includes(term) ||
+      (r.data.product || "").toLowerCase().includes(term) ||
+      (r.data.orderId || "").toLowerCase().includes(term) ||
+      (r.data.notificationId || "").toLowerCase().includes(term)
+    );
   });
+
+  renderList(filtered);
 }
 
-// -----------------------------
-// 🚚 For Customer → Load Their Own Deliveries
-// -----------------------------
-function loadDeliveriesForCustomer(uid) {
-  const deliveriesList = document.getElementById("deliveriesList");
-  const emptyState = document.getElementById("emptyState");
+searchInput?.addEventListener("input", applyFilters);
+filterSelect?.addEventListener("change", applyFilters);
 
-  const q = query(
-    collection(db, "deliveries"),
-    where("userId", "==", uid),
-    orderBy("processedAt", "desc")
-  );
+// Main logic - detect role and fetch deliveries
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
 
-  onSnapshot(q, (snapshot) => {
-    deliveriesList.innerHTML = "";
-    if (snapshot.empty) {
-      emptyState.style.display = "block";
-      return;
+  try {
+    // 🔍 Get the logged-in user’s role
+    const userRef = doc(db, "customers", user.uid);
+    const userSnap = await getDoc(userRef);
+    const role = userSnap.exists() ? (userSnap.data().role || "customer") : "customer";
+
+    // 📦 Build Firestore query
+    let deliveriesQuery;
+    if (role === "admin") {
+      // Admin sees all
+      deliveriesQuery = query(collection(db, "deliveries"), orderBy("processedAt", "desc"));
+    } else {
+      // Customer sees only their own deliveries
+      deliveriesQuery = query(
+        collection(db, "deliveries"),
+        where("userId", "==", user.uid),
+        orderBy("processedAt", "desc")
+      );
     }
-    emptyState.style.display = "none";
 
-    snapshot.forEach((docSnap) => {
-      const d = docSnap.data();
-      addDeliveryRow(d);
-    });
-  });
-}
-
-// -----------------------------
-// 🧾 Add Delivery Row to Page
-// -----------------------------
-function addDeliveryRow(d) {
-  const deliveriesList = document.getElementById("deliveriesList");
-  const date =
-    d.processedAt?.toDate?.().toLocaleString?.() || "Not processed yet";
-
-  const row = document.createElement("div");
-  row.className = "delivery-item";
-  row.innerHTML = `
-    <div class="delivery-card">
-      <div>
-        <strong>${d.fullName || "Unknown"}</strong> — ${d.product || ""}
-      </div>
-      <div>
-        <span>${d.quantity || ""} L</span> |
-        <span>${d.status?.toUpperCase() || "PENDING"}</span>
-      </div>
-      <div class="delivery-date">${date}</div>
-    </div>
-  `;
-
-  deliveriesList.appendChild(row);
-}
+    // 🧠 Real-time listener
+    onSnapshot(
+      deliveriesQuery,
+      (snapshot) => {
+        deliveriesCache = [];
+        snapshot.forEach((doc) => deliveriesCache.push({ id: doc.id, data: doc.data() }));
+        applyFilters();
+      },
+      (err) => {
+        console.error("Deliveries listener error:", err);
+        emptyState.textContent = "Failed to load deliveries";
+        emptyState.style.display = "block";
+      }
+    );
+  } catch (err) {
+    console.error("Error loading user role or deliveries:", err);
+    emptyState.textContent = "Error loading data.";
+    emptyState.style.display = "block";
+  }
+});
