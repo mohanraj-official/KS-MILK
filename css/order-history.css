@@ -78,7 +78,7 @@ body {
     width: 100%;
     border-collapse: collapse;
     /* FORCE MINIMUM WIDTH to ensure horizontal scrollbar appears on mobile */
-    min-width: 1200px; 
+    min-width: 1500px;
 }
 
 /* Table Head */
