@@ -96,18 +96,6 @@
     transform: scale(0.98);
 }
 
-/* GLOBAL RESET: ESSENTIAL */
-* {
-    box-sizing: border-box; 
-    margin: 0;
-    padding: 0;
-}
-body {
-    font-family: "Inter", system-ui, sans-serif;
-    background: #f7fdf8;
-    color: #222;
-    overflow-x: hidden; 
-}
 
 
 

@@ -1,6 +1,20 @@
 /* ==========================================================
     KS MILK - EXACT ORIGINAL NAVBAR STYLES
     ========================================================== */
+/* GLOBAL RESET: ESSENTIAL */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Inter", system-ui, sans-serif;
+    background: #f7fdf8;
+    color: #222;
+    overflow-x: hidden;
+}
+
 
 /* --- Global & Desktop Navbar Styles --- */
 .navbar {
@@ -9,56 +23,72 @@
     align-items: center;
     padding: 16px 40px;
     background: #ffffff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     position: sticky;
     top: 0;
     z-index: 1000;
 }
-.logo a { text-decoration: none; font-size: 24px; font-weight: 700; color: #1a1a1a; }
-.logo .green { color: #16a34a; } 
 
-.nav-links { 
-    list-style: none; 
-    display: flex; /* Desktop: Show links side-by-side */
-    gap: 25px; 
+.logo a {
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
 }
-.nav-links a { 
-    text-decoration: none; 
-    color: #444; 
-    font-weight: 500; 
-    transition: color 0.3s ease; 
+
+.logo .green {
+    color: #16a34a;
 }
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    /* Desktop: Show links side-by-side */
+    gap: 25px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #444;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
 .nav-links a:hover,
-.nav-links a.active { 
-    color: #16a34a; 
+.nav-links a.active {
+    color: #16a34a;
 }
 
-.hamburger { 
-    display: none; /* Desktop: Hide hamburger */
-    font-size: 24px; 
-    cursor: pointer; 
+.hamburger {
+    display: none;
+    /* Desktop: Hide hamburger */
+    font-size: 24px;
+    cursor: pointer;
     user-select: none;
 }
 
 /* --- Mobile Responsiveness: Hamburger Menu Logic (Functional Block) --- */
 @media (max-width: 768px) {
-    .navbar { 
-        padding: 16px 20px; 
-        position: relative; /* Container needs relative positioning */
+    .navbar {
+        padding: 16px 20px;
+        position: relative;
+        /* Container needs relative positioning */
     }
-    
-    .nav-links { 
-        display: none; /* Mobile Default: Hide links */
+
+    .nav-links {
+        display: none;
+        /* Mobile Default: Hide links */
         flex-direction: column;
         width: 100%;
-        
+
         /* Positioning the menu to drop down below the navbar */
         position: absolute;
-        top: 52px; /* Adjust based on navbar height */
+        top: 52px;
+        /* Adjust based on navbar height */
         left: 0;
-        
+
         background: #ffffff;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         padding: 10px 0;
         border-top: 1px solid #f0f0f0;
     }
@@ -69,13 +99,15 @@
         border-bottom: 1px solid #f7f7f7;
         /* FIX: Ensure no 'display: none;' here */
     }
-    
+
     /* CRITICAL: CLASS TOGGLED BY JAVASCRIPT */
     .nav-links.active {
-        display: flex; /* Mobile Active: Show links */
+        display: flex;
+        /* Mobile Active: Show links */
     }
-    
-    .hamburger { 
-        display: block; /* Mobile: Show hamburger */
+
+    .hamburger {
+        display: block;
+        /* Mobile: Show hamburger */
     }
 }
