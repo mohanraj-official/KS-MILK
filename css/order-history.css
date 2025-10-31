@@ -1,0 +1,193 @@
+/* ==============================
+    KS MILK - Order History Section (Crystal Clear)
+    ============================== */
+
+.orders-section {
+    padding: 80px 40px; /* More vertical space */
+    text-align: center;
+    background: #ffffff; /* Clean white background */
+    font-family: 'Poppins', sans-serif;
+    animation: fadeIn 0.7s ease forwards;
+}
+
+/* Section Headings (Refined Glow) */
+.orders-section h2 {
+    font-size: 2.5rem; /* Larger, more impactful title */
+    font-weight: 800;
+    color: #2e7d32;
+    margin-bottom: 5px;
+    /* Use the gradient for a modern text effect */
+    background: linear-gradient(90deg, #1e8449, #4caf50);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glowText 3s infinite alternate;
+}
+
+.orders-section .subtitle,
+.orders-section > p {
+    color: #666; /* Softer subtext color */
+    font-size: 1.05rem;
+    margin-bottom: 40px;
+}
+
+/* ==============================
+    Orders Table Container (Crisp & Defined)
+    ============================== */
+.orders-table-container {
+    overflow-x: auto;
+    max-width: 1200px; /* Slightly wider */
+    margin: auto;
+    border-radius: 18px;
+    background: #ffffff; /* Crystal clear white */
+    /* Cleaner, sharper shadow */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); 
+    border: 1px solid #e0e0e0; /* Subtle, crisp frame border */
+    transition: all 0.4s ease;
+}
+
+.orders-table-container:hover {
+    /* Subtle lift and refined shadow */
+    transform: translateY(-5px); 
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.12);
+}
+
+/* ==============================
+    Orders Table Styles (Data-Focused)
+    ============================== */
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #ffffff;
+}
+
+.orders-table th,
+.orders-table td {
+    padding: 16px 15px; /* Increased padding for air */
+    text-align: left; /* Left align text in columns (more professional for data) */
+    font-size: 0.95rem;
+    border-bottom: 1px solid #f0f0f0; /* Very light, clean separator */
+    color: #333;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.orders-table th {
+    background: #4caf50; /* Solid primary color */
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    position: sticky; /* Keep header visible on horizontal scroll */
+    top: 0;
+}
+
+/* Table Row Hover (Highlight) */
+.orders-table tr:not(:first-child):hover {
+    background: #f7fff7;
+    /* Prominent left border highlight */
+    border-left: 5px solid #4caf50;
+    transform: none; /* Keep transform off the rows, put it on the container */
+}
+
+/* Highlight Total Column */
+.orders-table th:nth-child(6),
+.orders-table td:nth-child(6) {
+    font-weight: 700;
+    color: #1e8449; /* Green total */
+    text-align: right; /* Right align numbers */
+}
+
+/* Total Column Header */
+.orders-table th:nth-child(6) {
+    color: #fff;
+}
+
+
+/* ==============================
+    Status Chip Styling (Crucial for Clarity)
+    ============================== */
+
+/* Apply this class to the <td> containing the status text */
+.status-cell {
+    text-align: center !important; 
+    font-weight: 600;
+    min-width: 120px;
+}
+
+.status-chip {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+/* Delivered - Primary Green */
+.status-delivered {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+/* Pending - Secondary Blue/Grey */
+.status-pending {
+    background-color: #f0f4f7;
+    color: #1e88e5;
+    border: 1px solid #bbdefb;
+}
+
+/* Cancelled/Failed - Warning Red */
+.status-cancelled {
+    background-color: #ffebee;
+    color: #d32f2f;
+    border: 1px solid #ef9a9a;
+}
+
+
+/* ==============================
+    Animations & Responsiveness
+    ============================== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowText {
+    from { text-shadow: 0 0 5px rgba(67,160,71,0.2); }
+    to { text-shadow: 0 0 10px rgba(46, 125, 50, 0.4); }
+}
+
+@media (max-width: 992px) {
+    .orders-section {
+        padding: 60px 20px;
+    }
+    .orders-section h2 {
+        font-size: 2rem;
+    }
+    .orders-table th,
+    .orders-table td {
+        padding: 14px 10px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .orders-section {
+        padding: 40px 10px;
+    }
+    .orders-section h2 {
+        font-size: 1.7rem;
+    }
+    .orders-table th,
+    .orders-table td {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+    .status-chip {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+}
