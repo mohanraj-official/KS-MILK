@@ -1,36 +1,30 @@
 /* ==============================
-    KS MILK - Dashboard Styles (Futuristic & Sharp)
+    Dashboard Container Layout
     ============================== */
-
-/* Dashboard Container Layout */
 .dashboard-container {
-    /* Keep structure, increase padding for spaciousness */
     display: grid;
-    grid-template-columns: 320px 1fr; /* Slightly wider profile column */
-    gap: 40px; /* Increased gap */
+    grid-template-columns: 320px 1fr;
+    gap: 40px;
+    /* Use padding that will be adjusted in media queries */
     padding: 50px 80px; 
-    background-color: #f0fdf2; /* Very light, clean background */
+    background-color: #f0fdf2; 
     min-height: calc(100vh - 80px);
     transition: all 0.5s ease;
 }
-
-
-
 
 /* =============================
     Profile Card (Futuristic Defined)
     ============================= */
 .profile-card {
-    /* Clean white background, eliminating blur/gradient for crispness */
     background: #ffffff; 
-    border-radius: 12px; /* Sharper corners */
-    padding: 40px 30px; /* Increased internal padding */
+    border-radius: 12px;
+    padding: 40px 30px; 
     text-align: left;
     /* Futuristic, layered shadow for sharp depth */
     box-shadow: 
-        8px 8px 0px #4caf50, /* Bold color shadow (Neo-Brutalism influence) */
-        0 0 0 1px #4caf50; /* Thin, sharp outline */
-    border: none; /* Border is now part of the shadow */
+        8px 8px 0px #4caf50, 
+        0 0 0 1px #4caf50;
+    border: none;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     position: sticky;
     top: 100px;
@@ -38,9 +32,7 @@
 }
 
 .profile-card:hover {
-    /* Interactive 'press-in' effect */
     transform: translate(4px, 4px);
-    /* Shadow shifts with the element */
     box-shadow: 
         4px 4px 0px #388e3c, 
         0 0 0 1px #388e3c;
@@ -51,15 +43,12 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    color: #1e8449; /* Deep, solid color */
-    font-size: 2rem; /* Larger title */
+    color: #1e8449;
+    font-size: 2rem;
     font-weight: 800;
     margin-bottom: 30px;
-    /* Remove gradient/glow for a solid, crisp title */
-    -webkit-background-clip: unset; 
-    -webkit-text-fill-color: initial;
-    text-shadow: none;
-    animation: none; 
+    /* Clean, solid text */
+    text-shadow: none; 
 }
 
 /* Info Text */
@@ -71,22 +60,15 @@
     align-items: center;
     gap: 12px;
     line-height: 1.5;
-    /* Smoother, defined interaction */
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
 }
 
 .profile-card p:hover {
-    transform: translateX(8px); /* More pronounced slide */
+    transform: translateX(8px);
     color: #4caf50;
-    font-weight: 600; /* Subtle weight increase on hover */
+    font-weight: 600;
 }
 
-/* Icons (Assuming icons are part of the structure) */
-.profile-card p svg, 
-.profile-card p i {
-    color: #4caf50; /* Icon color */
-    font-size: 1.2rem;
-}
 
 
 
@@ -97,7 +79,7 @@
 .dashboard-content {
     background: #fff;
     border-radius: 12px;
-    padding: 40px; /* Increased padding */
+    padding: 40px; 
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
     transition: all 0.5s ease;
     animation: fadeIn 0.7s ease forwards;
@@ -121,8 +103,8 @@
     ============================= */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Slightly larger min-width */
-    gap: 30px; /* Increased gap */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
 }
 
 .card {
@@ -132,11 +114,10 @@
     text-decoration: none;
     color: #333;
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    /* All transitions centralized here */
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     position: relative;
     overflow: hidden;
-    border: 1px solid #e0e0e0; /* Clean default border */
+    border: 1px solid #e0e0e0;
 }
 
 .card h3 {
@@ -152,34 +133,28 @@
     margin-bottom: 0;
 }
 
-/* Hover Animation (Lift + Border Glow) */
+/* Hover Animation (Lift + Border Color) */
 .card:hover {
-    transform: translateY(-8px) scale(1.02); /* More lift */
+    transform: translateY(-8px) scale(1.02);
     box-shadow: 0 15px 30px rgba(67,160,71,0.2);
-    border-color: #4caf50; /* Border becomes the primary green */
+    border-color: #4caf50;
 }
 
-/* Animated Border Highlight (Cleaner than the fill animation) */
+/* Animated Border Highlight */
 .card::after {
     content: "";
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 0; /* Starts hidden */
+    width: 0;
     height: 5px;
     background: linear-gradient(90deg, #4caf50, #1e8449);
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card:hover::after {
-    width: 100%; /* Sweeps across the bottom */
+    width: 100%;
 }
-/* The old .card::before fill animation is removed for clarity and speed */
-.card::before {
-    content: none;
-}
-
-
 
 
 
@@ -193,7 +168,8 @@
 @media (max-width: 1100px) {
     .dashboard-container {
         grid-template-columns: 1fr;
-        padding: 40px 40px;
+        /* REDUCED HORIZONTAL PADDING to prevent scrollbar */
+        padding: 40px 40px; 
         gap: 30px;
     }
     .profile-card {
@@ -201,12 +177,13 @@
         top: 0;
         margin-bottom: 10px;
         text-align: center;
-        /* Reset shadow for smaller screens to be less aggressive */
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
     }
     .profile-card:hover {
         transform: translateY(-5px);
+        /* Disable the harsh neo-brutalism shadow effect on mobile/tablet hover */
         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        transform: none; 
     }
     .profile-card h2,
     .profile-card p {
@@ -219,12 +196,20 @@
 
 /* Mobiles */
 @media (max-width: 650px) {
+    .navbar {
+        padding: 18px 20px;
+    }
     .dashboard-container {
-        padding: 25px 20px;
+        /* FURTHER REDUCED HORIZONTAL PADDING */
+        padding: 25px 20px; 
         gap: 25px;
+    }
+    .dashboard-content {
+        padding: 20px;
     }
     .profile-card {
         padding: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     }
     .profile-card h2 {
         font-size: 1.7rem;
