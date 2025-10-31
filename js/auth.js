@@ -1,5 +1,5 @@
 // auth.js — refined and safe version
-import { auth, db } from "./firebase.js";
+import { auth, db, storage  } from "./firebase.js";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
