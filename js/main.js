@@ -1,7 +1,7 @@
 // main.js — final refined version
 import { auth, db } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import { doc, setDoc, serverTimestamp, getDoc, collection } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+import { doc, setDoc, serverTimestamp, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 // ---------- Toggle Menu ----------
 window.toggleMenu = function () {
@@ -248,3 +248,37 @@ window.closePopup = function () {
     window.location.href = "order-history.html";
   }, 400);
 };
+
+
+
+
+
+// after saving notifRef
+try {
+  // 🔹 Get all admin tokens from Firestore
+  const adminTokensSnap = await getDocs(collection(db, "adminTokens"));
+  const tokens = adminTokensSnap.docs.map(doc => doc.data().token).filter(Boolean);
+
+  // 🔹 Send push notification using FCM REST API
+  for (const token of tokens) {
+    await fetch("https://fcm.googleapis.com/fcm/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "key=YOUR_SERVER_KEY_HERE" // ⚠️ replace with your actual Server Key
+      },
+      body: JSON.stringify({
+        to: token,
+        notification: {
+          title: "🥛 New Order Received",
+          body: `${order.fullName} ordered ${order.quantity}L of ${order.productName}`
+        }
+      })
+    });
+  }
+
+  console.log("📩 Push notifications sent to admin(s)");
+
+} catch (err) {
+  console.error("❌ Error sending push notification:", err);
+}

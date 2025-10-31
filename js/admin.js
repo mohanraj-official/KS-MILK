@@ -2,8 +2,9 @@
 // -------------------------------------------
 // Handles admin authentication, logout, customers, orders,
 // live notifications, delivery summary, and tab navigation.
-
-import { auth, db } from "./firebase.js";
+import { messaging } from "./firebase.js";
+import { getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js";
+import { auth, db, requestNotificationPermission } from "./firebase.js";
 import {
   onAuthStateChanged,
   signOut
@@ -16,8 +17,74 @@ import {
   getDoc,
   onSnapshot,
   query,
-  orderBy
+  orderBy, setDoc
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+
+
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const token = await requestNotificationPermission();
+    if (token) {
+      await setDoc(doc(db, "adminTokens", user.uid), { token }, { merge: true });
+      console.log("✅ Admin FCM token saved to Firestore");
+    }
+  }
+});
+
+
+
+
+
+
+async function requestPermission() {
+  const permission = await Notification.requestPermission();
+  if (permission === "granted") {
+    const token = await getToken(messaging, { vapidKey: "YOUR_VAPID_KEY" });
+    console.log("✅ FCM Token:", token);
+    // Save this token in Firestore under adminTokens
+  } else {
+    console.log("❌ Notification permission denied.");
+  }
+}
+
+onMessage(messaging, (payload) => {
+  console.log("📩 New notification:", payload);
+  alert(payload.notification.title + ": " + payload.notification.body);
+});
+
+requestPermission();
+
+
+import { requestNotificationPermission } from "./firebase.js";
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const token = await requestNotificationPermission();
+    if (token) {
+      // Save token to Firestore (so customers can send notifications)
+      await setDoc(doc(db, "adminTokens", user.uid), { token }, { merge: true });
+    }
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // -----------------------------
 // 🔹 LOGOUT
@@ -225,8 +292,8 @@ function setupDeliveriesSummary() {
           <div style="text-align:right">
             <div style="font-size:12px;color:#666">
               ${(d.processedAt && d.processedAt.toDate)
-                ? d.processedAt.toDate().toLocaleString()
-                : ""}
+          ? d.processedAt.toDate().toLocaleString()
+          : ""}
             </div>
             <div style="font-weight:600;color:${d.status === "delivered" ? "#166534" : "#9b1c1c"}">
               ${d.status.toUpperCase()}
