@@ -16,20 +16,29 @@
 
 <body>
 
+
+
   <!-- Navbar -->
   <nav class="navbar">
-    <div class="logo"><a href="admin-dashboard.html"><span class="green">KS</span> MILK</a></div>
+    <div class="logo">
+      <a href="admin-dashboard.html"><span class="green">KS</span> MILK</a>
+    </div>
     <ul class="nav-links">
       <li>
-        <div id="notificationBell">
-          🔔
-          <span id="notifCount">0</span>
-        </div>
+        <!-- Notification icon, now wrapped in a clickable <a> tag -->
+        <a href="notifications.html">
+          <div id="notificationBell">
+            🔔
+            <span id="notifCount">0</span> <!-- Dynamic unread notifications count -->
+          </div>
+        </a>
       </li>
       <li><a href="login.html" id="logout-link">Logout</a></li>
     </ul>
     <div class="hamburger" onclick="toggleMenu()">☰</div>
   </nav>
+
+
 
 
 
