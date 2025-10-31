@@ -68,7 +68,7 @@ onAuthStateChanged(auth, async (user) => {
 async function requestNotificationPermission(userId) {
   try {
     // Register service worker for background messages
-    const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+    const registration = await navigator.serviceWorker.register("./firebase-messaging-sw.js");
     console.log("✅ Service Worker registered:", registration);
 
     const permission = await Notification.requestPermission();
