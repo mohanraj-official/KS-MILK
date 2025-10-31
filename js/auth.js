@@ -1,10 +1,10 @@
 // auth.js — refined and safe version
 import { auth, db } from "./firebase.js";
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut, 
-  updateProfile 
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 import { setDoc, getDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
@@ -95,6 +95,17 @@ if (loginForm) {
     }
   });
 }
+
+
+
+import { requestNotificationPermission } from "./firebase.js";
+
+// After login success
+await requestNotificationPermission();
+
+
+
+
 
 // -------------------- LOGOUT --------------------
 const logoutBtn = document.getElementById("logout-btn");
