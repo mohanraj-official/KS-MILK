@@ -241,32 +241,3 @@ window.closePopup = function () {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-/* JavaScript for Navbar and Popup (e.g., in js/main.js) */
-
-// Function to toggle the mobile menu visibility
-function toggleMenu() {
-    const navLinks = document.querySelector('.nav-links');
-    navLinks.classList.toggle('active');
-}
-
-// Function to close the success popup
-function closePopup() {
-    document.getElementById('successPopup').style.display = 'none';
-    // Optionally redirect to the home page after closing
-    // window.location.href = 'index.html'; 
-}
-
-// Example function to show the popup (you'll call this after successful order submission)
-function showPopup() {
-    document.getElementById('successPopup').style.display = 'flex';
-}

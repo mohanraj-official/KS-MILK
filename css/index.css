@@ -1,57 +1,77 @@
-/* ==================================================
-    KS MILK - Home Page Hero Section Styles
-    ================================================== */
-
-.hero {
-    /* Ensure the hero section takes up the remaining viewport height */
-    min-height: calc(100vh - 80px); /* Assuming navbar is ~80px tall */
-    width: 100%;
-    position: relative;
-    overflow: hidden; /* Important to keep the image contained */
+/* --- Global & Desktop Navbar Styles --- */
+.navbar {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    background: #e5ffe7; /* Very light green/milky background */
-}
-
-.cow-img {
-    /* Image sizing and positioning for a good look */
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures the image covers the hero area without distortion */
-    object-position: center 30%; /* Focus on the lower part (cow) */
-    
-    /* Apply subtle effects for depth/quality */
-    filter: brightness(95%) contrast(105%); 
-    transition: transform 0.5s ease;
-}
-
-.hero:hover .cow-img {
-    transform: scale(1.02); /* Slight zoom on hover for interactivity */
-}
-
-/* Optional: Overlay a slight gradient or shade to prepare for any text in future */
-.hero::after {
-    content: '';
-    position: absolute;
+    padding: 16px 40px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    position: sticky;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        to top,
-        rgba(247, 253, 248, 0.5) 0%, /* Transparent milk color at bottom */
-        rgba(247, 253, 248, 0.1) 50%,
-        transparent 100%
-    );
+    z-index: 1000;
+}
+.logo a { text-decoration: none; font-size: 24px; font-weight: 700; color: #1a1a1a; }
+.logo .green { color: #16a34a; } 
+
+.nav-links { 
+    list-style: none; 
+    display: flex; /* Desktop: Show links side-by-side */
+    gap: 25px; 
+}
+.nav-links a { 
+    text-decoration: none; 
+    color: #444; 
+    font-weight: 500; 
+    transition: color 0.3s ease; 
+}
+.nav-links a:hover,
+.nav-links a.active { 
+    color: #16a34a; 
 }
 
-/* --- Mobile Adjustments --- */
-@media (max-width: 600px) {
-    .hero {
-        min-height: calc(100vh - 60px); /* Adjust height for potentially smaller mobile navbar */
+.hamburger { 
+    display: none; /* Desktop: Hide hamburger */
+    font-size: 24px; 
+    cursor: pointer; 
+    user-select: none;
+}
+
+/* --- Mobile Responsiveness: Hamburger Menu Logic --- */
+@media (max-width: 768px) {
+    .navbar { 
+        padding: 16px 20px; 
+        /* The container needs relative positioning for the absolute menu */
+        position: relative; 
     }
-    .cow-img {
-        object-position: center 50%; /* Center the cow more vertically */
+    
+    .nav-links { 
+        display: none; /* Mobile Default: Hide links */
+        flex-direction: column;
+        width: 100%;
+        
+        /* Positioning the menu to drop down below the navbar */
+        position: absolute;
+        top: 52px; /* Adjust based on navbar height */
+        left: 0;
+        
+        background: #ffffff;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        padding: 10px 0;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    .nav-links li {
+        text-align: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #f7f7f7;
+    }
+    
+    /* CLASS TOGGLED BY JAVASCRIPT */
+    .nav-links.active {
+        display: flex; /* Mobile Active: Show links */
+    }
+    
+    .hamburger { 
+        display: block; /* Mobile: Show hamburger */
     }
 }
