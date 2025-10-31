@@ -1,5 +1,5 @@
 // ---------------------------------------------------
-// 🥛 KS MILK — Admin Dashboard Script (Final Version)
+// 🥛 KS MILK — Admin Dashboard Script (Final Refined Version)
 // ---------------------------------------------------
 // Handles: admin authentication, customer management, orders, deliveries,
 // logout, and real-time notifications.
@@ -16,6 +16,7 @@ import {
   collection,
   getDocs,
   deleteDoc,
+  setDoc,
   doc,
   getDoc,
   onSnapshot,
@@ -83,9 +84,10 @@ async function requestNotificationPermission(userId) {
 
       console.log("📱 FCM Token:", token);
 
-      // Optionally: Save FCM token to Firestore (for targeted notifications)
+      // ✅ Save FCM token to Firestore (for targeted notifications)
       if (token && userId) {
         await setDoc(doc(db, "adminTokens", userId), { token }, { merge: true });
+        console.log("✅ Admin FCM token saved to Firestore");
       }
 
       return token;
