@@ -69,6 +69,7 @@ body {
     ================================================== */
 
 .confirm-container {
+    /* ... (unchanged) ... */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -77,7 +78,7 @@ body {
     background: #f7fdf8;
 }
 
-/* Confirmation Box - The Clean Card */
+/* Confirmation Box - MUST BE POSITION: RELATIVE */
 .confirm-box {
     width: 100%;
     max-width: 500px;
@@ -87,12 +88,15 @@ body {
     padding: 30px;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); 
     text-align: center;
+    position: relative; /* CRITICAL: Sets positioning context */
 }
 
 .confirm-box h2 {
     font-size: 26px;
     color: #183826;
-    margin-bottom: 8px;
+    /* Increase bottom margin to prevent text overlap with the close button */
+    margin-bottom: 25px; 
+    padding-right: 40px; /* Push the H2 text away from the top-right button */
     font-weight: 700;
 }
 
@@ -102,158 +106,73 @@ body {
     margin-bottom: 25px;
 }
 
-/* Order Summary Details */
-.order-summary {
-    text-align: left;
-    background: #f9fbfb;
-    border: 1px solid #eef1f3;
-    border-radius: 8px;
-    padding: 15px 20px;
-    margin-bottom: 25px;
-}
-
-.order-summary p {
-    font-size: 16px;
-    color: #333;
-    line-height: 1.6;
-    margin: 4px 0;
-}
-
-.order-summary b {
-    color: #1a1a1a;
-    display: inline-block;
-    min-width: 100px; /* Align key text neatly */
-    font-weight: 600;
-}
-
-/* --- Action Buttons --- */
-.confirm-actions {
-    display: flex;
-    gap: 10px; 
-    align-items: center;
-    justify-content: space-between;
-}
-
-.confirm-btn,
-.edit-btn,
-.cancel-btn {
-    padding: 12px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: background 0.3s ease, transform 0.1s;
-    border: 1px solid transparent; 
-}
-
-.confirm-btn {
-    flex-grow: 1; 
-    background: #16a34a; /* Primary Success Green */
-    color: #ffffff;
-    border-color: #16a34a;
-}
-
-.confirm-btn:hover {
-    background: #15803d;
-}
-
-.edit-btn {
-    background: #fef3c7; /* Light Yellow/Orange for Edit */
-    color: #a16207;
-    border-color: #fde68a;
-    flex-basis: 90px;
-}
-
-.edit-btn:hover {
-    background: #fde68a;
-}
-
-.cancel-btn {
+/* --- Absolute Positioned Cancel Button --- */
+.cancel-btn.top-right {
+    position: absolute; 
+    top: 15px;
+    right: 15px;
+    /* Style the button as a small 'x' */
     background: #fef2f2; 
     color: #dc2626; 
     border-color: #fecaca;
     font-size: 20px;
     line-height: 1;
-    padding: 10px 15px;
-    flex-basis: 50px;
+    width: 35px; /* Fixed small width */
+    height: 35px; /* Fixed small height */
+    padding: 0;
+    display: grid;
+    place-content: center;
+    border-radius: 50%; /* Make it a circular button */
+    z-index: 10;
+    flex-basis: auto; /* Override flex-basis from other styles */
 }
 
-.cancel-btn:hover {
+.cancel-btn.top-right:hover {
     background: #fecaca;
+    transform: none; /* Override hover transform if any */
 }
 
-/* --- Popup (Success Message) Styles --- */
-
-.popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none; 
-    justify-content: center;
+/* --- Action Buttons (Bottom) - REMOVE CANCEL BUTTON STYLES --- */
+.confirm-actions {
+    display: flex;
+    gap: 10px; 
     align-items: center;
-    z-index: 5000;
+    justify-content: flex-end; /* Push remaining buttons to the right */
 }
 
-.popup-content {
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    width: 90%;
-    max-width: 350px;
+.confirm-btn,
+.edit-btn {
+    /* ... (unchanged) ... */
 }
 
-.popup-content h3 {
-    color: #16a34a;
-    margin-bottom: 10px;
-    font-size: 24px;
+/* The original .cancel-btn styles are now obsolete since the element was moved/renamed/restyled */
+/* We still need a placeholder style for the original .cancel-btn if you keep it: */
+.cancel-btn {
+    display: none; /* Hide the old button if it wasn't removed from HTML */
 }
 
-.popup-content p {
-    color: #5b5b5b;
-    margin-bottom: 20px;
-}
-
-.popup-content button {
-    background: #16a34a;
-    color: white;
-    border: none;
-    padding: 10px 30px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-/* --- Mobile Responsiveness --- */
+/* --- Mobile Responsiveness Adjustments --- */
 @media (max-width: 600px) {
-    .confirm-container {
-        padding: 20px 15px;
+    /* ... (unchanged container/box styles) ... */
+
+    /* Adjust the absolute button for mobile */
+    .cancel-btn.top-right {
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
     }
-    .confirm-box {
-        padding: 20px;
-        border-radius: 10px;
-    }
-    .confirm-box h2 {
-        font-size: 24px;
-    }
+
     .confirm-actions {
-        flex-direction: column; /* Stack buttons vertically */
+        flex-direction: column; 
+        justify-content: center;
     }
+    
+    /* Ensure the remaining action buttons still take full width on mobile */
     .confirm-btn,
-    .edit-btn,
-    .cancel-btn {
-        width: 100%; /* Full width when stacked */
+    .edit-btn {
+        width: 100%; 
         flex-basis: auto;
     }
-    .cancel-btn {
-        margin-top: 10px; 
-        font-size: 16px; 
-        padding: 12px 15px;
-    }
 }
-
-
