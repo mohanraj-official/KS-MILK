@@ -109,19 +109,32 @@ function applyFilters() {
 searchInput?.addEventListener("input", applyFilters);
 filterSelect?.addEventListener("change", applyFilters);
 
-// Main logic
+// ---------------------------------------------------
+// 🔹 AUTH & DELIVERY DATA HANDLER
+// ---------------------------------------------------
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
+    // 🚪 No user logged in → redirect to login
     window.location.href = "login.html";
     return;
   }
 
   try {
+    // 🔍 Fetch user document
     const userRef = doc(db, "customers", user.uid);
     const userSnap = await getDoc(userRef);
-    const role = userSnap.exists() ? userSnap.data().role : "customer";
 
-    let deliveriesQuery =
+    // 🧩 Determine user role (default to 'customer')
+    const role = userSnap.exists() ? userSnap.data().role || "customer" : "customer";
+
+    // 🧭 Update Dashboard link dynamically
+    const dashboardLink = document.getElementById("dashboardLink");
+    if (dashboardLink) {
+      dashboardLink.href = role === "admin" ? "admin-dashboard.html" : "dashboard.html";
+    }
+
+    // 🔄 Define Firestore query based on role
+    const deliveriesQuery =
       role === "admin"
         ? query(collection(db, "deliveries"), orderBy("processedAt", "desc"))
         : query(
@@ -130,10 +143,15 @@ onAuthStateChanged(auth, async (user) => {
             orderBy("processedAt", "desc")
           );
 
+    // 🧠 Listen to real-time updates
     onSnapshot(
       deliveriesQuery,
       (snap) => {
-        deliveriesCache = snap.docs.map((d) => ({ id: d.id, data: d.data() }));
+        deliveriesCache = snap.docs.map((docSnap) => ({
+          id: docSnap.id,
+          data: docSnap.data(),
+        }));
+
         applyFilters();
       },
       (err) => {
@@ -142,9 +160,9 @@ onAuthStateChanged(auth, async (user) => {
         emptyState.style.display = "block";
       }
     );
-  } catch (e) {
-    console.error("Error loading deliveries:", e);
-    emptyState.textContent = "Error loading data.";
+  } catch (error) {
+    console.error("Error loading deliveries:", error);
+    emptyState.textContent = "Error loading delivery data.";
     emptyState.style.display = "block";
   }
 });
