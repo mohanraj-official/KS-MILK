@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/loader.css">
     <link rel="icon" href="https://www.google.com/favicon.ico">
+
+
+
 </head>
 
 <body>
@@ -53,18 +56,22 @@
         </div>
     </div>
 
-   
+
 
     <script src="js/firebase.js"></script>
     <script type="module" src="js/main.js"></script>
     <script src="js/navbar.js"></script>
+    <script type="module">
+        import { disableBackNavigation } from "./js/navigationControl.js";
+        disableBackNavigation();
+    </script>
 
 
-     <!-- Loader -->
+    <!-- Loader -->
     <div id="loader">
         <div class="spinner"></div>
     </div>
-<script src="js/loader.js"></script>
+    <script src="js/loader.js"></script>
 </body>
 
 </html>
