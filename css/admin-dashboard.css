@@ -282,8 +282,14 @@
 
 
 
-/* --- Mobile Floating Bell (Bottom-Right Corner) --- */
+
+
+
+
+
+/* --- Always-visible Floating Bell on Mobile --- */
 @media (max-width: 768px) {
+  /* Force the bell to appear, independent of the hamburger */
   #notificationBell {
     position: fixed !important;
     bottom: 20px;
@@ -297,16 +303,17 @@
     display: flex !important;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     z-index: 2000;
     cursor: pointer;
   }
 
-  #notificationBell a {
-    color: inherit;
-    text-decoration: none;
+  /* Ensure it ignores nav visibility changes */
+  .nav-links #notificationBell {
+    display: flex !important;
   }
 
+  /* Count badge on top of the bell */
   #notifCount {
     position: absolute;
     top: 8px;
@@ -325,3 +332,16 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
   }
 }
+
+
+
+@keyframes pulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+#notificationBell.new-notif {
+  animation: pulse 0.8s ease-in-out 2;
+}
+

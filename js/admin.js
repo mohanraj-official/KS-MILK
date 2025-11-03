@@ -229,6 +229,9 @@ function setupNotifications() {
       if (change.type === "added" && !seen.has(change.doc.id)) {
         seen.add(change.doc.id);
         unread++;
+        bell.classList.add("new-notif");
+setTimeout(() => bell.classList.remove("new-notif"), 1500);
+
         count.textContent = unread;
         count.style.display = "flex";
         try {
