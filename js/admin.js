@@ -1,124 +1,76 @@
 // ---------------------------------------------------
-// 🥛 KS MILK — Admin Dashboard Script (Final Refined Version)
+// 🥛 KS MILK — admin.js (Final Refined Version)
 // ---------------------------------------------------
-// Handles: admin authentication, customer management, orders, deliveries,
-// logout, and real-time notifications.
 
-// ---------------------------------------------------
-// 🔹 IMPORTS
-// ---------------------------------------------------
-import { auth, db, messaging } from "./firebase.js";
+import { auth, db, requestNotificationPermission } from "./firebase.js";
 import {
   onAuthStateChanged,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 import {
-  collection,
-  getDocs,
-  deleteDoc,
-  setDoc,
-  doc,
-  getDoc,
-  onSnapshot,
-  query,
-  orderBy
+  collection, getDocs, deleteDoc, setDoc, doc,
+  getDoc, onSnapshot, query, orderBy
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
-import { getToken } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js";
 
 // ---------------------------------------------------
-// 🔹 AUTH CHECK (Runs on page load)
+// 🔹 Loader Handling
+// ---------------------------------------------------
+document.body.style.display = "none";
+const loader = document.createElement("div");
+loader.id = "loader";
+loader.innerHTML = `<div class="spinner"></div>`;
+document.body.appendChild(loader);
+
+// ---------------------------------------------------
+// 🔹 Admin Auth Check
 // ---------------------------------------------------
 onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
+  if (!user) return window.location.href = "login.html";
 
   try {
     const userDoc = await getDoc(doc(db, "customers", user.uid));
 
     if (!userDoc.exists() || userDoc.data().role !== "admin") {
       alert("Access denied. Admins only.");
-      window.location.href = "index.html";
-      return;
+      return window.location.href = "index.html";
     }
 
-    // ✅ Display admin info
     const data = userDoc.data();
     document.getElementById("admin-name").textContent = data.fullName || "Admin";
     document.getElementById("admin-email").textContent = data.email || "—";
 
-    // ✅ Enable notifications
-    await requestNotificationPermission(user.uid);
+    await requestNotificationPermission("admin", user.uid);
 
-    // ✅ Load dashboard data
     loadCustomers();
     loadOrders();
     setupNotifications();
     setupDeliveriesSummary();
 
+    loader.remove();
+    document.body.style.display = "block";
+
   } catch (err) {
-    console.error("Error verifying admin:", err);
+    console.error("❌ Error verifying admin:", err);
     alert("Error verifying admin access.");
+    window.location.href = "login.html";
   }
 });
 
 // ---------------------------------------------------
-// 🔹 REQUEST NOTIFICATION PERMISSION + FCM TOKEN
-// ---------------------------------------------------
-async function requestNotificationPermission(userId) {
-  try {
-    // Register service worker for background messages
-    const registration = await navigator.serviceWorker.register("./firebase-messaging-sw.js");
-    console.log("✅ Service Worker registered:", registration);
-
-    const permission = await Notification.requestPermission();
-
-    if (permission === "granted") {
-      console.log("🔔 Notification permission granted.");
-
-      const token = await getToken(messaging, {
-        vapidKey: "BOkG8TYzCuySeqmDGJ_4qTMTPcyTMl8nKmfRVJ6_VEh2eLq0sEb8cRpeY6rvO1Gk6E8vXFbfkwKqZzR6_gc03B0",
-        serviceWorkerRegistration: registration,
-      });
-
-      console.log("📱 FCM Token:", token);
-
-      // ✅ Save FCM token to Firestore (for targeted notifications)
-      if (token && userId) {
-        await setDoc(doc(db, "adminTokens", userId), { token }, { merge: true });
-        console.log("✅ Admin FCM token saved to Firestore");
-      }
-
-      return token;
-    } else {
-      console.warn("❌ Notification permission denied.");
-    }
-  } catch (error) {
-    console.error("⚠️ Error getting FCM token:", error);
-  }
-}
-
-// ---------------------------------------------------
-// 🔹 LOGOUT HANDLER
+// 🔹 Logout
 // ---------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   const logoutLink = document.getElementById("logout-link");
-  if (logoutLink) {
-    logoutLink.addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        alert("Logged out successfully.");
-        window.location.href = "login.html";
-      } catch (err) {
-        console.error("Logout failed:", err);
-      }
-    });
-  }
+  if (!logoutLink) return;
+  logoutLink.addEventListener("click", async () => {
+    await signOut(auth);
+    alert("Logged out successfully.");
+    window.location.href = "login.html";
+  });
 });
 
 // ---------------------------------------------------
-// 👥 LOAD CUSTOMERS
+// 👥 Load Customers
 // ---------------------------------------------------
 async function loadCustomers() {
   const table = document.getElementById("customerTable");
@@ -131,7 +83,7 @@ async function loadCustomers() {
       const data = docSnap.data();
       const isAdmin = data.role === "admin";
       const deleteBtn = isAdmin
-        ? `<button disabled style="opacity:0.5;cursor:not-allowed;">🗑️ Delete</button>`
+        ? `<button disabled>🗑️ Delete</button>`
         : `<button class="delete-btn" data-id="${docSnap.id}">🗑️ Delete</button>`;
 
       table.insertAdjacentHTML(
@@ -147,9 +99,8 @@ async function loadCustomers() {
 
     document.querySelectorAll(".delete-btn").forEach((btn) => {
       btn.addEventListener("click", async () => {
-        const id = btn.dataset.id;
         if (confirm("Delete this customer?")) {
-          await deleteDoc(doc(db, "customers", id));
+          await deleteDoc(doc(db, "customers", btn.dataset.id));
           alert("Customer deleted.");
           loadCustomers();
         }
@@ -161,7 +112,7 @@ async function loadCustomers() {
 }
 
 // ---------------------------------------------------
-// 📦 LOAD ORDERS
+// 📦 Load Orders
 // ---------------------------------------------------
 async function loadOrders() {
   const table = document.getElementById("orderTable");
@@ -187,9 +138,8 @@ async function loadOrders() {
 
     document.querySelectorAll(".delete-order-btn").forEach((btn) => {
       btn.addEventListener("click", async () => {
-        const id = btn.dataset.id;
         if (confirm("Delete this order?")) {
-          await deleteDoc(doc(db, "orders", id));
+          await deleteDoc(doc(db, "orders", btn.dataset.id));
           alert("Order deleted.");
           loadOrders();
         }
@@ -201,7 +151,7 @@ async function loadOrders() {
 }
 
 // ---------------------------------------------------
-// 🔔 LIVE NOTIFICATIONS (NEW ORDERS)
+// 🔔 Live Notifications (New Orders)
 // ---------------------------------------------------
 function setupNotifications() {
   const bell = document.getElementById("notificationBell");
@@ -231,18 +181,14 @@ function setupNotifications() {
         unread++;
         count.textContent = unread;
         count.style.display = "flex";
-        try {
-          new Audio("notification.mp3").play();
-        } catch (e) {
-          console.warn("Notification sound error:", e);
-        }
+        try { new Audio("notification.mp3").play(); } catch {}
       }
     });
   });
 }
 
 // ---------------------------------------------------
-// 🚚 DELIVERIES SUMMARY
+// 🚚 Deliveries Summary
 // ---------------------------------------------------
 function setupDeliveriesSummary() {
   const section = document.getElementById("deliveriesSummary");
@@ -252,39 +198,18 @@ function setupDeliveriesSummary() {
   onSnapshot(q, (snap) => {
     section.innerHTML = snap.empty
       ? `<p>No deliveries yet.</p>`
-      : snap.docs
-          .slice(0, 8)
-          .map((docSnap) => {
-            const d = docSnap.data();
-            return `
-              <div style="display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #eee">
-                <div>${d.fullName || "—"} • ${d.product || ""} (${d.quantity || 0} L)</div>
-                <div style="text-align:right">
-                  <div style="font-size:12px;color:#666">
-                    ${d.processedAt?.toDate?.().toLocaleString?.() || ""}
-                  </div>
-                  <div style="font-weight:600;color:${d.status === "delivered" ? "#166534" : "#9b1c1c"}">
-                    ${d.status?.toUpperCase?.() || "PENDING"}
-                  </div>
+      : snap.docs.slice(0, 8).map((docSnap) => {
+          const d = docSnap.data();
+          return `
+            <div class="delivery-item">
+              <div>${d.fullName || "—"} • ${d.product || ""} (${d.quantity || 0} L)</div>
+              <div>
+                <div>${d.processedAt?.toDate?.().toLocaleString?.() || ""}</div>
+                <div style="color:${d.status === "delivered" ? "green" : "red"}">
+                  ${d.status?.toUpperCase?.() || "PENDING"}
                 </div>
-              </div>`;
-          })
-          .join("");
+              </div>
+            </div>`;
+        }).join("");
   });
 }
-
-// ---------------------------------------------------
-// 🧭 TAB SWITCHING (Dashboard Navigation)
-// ---------------------------------------------------
-document.addEventListener("DOMContentLoaded", () => {
-  const tabs = document.querySelectorAll(".tab-btn");
-  const sections = document.querySelectorAll(".tab-content");
-
-  tabs.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      sections.forEach((sec) => (sec.style.display = "none"));
-      const target = document.getElementById(`${btn.dataset.tab}-section`);
-      if (target) target.style.display = "block";
-    });
-  });
-});
