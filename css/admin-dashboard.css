@@ -15,13 +15,15 @@
 
 /* --- Left Column: Profile Card (Aside) --- */
 .profile-card {
-    flex-basis: 280px; /* Fixed width for the sidebar */
+    flex-basis: 280px;
+    /* Fixed width for the sidebar */
     background: #ffffff;
     border: 1px solid #e6e8ea;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    align-self: flex-start; /* Stick to the top */
+    align-self: flex-start;
+    /* Stick to the top */
 }
 
 .profile-card h2 {
@@ -38,6 +40,7 @@
     margin-bottom: 8px;
     word-wrap: break-word;
 }
+
 .profile-card b {
     color: #183826;
 }
@@ -54,7 +57,7 @@
     font-weight: 700;
 }
 
-.dashboard-content > p {
+.dashboard-content>p {
     color: #5b5b5b;
     font-size: 16px;
     margin-bottom: 30px;
@@ -95,9 +98,11 @@
 
 /* Active tab style */
 .tab-btn.active {
-    background: #ecfdf5; /* Light green background */
+    background: #ecfdf5;
+    /* Light green background */
     border-color: #16a34a;
-    color: #166534; /* Darker green text */
+    color: #166534;
+    /* Darker green text */
     box-shadow: 0 0 0 2px #16a34a20;
 }
 
@@ -128,7 +133,8 @@
 }
 
 .data-table th {
-    background-color: #f9fafb; /* Very light header background */
+    background-color: #f9fafb;
+    /* Very light header background */
     color: #4b5563;
     font-weight: 600;
     padding: 12px 15px;
@@ -172,9 +178,48 @@
 .action-btn.delete {
     background: #ef4444;
 }
+
 .action-btn.delete:hover {
     background: #dc2626;
 }
+
+
+
+
+
+
+
+
+/* --- Fix: Notification Count Badge Position --- */
+#notificationBell {
+    position: relative;
+    /* Ensure the badge is positioned relative to the bell */
+    display: inline-block;
+}
+
+#notifCount {
+    position: absolute;
+    top: -6px;
+    /* moves badge slightly upward */
+    right: -6px;
+    /* aligns to top-right corner */
+    background: #ef4444;
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 50%;
+    padding: 3px 6px;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+
+
+
 
 
 
@@ -186,22 +231,25 @@
 
 @media (max-width: 992px) {
     .dashboard-container {
-        flex-direction: column; /* Stack columns vertically */
+        flex-direction: column;
+        /* Stack columns vertically */
         gap: 20px;
         padding: 15px;
     }
 
     .profile-card {
-        flex-basis: auto; /* Allow profile card to take full width */
+        flex-basis: auto;
+        /* Allow profile card to take full width */
         width: 100%;
         margin-bottom: 10px;
         text-align: center;
     }
+
     .profile-card h2,
     .profile-card p {
         text-align: center;
     }
-    
+
     .dashboard-content h2 {
         font-size: 28px;
     }
@@ -213,17 +261,20 @@
         grid-template-columns: 1fr;
     }
 
-    .data-table th, 
+    .data-table th,
     .data-table td {
-        padding: 10px 8px; /* Reduce table padding on mobile */
+        padding: 10px 8px;
+        /* Reduce table padding on mobile */
         font-size: 12px;
     }
-    
+
     /* Optional: Make table scrollable if content is too wide */
     .tab-content {
         overflow-x: auto;
     }
+
     .data-table {
-        min-width: 500px; /* Ensure a minimum width to keep columns readable */
+        min-width: 500px;
+        /* Ensure a minimum width to keep columns readable */
     }
 }
