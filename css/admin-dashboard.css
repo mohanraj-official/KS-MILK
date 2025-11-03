@@ -279,3 +279,18 @@
         /* Ensure a minimum width to keep columns readable */
     }
 }
+
+
+@media (max-width: 768px) {
+  #notificationBell {
+    display: inline-flex !important;
+    position: absolute;
+    top: 18px;
+    right: 70px;     /* adjust based on your Logout button */
+    z-index: 1000;
+  }
+  #notifCount {
+    top: -6px;
+    right: -8px;
+  }
+}
