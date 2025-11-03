@@ -1,14 +1,15 @@
 // ---------------------------------------------------
-// 🥛 KS MILK — firebase.js (Final Refined Version)
+// firebase.js — KS-MILK (Final Refined Version)
 // ---------------------------------------------------
 
+// Import Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js";
 
 // ---------------------------------------------------
-// 🔹 Firebase Config
+// 🔹 Firebase Configuration
 // ---------------------------------------------------
 const firebaseConfig = {
   apiKey: "AIzaSyDWlIcY8xsjAI72GWkiUEWzZpgQXY5CcfM",
@@ -28,60 +29,54 @@ const db = getFirestore(app);
 const messaging = getMessaging(app);
 
 // ---------------------------------------------------
-// 🔹 Request Notification Permission (Admins Only)
+// 🔹 Request Notification Permission + Save Token
 // ---------------------------------------------------
-export async function requestNotificationPermission(role = "customer", userId = null) {
+export async function requestNotificationPermission() {
   try {
-    const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
-    console.log("✅ Service Worker registered:", registration);
-
     const permission = await Notification.requestPermission();
-    if (permission !== "granted") {
+
+    if (permission === "granted") {
+      console.log("🔔 Notification permission granted.");
+
+      const token = await getToken(messaging, {
+        vapidKey: "BOkG8TYzCuySeqmDGJ_4qTMTPcyTMl8nKmfRVJ6_VEh2eLq0sEb8cRpeY6rvO1Gk6E8vXFbfkwKqZzR6_gc03B0"
+      });
+
+      console.log("📱 FCM Token:", token);
+
+      // ✅ Save token in Firestore for the logged-in user
+      const user = auth.currentUser;
+      if (user && token) {
+        await setDoc(doc(db, "userTokens", user.uid), {
+          token,
+          email: user.email || "unknown",
+          updatedAt: new Date()
+        });
+        console.log("✅ Token saved to Firestore for user:", user.uid);
+      }
+
+      return token;
+    } else {
       console.warn("❌ Notification permission denied by user.");
-      return null;
     }
-
-    const token = await getToken(messaging, {
-      vapidKey: "BOkG8TYzCuySeqmDGJ_4qTMTPcyTMl8nKmfRVJ6_VEh2eLq0sEb8cRpeY6rvO1Gk6E8vXFbfkwKqZzR6_gc03B0",
-      serviceWorkerRegistration: registration,
-    });
-
-    if (!token) {
-      console.warn("⚠️ No FCM token generated.");
-      return null;
-    }
-
-    console.log("📱 FCM Token:", token);
-
-    // Save token only if admin
-    const user = auth.currentUser;
-    const uid = userId || user?.uid;
-    if (!uid) return token;
-
-    const collectionName = role === "admin" ? "adminTokens" : "userTokens";
-    await setDoc(doc(db, collectionName, uid), {
-      token,
-      email: user?.email || "unknown",
-      updatedAt: new Date(),
-    }, { merge: true });
-
-    console.log(`✅ Token saved in '${collectionName}' for ${uid}`);
-    return token;
   } catch (error) {
-    console.error("⚠️ Error requesting notification permission:", error);
+    console.error("⚠️ Error getting FCM token:", error);
   }
 }
 
 // ---------------------------------------------------
-// 🔹 Foreground Message Handling
+// 🔹 Handle Foreground Notifications
 // ---------------------------------------------------
 onMessage(messaging, (payload) => {
-  console.log("📩 Foreground message received:", payload);
+  console.log("📩 Message received in foreground:", payload);
   new Notification(payload.notification.title, {
     body: payload.notification.body,
   });
 });
 
 // ---------------------------------------------------
+// 🔹 Exports
+// ---------------------------------------------------
 export { app, auth, db, messaging };
+
 console.log("🔥 Firebase connected successfully to:", firebaseConfig.projectId);
