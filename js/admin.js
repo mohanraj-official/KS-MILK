@@ -8,49 +8,44 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 import {
-  collection, getDocs, deleteDoc, setDoc, doc,
-  getDoc, onSnapshot, query, orderBy
+  collection, getDocs, deleteDoc, doc, getDoc, onSnapshot, query, orderBy
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 // ---------------------------------------------------
-// 🔹 Loader Handling
+// 🔹 Loader Setup
 // ---------------------------------------------------
 document.body.style.display = "none";
-const loader = document.createElement("div");
-loader.id = "loader";
-loader.innerHTML = `<div class="spinner"></div>`;
-document.body.appendChild(loader);
+window.addEventListener("load", () => {
+  document.body.insertAdjacentHTML("afterbegin", `<div id="loader"><div class="spinner"></div></div>`);
+});
 
 // ---------------------------------------------------
-// 🔹 Admin Auth Check
+// 🔹 Auth Check
 // ---------------------------------------------------
 onAuthStateChanged(auth, async (user) => {
-  if (!user) return window.location.href = "login.html";
+  if (!user) return (window.location.href = "login.html");
 
   try {
     const userDoc = await getDoc(doc(db, "customers", user.uid));
-
     if (!userDoc.exists() || userDoc.data().role !== "admin") {
-      alert("Access denied. Admins only.");
-      return window.location.href = "index.html";
+      alert("Access denied — Admins only.");
+      return (window.location.href = "index.html");
     }
 
-    const data = userDoc.data();
-    document.getElementById("admin-name").textContent = data.fullName || "Admin";
-    document.getElementById("admin-email").textContent = data.email || "—";
+    document.getElementById("admin-name").textContent = userDoc.data().fullName || "Admin";
+    document.getElementById("admin-email").textContent = userDoc.data().email || "—";
 
     await requestNotificationPermission("admin", user.uid);
-
     loadCustomers();
     loadOrders();
     setupNotifications();
     setupDeliveriesSummary();
 
-    loader.remove();
+    document.getElementById("loader").remove();
     document.body.style.display = "block";
 
   } catch (err) {
-    console.error("❌ Error verifying admin:", err);
+    console.error("❌ Admin auth error:", err);
     alert("Error verifying admin access.");
     window.location.href = "login.html";
   }
@@ -59,14 +54,10 @@ onAuthStateChanged(auth, async (user) => {
 // ---------------------------------------------------
 // 🔹 Logout
 // ---------------------------------------------------
-document.addEventListener("DOMContentLoaded", () => {
-  const logoutLink = document.getElementById("logout-link");
-  if (!logoutLink) return;
-  logoutLink.addEventListener("click", async () => {
-    await signOut(auth);
-    alert("Logged out successfully.");
-    window.location.href = "login.html";
-  });
+document.getElementById("logout-link")?.addEventListener("click", async () => {
+  await signOut(auth);
+  alert("Logged out successfully.");
+  window.location.href = "login.html";
 });
 
 // ---------------------------------------------------
@@ -77,38 +68,33 @@ async function loadCustomers() {
   if (!table) return;
   table.innerHTML = "";
 
-  try {
-    const snapshot = await getDocs(collection(db, "customers"));
-    snapshot.forEach((docSnap) => {
-      const data = docSnap.data();
-      const isAdmin = data.role === "admin";
-      const deleteBtn = isAdmin
-        ? `<button disabled>🗑️ Delete</button>`
-        : `<button class="delete-btn" data-id="${docSnap.id}">🗑️ Delete</button>`;
+  const snapshot = await getDocs(collection(db, "customers"));
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const isAdmin = data.role === "admin";
+    table.insertAdjacentHTML(
+      "beforeend",
+      `<tr>
+        <td>${data.fullName || "—"}</td>
+        <td>${data.email || "—"}</td>
+        <td>${data.role || "user"}</td>
+        <td>
+          ${isAdmin ? `<button disabled>🗑️ Delete</button>` :
+          `<button class="delete-btn" data-id="${docSnap.id}">🗑️ Delete</button>`}
+        </td>
+      </tr>`
+    );
+  });
 
-      table.insertAdjacentHTML(
-        "beforeend",
-        `<tr>
-          <td>${data.fullName || "—"}</td>
-          <td>${data.email || "—"}</td>
-          <td>${data.role || "user"}</td>
-          <td>${deleteBtn}</td>
-        </tr>`
-      );
+  document.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      if (confirm("Delete this customer?")) {
+        await deleteDoc(doc(db, "customers", btn.dataset.id));
+        alert("Customer deleted.");
+        loadCustomers();
+      }
     });
-
-    document.querySelectorAll(".delete-btn").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        if (confirm("Delete this customer?")) {
-          await deleteDoc(doc(db, "customers", btn.dataset.id));
-          alert("Customer deleted.");
-          loadCustomers();
-        }
-      });
-    });
-  } catch (err) {
-    console.error("Error loading customers:", err);
-  }
+  });
 }
 
 // ---------------------------------------------------
@@ -119,39 +105,35 @@ async function loadOrders() {
   if (!table) return;
   table.innerHTML = "";
 
-  try {
-    const snapshot = await getDocs(collection(db, "orders"));
-    snapshot.forEach((docSnap) => {
-      const data = docSnap.data();
-      table.insertAdjacentHTML(
-        "beforeend",
-        `<tr>
-          <td>${data.fullName || "—"}</td>
-          <td>${data.product || "—"}</td>
-          <td>${data.quantity || 0} L</td>
-          <td>${data.address || "—"}</td>
-          <td>${data.createdAt?.toDate?.().toLocaleString?.() || "N/A"}</td>
-          <td><button class="delete-order-btn" data-id="${docSnap.id}">🗑️ Delete</button></td>
-        </tr>`
-      );
-    });
+  const snapshot = await getDocs(collection(db, "orders"));
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    table.insertAdjacentHTML(
+      "beforeend",
+      `<tr>
+        <td>${data.fullName || "—"}</td>
+        <td>${data.product || "—"}</td>
+        <td>${data.quantity || 0} L</td>
+        <td>${data.address || "—"}</td>
+        <td>${data.createdAt?.toDate?.().toLocaleString?.() || "N/A"}</td>
+        <td><button class="delete-order-btn" data-id="${docSnap.id}">🗑️ Delete</button></td>
+      </tr>`
+    );
+  });
 
-    document.querySelectorAll(".delete-order-btn").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        if (confirm("Delete this order?")) {
-          await deleteDoc(doc(db, "orders", btn.dataset.id));
-          alert("Order deleted.");
-          loadOrders();
-        }
-      });
+  document.querySelectorAll(".delete-order-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      if (confirm("Delete this order?")) {
+        await deleteDoc(doc(db, "orders", btn.dataset.id));
+        alert("Order deleted.");
+        loadOrders();
+      }
     });
-  } catch (err) {
-    console.error("Error loading orders:", err);
-  }
+  });
 }
 
 // ---------------------------------------------------
-// 🔔 Live Notifications (New Orders)
+// 🔔 Live Notifications
 // ---------------------------------------------------
 function setupNotifications() {
   const bell = document.getElementById("notificationBell");
